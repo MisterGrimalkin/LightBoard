@@ -1,9 +1,7 @@
 package lightboard.updater.transport;
 
-import lightboard.zone.impl.TextZone;
 import lightboard.updater.Updater;
-import org.javalite.http.Get;
-import org.javalite.http.Http;
+import lightboard.zone.impl.TextZone;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,29 +34,29 @@ public class BusTimesUpdater extends Updater {
 
         String result = callWebService();
 
-        List<String> messages = parseResult(result).get(busNumber);
+//        List<String> messages = parseResult(result).get(busNumber);
+//
+//        String msg = busNumber + ">" + displayAs + ":";
+//        if ( messages==null ) {
+//            msg += " -none-";
+//        } else {
+//            for ( String m : messages ) {
+//                msg += " " + m;
+//            }
+//        }
 
-        String msg = busNumber + ">" + displayAs + ":";
-        if ( messages==null ) {
-            msg += " -none-";
-        } else {
-            for ( String m : messages ) {
-                msg += " " + m;
-            }
-        }
-
-        addMessage(msg);
+        addMessage("Smoke me a kipper");
 
     }
 
     private String callWebService() {
         String result = "";
-        try {
-            Get get = Http.get(TFL_BUS_URL+"?StopCode1="+stopCode);
-            result = get.text();
-        } catch ( Exception e ) {
-            replaceMessage("Error Querying TFL! " + e.getMessage());
-        }
+//        try {
+//            Get get = Http.get(TFL_BUS_URL+"?StopCode1="+stopCode);
+//            result = get.text();
+//        } catch ( Exception e ) {
+//            replaceMessage("Error Querying TFL! " + e.getMessage());
+//        }
         return result;
 
     }

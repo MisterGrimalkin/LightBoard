@@ -1,7 +1,9 @@
 package lightboard.board.impl;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -28,7 +30,7 @@ public class GraphicalBoard implements LightBoard {
 
     private int d;
 
-    private final Stage stage;
+    private Stage stage;
 
     private String title;
     private int ledRadius;
@@ -52,29 +54,19 @@ public class GraphicalBoard implements LightBoard {
         this.spacer = spacer;
     }
 
+    private Group boardGroup;
+
     @Override
     public void init() {
 
-        leds = new Circle[rows][cols];
-        d = ledRadius*2;
-
         // Build UI components
-        final Pane pane = new Pane();
+        Pane pane = new Pane();
         pane.setStyle(BLACK_BACKGROUND);
-        addMouseHandlers(stage, pane);
-        Group board = new Group();
-        pane.getChildren().add(board);
+        addMouseHandlers(pane);
 
-        // Create LED Board
-        for ( int row=0; row<rows; row++ ) {
-            for ( int col=0; col<cols; col++ ) {
-                Circle led = new Circle(ledRadius - spacer, OFF);
-                led.setCenterX(d + col * d);
-                led.setCenterY(d + row * d);
-                board.getChildren().add(led);
-                leds[row][col] = led;
-            }
-        }
+        boardGroup = new Group();
+        pane.getChildren().add(boardGroup);
+        initBoard();
 
         // Start UI
         stage.setScene(new Scene(pane, getWidthPixels(), getHeightPixels()));
@@ -86,8 +78,23 @@ public class GraphicalBoard implements LightBoard {
         stage.show();
 
     }
+    private void initBoard() {
+        leds = new Circle[rows][cols];
+        d = ledRadius*2;
 
-    private void addMouseHandlers(final Stage stage, Pane pane) {
+        // Create LED Board
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                Circle led = new Circle(ledRadius - spacer, OFF);
+                led.setCenterX(d + col * d);
+                led.setCenterY(d + row * d);
+                boardGroup.getChildren().add(led);
+                leds[row][col] = led;
+            }
+        }
+    }
+
+    private void addMouseHandlers(Pane pane) {
 
         pane.setOnMouseEntered(event -> stage.setOpacity(FULL_OPACITY));
         pane.setOnMouseExited(event -> stage.setOpacity(FADED_OPACITY));
@@ -107,11 +114,18 @@ public class GraphicalBoard implements LightBoard {
         });
 
         pane.setOnMouseClicked((e) -> {
-           if ( e.isControlDown() && e.isShiftDown() ) {
-               dumpUiState();
-               dumpToDebug = !dumpToDebug;
+           if ( e.isControlDown() && e.isAltDown() ) {
+               if ( e.isShiftDown() ) {
+                   stage.hide();
+                   stage = new Stage();
+                   init();
+               } else {
+                   dumpUiState();
+                   dumpToDebug = !dumpToDebug;
+               }
            }
         });
+
 
     }
 
@@ -132,7 +146,9 @@ public class GraphicalBoard implements LightBoard {
     private void dumpRow(int rowNumber, boolean... rowData) {
         Circle[] rowLights = leds[rowNumber];
         for ( int c=0; c<rowLights.length; c++ ) {
-            rowLights[c].setFill(rowData[c] ? ON : OFF);
+            if ( rowLights[c]!=null ) {
+                rowLights[c].setFill(rowData[c] ? ON : OFF);
+            }
         }
     }
 
