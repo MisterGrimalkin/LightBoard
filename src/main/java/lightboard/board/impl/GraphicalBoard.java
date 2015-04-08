@@ -7,19 +7,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lightboard.board.GrayscaleLightBoard;
 import lightboard.board.LightBoard;
 
-public class GraphicalBoard implements LightBoard {
+public class GraphicalBoard implements LightBoard, GrayscaleLightBoard {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
-    private final static Color ON = Color.color(  1.0, 0.0, 0.0);
-    private final static Color OFF = Color.color( 0.15, 0.0, 0.0);
+    private final static double RED_MIN = 0.15;
+    private final static double RED_MAX = 1.0;
+
+    private final static double GREEN_MIN = 0.0;
+    private final static double GREEN_MAX = 0.0;
+
+    private final static double BLUE_MIN = 0.0;
+    private final static double BLUE_MAX = 0.0;
+
+    private final static Color ON = Color.color(  RED_MAX, GREEN_MAX, BLUE_MAX );
+    private final static Color OFF = Color.color( RED_MIN, GREEN_MIN, BLUE_MIN);
 
     private final static double FULL_OPACITY = 1.0;
     private final static double FADED_OPACITY = 0.8;
 
-    private final static int LED_REFRESH_TIME = 10;
+    private final static int LED_REFRESH_TIME = 150;
 
     private final int rows;
     private final int cols;
@@ -117,6 +127,21 @@ public class GraphicalBoard implements LightBoard {
 
     private Double dragOffsetX = null;
     private Double dragOffsetY = null;
+
+    @Override
+    public void dump(double[][] data) {
+        for ( int r=0; r<data.length; r++ ) {
+            dumpRow(r, data[r]);
+        }
+    }
+
+    private void dumpRow(int rowNumber, double... data) {
+        Circle[] rowLights = leds[rowNumber];
+        for ( int c=0; c<rowLights.length; c++ ) {
+            double red = RED_MIN + ((data[c]/255)*(RED_MAX-RED_MIN));
+            rowLights[c].setFill(Color.color(red, 0, 0));
+        }
+    }
 
     @Override
     public synchronized void dump(boolean[][] data) {

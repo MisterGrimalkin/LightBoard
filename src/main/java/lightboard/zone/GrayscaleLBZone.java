@@ -1,5 +1,6 @@
 package lightboard.zone;
 
+import lightboard.board.GrayscaleLightBoardSurface;
 import lightboard.board.LightBoardSurface;
 import lightboard.board.LightBoardSurface.Region;
 import lightboard.util.MessageQueue.Edge;
@@ -14,11 +15,11 @@ import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.CENTRE;
 import static lightboard.util.MessageQueue.VPosition.MIDDLE;
 
-public abstract class LBZone {
+public abstract class GrayscaleLBZone {
 
-    protected final LightBoardSurface surface;
+    protected final GrayscaleLightBoardSurface surface;
 
-    protected LBZone(LightBoardSurface surface) {
+    protected GrayscaleLBZone(GrayscaleLightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
     }
@@ -43,11 +44,11 @@ public abstract class LBZone {
 
     private Timer timer;
 
-    public LBZone start() {
+    public GrayscaleLBZone start() {
         return start(DEFAULT_TICK);
     }
 
-    public LBZone start(int scrollTick) {
+    public GrayscaleLBZone start(int scrollTick) {
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override public void run() {
@@ -236,13 +237,13 @@ public abstract class LBZone {
             resetScroll();
         }
 
-        if ( outline ) {
-            surface.outlineRegion(region);
-        }
-
-        if ( invert ) {
-            surface.invertRegion(region);
-        }
+//        if ( outline ) {
+//            surface.outlineRegion(region);
+//        }
+//
+//        if ( invert ) {
+//            surface.invertRegion(region);
+//        }
 
     }
 
@@ -251,37 +252,23 @@ public abstract class LBZone {
     // Surface Drawing //
     /////////////////////
 
-    protected boolean drawPoint(int x, int y) {
-        return surface.drawPoint(region.left+contentLeft+x, region.top+contentTop+y, region);
+    protected boolean drawPoint(int x, int y, double value) {
+        return surface.drawPoint(region.left+contentLeft+x, region.top+contentTop+y, value, region);
     }
 
     protected boolean clearPoint(int x, int y) {
-        return surface.clearPoint(region.left + contentLeft + x, region.top + contentTop + y, region);
-    }
-
-    protected boolean drawRect(int x, int y, int width, int height, boolean fill) {
-        Region toDraw = surface.safeRegion(region.left+contentLeft+x, region.top+contentTop+y, width, height);
-        if ( fill ) {
-            return surface.fillRegion(toDraw);
-        } else {
-            return surface.outlineRegion(toDraw);
-        }
-    }
-
-    protected boolean clearRect(int x, int y, int width, int height) {
-        Region toDraw = surface.safeRegion(region.left+contentLeft+x, region.top+contentTop+y, width, height);
-        return surface.clearRegion(toDraw);
+        return drawPoint(x, y, 0);
     }
 
     protected boolean clear() {
         return surface.clearRegion(region);
     }
 
-    protected boolean drawPattern(int x, int y, boolean[][] pattern) {
+    protected boolean drawPattern(int x, int y, double[][] pattern) {
         return surface.drawPattern(region.left+contentLeft+x, region.top+contentTop+y, pattern, region);
     }
 
-    protected boolean drawPattern(int x, int y, boolean[][] pattern, boolean clearBackground) {
+    protected boolean drawPattern(int x, int y, double[][] pattern, boolean clearBackground) {
         return surface.drawPattern(region.left+contentLeft+x, region.top+contentTop+y, pattern, clearBackground, region);
     }
 
@@ -290,54 +277,54 @@ public abstract class LBZone {
     // Options //
     /////////////
 
-    public LBZone region(Region region) {
+    public GrayscaleLBZone region(Region region) {
         this.region = region;
         return this;
     }
 
-    public LBZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
+    public GrayscaleLBZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
         region = surface.safeRegion(regionLeft, regionTop, regionWidth, regionHeight);
         return this;
     }
 
-    public LBZone autoRender(boolean enableTickRender) {
+    public GrayscaleLBZone autoRender(boolean enableTickRender) {
         this.autoRender = enableTickRender;
         return this;
     }
 
-    public LBZone autoReset(boolean autoReset) {
+    public GrayscaleLBZone autoReset(boolean autoReset) {
         this.autoReset = autoReset;
         return this;
     }
 
-    public LBZone clear(boolean clear) {
+    public GrayscaleLBZone clear(boolean clear) {
         this.clear = clear;
         return this;
     }
 
-    public LBZone outline(boolean outline) {
+    public GrayscaleLBZone outline(boolean outline) {
         this.outline = outline;
         return this;
     }
 
-    public LBZone invert(boolean invert) {
+    public GrayscaleLBZone invert(boolean invert) {
         this.invert = invert;
         return this;
     }
 
-    public LBZone scroll(Edge from, Edge to) {
+    public GrayscaleLBZone scroll(Edge from, Edge to) {
         scrollFrom = from;
         scrollTo = to;
         return this;
     }
 
-    public LBZone restPosition(HPosition x, VPosition y) {
+    public GrayscaleLBZone restPosition(HPosition x, VPosition y) {
         restPositionH = x;
         restPositionV = y;
         return this;
     }
 
-    public LBZone restDuration(int pause) {
+    public GrayscaleLBZone restDuration(int pause) {
         restDuration = pause;
         return this;
     }
