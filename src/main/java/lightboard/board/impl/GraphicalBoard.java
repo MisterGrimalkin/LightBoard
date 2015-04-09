@@ -155,7 +155,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
                 double red = data[0][r][c];
                 double green = data[1][r][c];
                 double blue = data[2][r][c];
-                if ( leds[c]!=null ) {
+                if ( leds[r][c]!=null ) {
                     leds[r][c].setFill(Color.color(red, green, blue));
                 }
             }
