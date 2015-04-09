@@ -39,7 +39,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
     private int d;
 
-    private final Stage stage;
+    private Stage stage;
 
     private String title;
     private int ledRadius;
@@ -72,7 +72,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
         // Build UI components
         final Pane pane = new Pane();
         pane.setStyle(BLACK_BACKGROUND);
-        addMouseHandlers(stage, pane);
+        addMouseHandlers(pane);
         Group board = new Group();
         pane.getChildren().add(board);
 
@@ -98,7 +98,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
     }
 
-    private void addMouseHandlers(final Stage stage, Pane pane) {
+    private void addMouseHandlers(Pane pane) {
 
 //        pane.setOnMouseEntered(event -> stage.setOpacity(FULL_OPACITY));
 //        pane.setOnMouseExited(event -> stage.setOpacity(FADED_OPACITY));
@@ -123,7 +123,17 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
            }
         });
 
-    }
+        pane.setOnMouseClicked((e) -> {
+            if ( e.isControlDown() && e.isAltDown() ) {
+                if ( e.isShiftDown() ) {
+                    stage.hide();
+                    stage = new Stage();
+                    init();
+                } else {
+                    dumpToDebug = !dumpToDebug;
+                }
+            }
+        });    }
 
 
     ///////////////////////////
@@ -145,7 +155,9 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
                 double red = data[0][r][c];
                 double green = data[1][r][c];
                 double blue = data[2][r][c];
-                leds[r][c].setFill(Color.color(red,green,blue));
+                if ( leds[c]!=null ) {
+                    leds[r][c].setFill(Color.color(red, green, blue));
+                }
             }
         }
     }
@@ -173,7 +185,9 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
             double red = RED_MIN + (data[c]*(RED_MAX-RED_MIN));
             double green = GREEN_MIN + (data[c]*(GREEN_MAX-GREEN_MIN));
             double blue = BLUE_MIN + (data[c]*(BLUE_MAX-BLUE_MIN));
-            rowLights[c].setFill(Color.color(red,green,blue));
+            if ( rowLights[c]!=null ) {
+                rowLights[c].setFill(Color.color(red, green, blue));
+            }
         }
     }
 
@@ -199,7 +213,9 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
             double red = rowData[c] ? RED_MAX : RED_MIN;
             double green = rowData[c] ? GREEN_MAX : GREEN_MIN;
             double blue = rowData[c] ? BLUE_MAX : BLUE_MIN;
-            rowLights[c].setFill(Color.color(red,green,blue));
+            if ( rowLights[c]!=null ) {
+                rowLights[c].setFill(Color.color(red, green, blue));
+            }
         }
     }
 
