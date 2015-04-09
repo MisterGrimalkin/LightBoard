@@ -92,7 +92,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
         stage.setAlwaysOnTop(true);
-        stage.setOpacity(FADED_OPACITY);
+//        stage.setOpacity(FADED_OPACITY);
         stage.setTitle(title);
         stage.show();
 
@@ -100,8 +100,8 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
     private void addMouseHandlers(final Stage stage, Pane pane) {
 
-        pane.setOnMouseEntered(event -> stage.setOpacity(FULL_OPACITY));
-        pane.setOnMouseExited(event -> stage.setOpacity(FADED_OPACITY));
+//        pane.setOnMouseEntered(event -> stage.setOpacity(FULL_OPACITY));
+//        pane.setOnMouseExited(event -> stage.setOpacity(FADED_OPACITY));
 
         pane.setOnMouseDragged((e)->{
             if ( dragOffsetX==null || dragOffsetY==null ) {
