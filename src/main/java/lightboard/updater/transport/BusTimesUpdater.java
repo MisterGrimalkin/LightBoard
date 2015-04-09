@@ -1,6 +1,6 @@
 package lightboard.updater.transport;
 
-import lightboard.zone.impl.TextZone;
+import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
 import org.javalite.http.Get;
 import org.javalite.http.Http;

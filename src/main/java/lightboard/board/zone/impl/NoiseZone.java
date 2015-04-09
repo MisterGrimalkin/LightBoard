@@ -1,7 +1,7 @@
-package lightboard.zone.impl;
+package lightboard.board.zone.impl;
 
-import lightboard.board.LightBoardSurface;
-import lightboard.zone.LBZone;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.LBZone;
 
 public class NoiseZone extends LBZone {
 

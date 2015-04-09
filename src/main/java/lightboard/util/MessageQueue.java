@@ -1,9 +1,12 @@
 package lightboard.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import static lightboard.util.MessageQueue.Edge.*;
+import static lightboard.util.MessageQueue.Edge.NO_SCROLL;
 import static lightboard.util.MessageQueue.HPosition.CENTRE;
 import static lightboard.util.MessageQueue.VPosition.MIDDLE;
 

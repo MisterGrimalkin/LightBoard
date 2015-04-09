@@ -1,8 +1,7 @@
 package lightboard.updater.schedule;
 
+import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
-import lightboard.util.MessageQueue;
-import lightboard.zone.impl.TextZone;
 
 import java.util.ArrayList;
 import java.util.List;

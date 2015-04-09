@@ -1,13 +1,13 @@
-package lightboard.zone;
+package lightboard.board.zone;
 
-import lightboard.board.LightBoardSurface;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.impl.CompositeZone;
+import lightboard.board.zone.impl.TextZone;
 import lightboard.font.SimpleFont;
 import lightboard.updater.UpdaterBundle;
 import lightboard.updater.schedule.DateTimeUpdater;
 import lightboard.updater.transport.BusTimesUpdater;
 import lightboard.updater.transport.TubeStatusUpdater;
-import lightboard.zone.impl.CompositeZone;
-import lightboard.zone.impl.TextZone;
 
 import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.LEFT;

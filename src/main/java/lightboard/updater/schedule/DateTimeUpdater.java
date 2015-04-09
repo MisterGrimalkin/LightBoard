@@ -1,7 +1,7 @@
 package lightboard.updater.schedule;
 
+import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
-import lightboard.zone.impl.TextZone;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

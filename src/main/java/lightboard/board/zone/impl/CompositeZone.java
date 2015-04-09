@@ -1,8 +1,7 @@
-package lightboard.zone.impl;
+package lightboard.board.zone.impl;
 
-import lightboard.board.LightBoardSurface;
-import lightboard.util.MessageQueue;
-import lightboard.zone.LBZone;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.LBZone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +57,6 @@ public class CompositeZone extends LBZone {
         }
         return drawn;
     }
-
-    @Override
-    public void onScrollComplete() {}
 
     @Override
     public LBZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {

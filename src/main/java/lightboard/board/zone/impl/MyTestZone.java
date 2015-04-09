@@ -1,8 +1,8 @@
-package lightboard.zone.impl;
+package lightboard.board.zone.impl;
 
-import lightboard.board.LightBoardSurface;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.LBZone;
 import lightboard.util.MessageQueue.Edge;
-import lightboard.zone.LBZone;
 
 /**
  * Created by grimalkin on 06/04/15.

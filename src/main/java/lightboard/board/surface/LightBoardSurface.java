@@ -1,4 +1,6 @@
-package lightboard.board;
+package lightboard.board.surface;
+
+import lightboard.board.LightBoard;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,7 +10,7 @@ public class LightBoardSurface {
     private final int rows;
     private final int cols;
 
-    private final Region boardRegion;
+    protected final Region boardRegion;
 
     private final boolean[][] ledStatus;
 
@@ -218,18 +220,18 @@ public class LightBoardSurface {
         return new Region(safeLeft, safeTop, safeWidth, safeHeight);
     }
 
-    private boolean pointInRegion(int x, int y, Region region) {
+    protected boolean pointInRegion(int x, int y, Region region) {
         if ( region==null ) {
             region = new Region(0,0,rows,cols);
         }
         return ( x>=region.left && x<=region.right && y>=region.top && y<=region.bottom );
     }
 
-    public int getRows() {
+    public final int getRows() {
         return rows;
     }
 
-    public int getCols() {
+    public final int getCols() {
         return cols;
     }
 

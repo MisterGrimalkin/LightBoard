@@ -1,12 +1,12 @@
-package lightboard.zone.impl;
+package lightboard.board.zone.impl;
 
-import lightboard.board.LightBoardSurface;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.LBZone;
 import lightboard.font.Font;
 import lightboard.font.SimpleFont;
 import lightboard.util.MessageQueue;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.MessageWrapper;
-import lightboard.zone.LBZone;
 
 public class TextZone extends LBZone {
 

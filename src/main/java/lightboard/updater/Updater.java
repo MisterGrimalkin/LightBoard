@@ -1,6 +1,6 @@
 package lightboard.updater;
 
-import lightboard.zone.impl.TextZone;
+import lightboard.board.zone.impl.TextZone;
 
 import java.util.Timer;
 import java.util.TimerTask;

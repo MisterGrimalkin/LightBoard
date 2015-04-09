@@ -7,10 +7,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lightboard.board.GrayscaleLightBoard;
 import lightboard.board.LightBoard;
+import lightboard.board.MonochromeLightBoard;
+import lightboard.board.PolychromeLightBoard;
 
-public class GraphicalBoard implements LightBoard, GrayscaleLightBoard {
+public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoard {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
@@ -29,7 +30,7 @@ public class GraphicalBoard implements LightBoard, GrayscaleLightBoard {
     private final static double FULL_OPACITY = 1.0;
     private final static double FADED_OPACITY = 0.8;
 
-    private final static int LED_REFRESH_TIME = 150;
+    private final static int LED_REFRESH_TIME = 80;
 
     private final int rows;
     private final int cols;
@@ -125,23 +126,59 @@ public class GraphicalBoard implements LightBoard, GrayscaleLightBoard {
 
     }
 
+
+    ///////////////////////////
+    // Polychrome LightBoard //
+    ///////////////////////////
+
     private Double dragOffsetX = null;
     private Double dragOffsetY = null;
 
     @Override
-    public void dump(double[][] data) {
+    public void dump(double[][][] data) {
         for ( int r=0; r<data.length; r++ ) {
-            dumpRow(r, data[r]);
+            dumpPolyRow(r, data[r]);
         }
     }
 
-    private void dumpRow(int rowNumber, double... data) {
+    private void dumpPolyRow(int rowNumber, double[][] data) {
         Circle[] rowLights = leds[rowNumber];
         for ( int c=0; c<rowLights.length; c++ ) {
-            double red = RED_MIN + ((data[c]/255)*(RED_MAX-RED_MIN));
-            rowLights[c].setFill(Color.color(red, 0, 0));
+            double red = data[c][0];
+            double green = data[c][1];
+            double blue = data[c][2];
+            rowLights[c].setFill(Color.color(red,green,blue));
         }
     }
+
+
+
+
+    ///////////////////////////
+    // Monochrome LightBoard //
+    ///////////////////////////
+
+    @Override
+    public void dump(double[][] data) {
+        for ( int r=0; r<data.length; r++ ) {
+            dumpMonoRow(r, data[r]);
+        }
+    }
+
+    private void dumpMonoRow(int rowNumber, double... data) {
+        Circle[] rowLights = leds[rowNumber];
+        for ( int c=0; c<rowLights.length; c++ ) {
+            double red = RED_MIN + (data[c]*(RED_MAX-RED_MIN));
+            double green = GREEN_MIN + (data[c]*(GREEN_MAX-GREEN_MIN));
+            double blue = BLUE_MIN + (data[c]*(BLUE_MAX-BLUE_MIN));
+            rowLights[c].setFill(Color.color(red,green,blue));
+        }
+    }
+
+
+    ///////////////////////
+    // Binary LightBoard //
+    ///////////////////////
 
     @Override
     public synchronized void dump(boolean[][] data) {
@@ -150,16 +187,24 @@ public class GraphicalBoard implements LightBoard, GrayscaleLightBoard {
             dumpToDebug = false;
         }
         for ( int r=0; r<data.length; r++ ) {
-            dumpRow(r, data[r]);
+            dumpBinaryRow(r, data[r]);
         }
     }
 
-    private void dumpRow(int rowNumber, boolean... rowData) {
+    private void dumpBinaryRow(int rowNumber, boolean... rowData) {
         Circle[] rowLights = leds[rowNumber];
         for ( int c=0; c<rowLights.length; c++ ) {
-            rowLights[c].setFill(rowData[c] ? ON : OFF);
+            double red = rowData[c] ? RED_MAX : RED_MIN;
+            double green = rowData[c] ? GREEN_MAX : GREEN_MIN;
+            double blue = rowData[c] ? BLUE_MAX : BLUE_MIN;
+            rowLights[c].setFill(Color.color(red,green,blue));
         }
     }
+
+
+    /////////////////////////
+    // Board Specification //
+    /////////////////////////
 
     @Override
     public int getRefreshInterval() {
