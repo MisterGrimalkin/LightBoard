@@ -30,7 +30,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
     private final static double FULL_OPACITY = 1.0;
     private final static double FADED_OPACITY = 0.8;
 
-    private final static int LED_REFRESH_TIME = 80;
+    private final static int LED_REFRESH_TIME = 100;
 
     private final int rows;
     private final int cols;
@@ -119,7 +119,6 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
         pane.setOnMouseClicked((e) -> {
            if ( e.isControlDown() && e.isShiftDown() ) {
-               dumpUiState();
                dumpToDebug = !dumpToDebug;
            }
         });
@@ -136,22 +135,20 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
     @Override
     public void dump(double[][][] data) {
-        for ( int r=0; r<data.length; r++ ) {
-            dumpPolyRow(r, data[r]);
+        if ( allowPoly && dumpToDebug && debugBoard!=null) {
+            PolychromeLightBoard pBoard = (PolychromeLightBoard)debugBoard;
+            pBoard.dump(data);
+            dumpToDebug = false;
+        }
+        for ( int r=0; r<data[0].length; r++ ) {
+            for ( int c=0; c<data[0][0].length; c++ ) {
+                double red = data[0][r][c];
+                double green = data[1][r][c];
+                double blue = data[2][r][c];
+                leds[r][c].setFill(Color.color(red,green,blue));
+            }
         }
     }
-
-    private void dumpPolyRow(int rowNumber, double[][] data) {
-        Circle[] rowLights = leds[rowNumber];
-        for ( int c=0; c<rowLights.length; c++ ) {
-            double red = data[c][0];
-            double green = data[c][1];
-            double blue = data[c][2];
-            rowLights[c].setFill(Color.color(red,green,blue));
-        }
-    }
-
-
 
 
     ///////////////////////////
@@ -160,6 +157,11 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
 
     @Override
     public void dump(double[][] data) {
+        if ( allowMono && dumpToDebug && debugBoard!=null) {
+            MonochromeLightBoard mBoard = (MonochromeLightBoard)debugBoard;
+            mBoard.dump(data);
+            dumpToDebug = false;
+        }
         for ( int r=0; r<data.length; r++ ) {
             dumpMonoRow(r, data[r]);
         }
@@ -234,23 +236,19 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
     // Debugging //
     ///////////////
 
-    private void dumpUiState() {
-        if ( debugBoard!=null ) {
-            boolean[][] state = new boolean[rows][cols];
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
-                    state[row][col] = (leds[row][col].getFill().equals(ON));
-                    leds[row][col].setFill(Color.color(  0.0, 0.0, 0.8));
-                }
-            }
-            debugBoard.dump(state);
-        }
-    }
-
     private boolean dumpToDebug = false;
     private LightBoard debugBoard;
+    private boolean allowMono = false;
+    private boolean allowPoly = false;
     public GraphicalBoard debugTo(LightBoard debugBoard) {
         this.debugBoard = debugBoard;
+        if ( debugBoard instanceof MonochromeLightBoard ) {
+            allowMono = true;
+        }
+        if ( debugBoard instanceof PolychromeLightBoard ) {
+            allowMono = true;
+            allowPoly = true;
+        }
         return this;
     }
 

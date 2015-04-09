@@ -14,7 +14,7 @@ public class PolychromeLightBoardSurface extends MonochromeLightBoardSurface {
     public PolychromeLightBoardSurface(PolychromeLightBoard... boards) {
         super(boards);
         this.boards = boards;
-        ledPolyValue = new double[getRows()][getCols()][3];
+        ledPolyValue = new double[3][getRows()][getCols()];
     }
 
 
@@ -38,7 +38,7 @@ public class PolychromeLightBoardSurface extends MonochromeLightBoardSurface {
 
     @Override
     public boolean isOn(int x, int y) {
-        return pointInRegion(x, y, boardRegion) && (ledPolyValue[y][x][0]>0 || ledPolyValue[y][x][1]>0 || ledPolyValue[y][x][2]>0);
+        return pointInRegion(x, y, boardRegion) && (ledPolyValue[0][y][x]>0 || ledPolyValue[0][y][x]>0 || ledPolyValue[0][y][x]>0);
     }
 
     @Override
@@ -48,9 +48,9 @@ public class PolychromeLightBoardSurface extends MonochromeLightBoardSurface {
 
     public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
         if ( pointInRegion(x, y, r) ) {
-            ledPolyValue[y][x][0] = Math.max(Math.min(red, 1.0), 0.0);
-            ledPolyValue[y][x][1] = Math.max(Math.min(green, 1.0), 0.0);
-            ledPolyValue[y][x][2] = Math.max(Math.min(blue, 1.0), 0.0);
+            ledPolyValue[0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
+            ledPolyValue[1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
+            ledPolyValue[2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
             return true;
         } else {
             return false;
@@ -59,12 +59,13 @@ public class PolychromeLightBoardSurface extends MonochromeLightBoardSurface {
 
     public synchronized boolean drawPattern(int xPos, int yPos, double[][][] chr, boolean clearBackground, Region r) {
         boolean changed = false;
-        if ( chr.length>0 && chr[0].length> 0 ) {
+        if ( chr.length>=3 && chr[0].length>0 && chr[0][0].length> 0 ) {
             for (int x = 0; x < getCols(); x++) {
                 for (int y = 0; y < getRows(); y++) {
-                    if ( x-xPos >= 0 && x-xPos < chr[0].length && y-yPos >= 0 && y-yPos < chr.length ) {
-                        double[] pixel = chr[y - yPos][x - xPos];
-                        changed |= drawPoint(x, y, pixel[0], pixel[1], pixel[2], r);
+                    if ( x-xPos >= 0 && x-xPos < chr[0][0].length && y-yPos >= 0 && y-yPos < chr[0].length ) {
+                        int imgCol = x-xPos;
+                        int imgRow = y-yPos;
+                        changed |= drawPoint(x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
                     }
                 }
             }

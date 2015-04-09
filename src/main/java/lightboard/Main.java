@@ -2,10 +2,12 @@ package lightboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
+import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.surface.MonochromeLightBoardSurface;
 import lightboard.board.surface.PolychromeLightBoardSurface;
 import lightboard.board.zone.impl.ImageZone;
@@ -31,38 +33,26 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new File("nude2.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int cols = COLS;
+        int rows = 200;
 
-//        int rows = Math.min(image.getHeight(), 150);
-//        int cols = Math.min(image.getWidth(), 150);
-        int cols = 200;
-        int rows = 230;
-
-
-//        LightBoard board = new GraphicalBoard(rows, cols, primaryStage, "Travel Board", 3, 1).debugTo(new TextBoard(ROWS, COLS));
-        PolychromeLightBoard board = new GraphicalBoard(rows, cols, primaryStage, "Travel Board", 2, 1).debugTo(new TextBoard(ROWS, COLS));
+        PolychromeLightBoard board;
+        board = new GraphicalBoard(rows, cols, primaryStage, "Travel Board", 2, 1).debugTo(new TextBoard(rows, cols));
         board.init();
 
 //        LightBoardSurface surface = new LightBoardSurface(board);
-        MonochromeLightBoardSurface surface = new PolychromeLightBoardSurface(board);
+//        MonochromeLightBoardSurface surface = new MonochromeLightBoardSurface(board);
+        PolychromeLightBoardSurface surface = new PolychromeLightBoardSurface(board);
         surface.init();
 
-        ImageZone zone = new ImageZone(surface, image);
-        zone.region(0, 16, rows-16, cols);
+        ImageZone zone = new ImageZone(surface);
+        zone.region(0, 16, cols, rows-16);
+        zone.loadImage("nude.jpg");
         zone.start();
-
-
-
 
         startClock              (surface, COLS - CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
         startBusStopDisplay     (surface, 0, 0,                     COLS - CLOCK_WIDTH, ROWS/2);
         startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS - CLOCK_WIDTH, ROWS/2,         "bad");
-
 
     }
 

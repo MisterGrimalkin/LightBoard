@@ -1,8 +1,8 @@
 package lightboard.board.impl;
 
-import lightboard.board.LightBoard;
+import lightboard.board.PolychromeLightBoard;
 
-public class TextBoard implements LightBoard {
+public class TextBoard implements PolychromeLightBoard {
 
     private final int rows;
     private final int cols;
@@ -28,6 +28,33 @@ public class TextBoard implements LightBoard {
     }
 
     @Override
+    public void dump(double[][] data) {
+        for ( int r=0; r<rows; r++ ) {
+            System.out.print((r<10?"0":"")+r+":");
+            for ( int c=0; c<cols; c++ ) {
+                System.out.print(data[r][c]>0.5 ? "#" : "-");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    @Override
+    public void dump(double[][][] data) {
+        for ( int r=0; r<rows; r++ ) {
+            System.out.print((r<10?"0":"")+r+":");
+            for ( int c=0; c<cols; c++ ) {
+                double red = data[0][r][c];
+                double green = data[1][r][c];
+                double blue = data[2][r][c];
+                System.out.print(((red+green+blue)/3)>0.5 ? "#" : "-");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    @Override
     public int getRefreshInterval() {
         return 250;
     }
@@ -41,4 +68,5 @@ public class TextBoard implements LightBoard {
     public int getCols() {
         return cols;
     }
+
 }

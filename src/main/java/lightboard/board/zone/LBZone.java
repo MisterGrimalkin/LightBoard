@@ -2,6 +2,8 @@ package lightboard.board.zone;
 
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.surface.LightBoardSurface.Region;
+import lightboard.board.surface.MonochromeLightBoardSurface;
+import lightboard.board.surface.PolychromeLightBoardSurface;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.HPosition;
 import lightboard.util.MessageQueue.VPosition;
@@ -16,11 +18,20 @@ import static lightboard.util.MessageQueue.VPosition.MIDDLE;
 
 public abstract class LBZone {
 
+    private final BoardType boardType;
+
     protected final LightBoardSurface surface;
 
     protected LBZone(LightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
+        if ( surface instanceof PolychromeLightBoardSurface ) {
+            boardType = BoardType.POLY;
+        } else if ( surface instanceof MonochromeLightBoardSurface ) {
+            boardType = BoardType.MONO;
+        } else {
+            boardType = BoardType.BINARY;
+        }
     }
 
 
@@ -289,6 +300,51 @@ public abstract class LBZone {
         return surface.drawPattern(region.left+contentLeft+x, region.top+contentTop+y, pattern, clearBackground, region);
     }
 
+    //////////////////////
+    // Monochrome Board //
+    //////////////////////
+
+    protected boolean drawPoint(int x, int y, double value) {
+        if ( boardType==BoardType.MONO ) {
+            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface)surface;
+            return mSurface.drawPoint(region.left+contentLeft+x, region.top+contentTop+y, value, region);
+
+        }
+        return false;
+    }
+
+//    protected boolean clearPoint(int x, int y) {
+//        return drawPoint(x, y, 0.0);
+//    }
+
+    protected boolean drawPattern(int x, int y, double[][] pattern) {
+        if ( boardType==BoardType.MONO ) {
+            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface) surface;
+            return mSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, region);
+        }
+        return false;
+    }
+
+    protected boolean drawPattern(int x, int y, double[][] pattern, boolean clearBackground) {
+        if ( boardType==BoardType.MONO ) {
+            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface) surface;
+            return mSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, clearBackground, region);
+        }
+        return false;
+    }
+
+    /////////////////////
+    // Polychome Board //
+    /////////////////////
+
+    protected boolean drawPattern(int x, int y, double[][][] pattern, boolean clearBackground) {
+        if ( boardType==BoardType.POLY ) {
+            PolychromeLightBoardSurface pSurface = (PolychromeLightBoardSurface) surface;
+            return pSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, clearBackground, region);
+        }
+        return false;
+    }
+
 
     /////////////
     // Options //
@@ -389,5 +445,11 @@ public abstract class LBZone {
     public Region getRegion() {
         return region;
     }
+
+    public BoardType getBoardType() {
+        return boardType;
+    }
+
+    protected enum BoardType { BINARY, MONO, POLY }
 
 }

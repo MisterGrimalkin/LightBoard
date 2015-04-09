@@ -1,49 +1,69 @@
 package lightboard.board.zone.impl;
 
-import lightboard.board.surface.MonochromeLightBoardSurface;
-import lightboard.board.zone.MonochromeLBZone;
+import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.zone.LBZone;
 import lightboard.util.MessageQueue;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import static org.imgscalr.Scalr.Mode;
 import static org.imgscalr.Scalr.resize;
 
-/**
- * Created by grimalkin on 08/04/15.
- */
-public class ImageZone extends MonochromeLBZone {
+public class ImageZone extends LBZone {
 
-    double[][] convertedImage;
+    double[][][] convertedImage;
+    boolean[][] convertedImageBinary;
 
-    private ImageMode mode = ImageMode.MONO;
-
-    public ImageZone(MonochromeLightBoardSurface surface, BufferedImage image) {
+    public ImageZone(LightBoardSurface surface) {
         super(surface);
         scroll(MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.Edge.TOP_EDGE);
-        convertedImage = convertImage(resize(image, Mode.FIT_TO_WIDTH, getRegion().width, getRegion().height));
         clear(false);
         restDuration(2000);
     }
 
+    public void loadImage(String filename) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        convertImage(resize(image, Mode.FIT_TO_WIDTH, getRegion().width, getRegion().height));
+    }
+
     @Override
     public int getContentWidth() {
-        return convertedImage[0].length;
+        return convertedImage[0][0].length;
     }
 
     @Override
     public int getContentHeight() {
-        return convertedImage.length;
+        return convertedImage[0].length;
     }
 
     @Override
     public boolean render() {
-        boolean drawn = drawPattern(0,0,convertedImage, true);
+        boolean drawn = false;
+        switch ( getBoardType() )  {
+            case BINARY:
+                drawn = drawPattern(0, 0, convertedImageBinary, true);
+                break;
+            case MONO:
+                drawn = drawPattern(0, 0, convertedImage[3], true);
+                break;
+            case POLY:
+                drawn = drawPattern(0, 0, convertedImage, true);
+                break;
+        }
         return drawn;
     }
 
-    private double[][] convertImage(BufferedImage image) {
-        double[][] result = new double[image.getHeight()][image.getWidth()];
+    private void convertImage(BufferedImage image) {
+        convertedImage = new double[4][image.getHeight()][image.getWidth()];
+        convertedImageBinary = new boolean[image.getHeight()][image.getWidth()];
         for ( int row=0; row<image.getHeight(); row++ ) {
             for ( int col=0; col<image.getWidth(); col++ ) {
                 int[] pixel = (image.getRaster().getPixel(col,row,new int[3]));
@@ -52,22 +72,19 @@ public class ImageZone extends MonochromeLBZone {
                 int blue = pixel[2];
                 int avg = ( red+green+blue ) / 3;
                 if ( row==0 || row==image.getHeight()-1 || col==0 || col==image.getWidth()-1 ) {
-                    result[row][col] = 0.0;
+                    convertedImage[0][row][col] = 0.0;
+                    convertedImage[1][row][col] = 0.0;
+                    convertedImage[2][row][col] = 0.0;
+                    convertedImage[3][row][col] = 0.0;
                 } else {
-                    switch ( mode ) {
-                        case BINARY:
-                            result[row][col] = (avg/255.0)>=0.5 ? 1.0 : 0.0;
-                            break;
-                        case MONO:
-                            result[row][col] = avg / 255.0;
-                            break;
-                        case POLY:
-                            break;
-                    }
+                    convertedImageBinary[row][col] = (avg/255.0)>=0.5;
+                    convertedImage[0][row][col] = red / 255.0;
+                    convertedImage[1][row][col] = green / 255.0;
+                    convertedImage[2][row][col] = blue / 255.0;
+                    convertedImage[3][row][col] = avg / 255.0;
                 }
             }
         }
-        return result;
     }
 
     private enum ImageMode { BINARY, MONO, POLY }
