@@ -14,6 +14,24 @@ import static org.imgscalr.Scalr.resize;
 
 public class ImageZone extends LBZone {
 
+    public static ImageZone fixed(LightBoardSurface s) {
+        ImageZone zone = new ImageZone(s);
+        zone.scroll(MessageQueue.Edge.NO_SCROLL, MessageQueue.Edge.NO_SCROLL);
+        return zone;
+    }
+
+    public static ImageZone scrollUp(LightBoardSurface s) {
+        ImageZone zone = new ImageZone(s);
+        zone.scroll(MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.Edge.TOP_EDGE);
+        return zone;
+    }
+
+    public static ImageZone scrollLeft(LightBoardSurface s) {
+        ImageZone zone = new ImageZone(s);
+        zone.scroll(MessageQueue.Edge.RIGHT_EDGE, MessageQueue.Edge.LEFT_EDGE);
+        return zone;
+    }
+
     double[][][] convertedImage;
     boolean[][] convertedImageBinary;
 
