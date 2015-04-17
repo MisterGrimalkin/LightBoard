@@ -8,6 +8,8 @@ import lightboard.board.impl.BlankBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.surface.PolychromeLightBoardSurface;
+import lightboard.board.zone.impl.ImageZone;
 
 import static lightboard.board.zone.Zones.*;
 
@@ -17,7 +19,7 @@ public class Main extends Application {
     private final static int ROWS = 16;
 
     private static int ledRadius = 2;
-    private static int ledSpacer = 0;
+    private static int ledSpacer = 1;
 
     private final static int CLOCK_WIDTH = 28;
 
@@ -49,6 +51,11 @@ public class Main extends Application {
         startClock              (surface, COLS - CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
         startBusStopDisplay     (surface, 0, 0,                     COLS - CLOCK_WIDTH, ROWS/2);
         startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS - CLOCK_WIDTH, ROWS/2,         "bad");
+
+//        ImageZone zone = ImageZone.scrollUp(surface);
+//        zone.region(0,ROWS,cols,rows-ROWS);
+//        zone.loadImage("test-image.jpg");
+//        zone.start();
 
     }
 

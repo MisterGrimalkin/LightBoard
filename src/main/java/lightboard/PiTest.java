@@ -17,6 +17,55 @@ public class PiTest {
 
     private static double deltaDelta = 0.1;
 
+    public static void doThing() throws InterruptedException {
+
+        System.out.println("Starting");
+
+        final GpioController gpio = GpioFactory.getInstance();
+
+        final GpioPinDigitalOutput clockPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
+        final GpioPinDigitalOutput storePin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.LOW);
+        final GpioPinDigitalOutput add0Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
+        final GpioPinDigitalOutput add1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.HIGH);
+        final GpioPinDigitalOutput add2Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
+        final GpioPinDigitalOutput add3Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
+        final GpioPinDigitalOutput data1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW);
+        final GpioPinDigitalOutput outputEnable1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.HIGH);
+
+
+        boolean exit = false;
+
+        while ( !exit ) {
+            clockPin.high();
+            System.out.println("High");
+            Thread.sleep(1000);
+            clockPin.low();
+            System.out.println("Low");
+            Thread.sleep(1000);
+
+            boolean set = Math.random() > 0.5;
+            System.out.println("Putting " + set);
+            if ( set ) {
+                data1Pin.high();
+            } else {
+                data1Pin.low();
+            }
+//            clockPin.high();
+//            Thread.sleep(100);
+//            clockPin.low();
+//            Thread.sleep(100);
+//            storePin.high();
+//            Thread.sleep(100);
+//            storePin.low();
+//            Thread.sleep(100);
+        }
+
+        System.out.println("Done");
+
+    }
+
+
+
     public static void startPulse() throws InterruptedException {
 
         final GpioController gpio = GpioFactory.getInstance();

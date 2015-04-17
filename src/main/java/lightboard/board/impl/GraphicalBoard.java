@@ -78,7 +78,7 @@ public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoar
         stage.setScene(new Scene(pane, getWidthPixels(), getHeightPixels()));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
-        stage.setAlwaysOnTop(true);
+//        stage.setAlwaysOnTop(true);
         stage.setTitle(title);
         stage.show();
 

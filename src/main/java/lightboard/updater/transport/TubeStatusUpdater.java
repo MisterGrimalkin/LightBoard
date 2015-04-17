@@ -50,19 +50,19 @@ public class TubeStatusUpdater extends Updater {
             String message = sb.toString();
             if ( message.isEmpty() ) {
                 if ( allowedLines.isEmpty() ) {
-                    replaceMessage("-Could Not Parse TFL Data-");
+                    message = "-Could Not Parse TFL Data-";
                 } else if ( allowedLines.contains("BAD") ) {
-                    replaceMessage("All Tubes Good Service");
+                    message = "All Tubes Good Service";
                 } else {
-                    replaceMessage("-Invalid Line Specified-");
+                    message = "-Invalid Line Specified-";
                 }
             } else {
                 if ( allowedLines.contains("BAD") ) {
                     message += "   Good Service All Other Lines";
                 }
-                System.out.println(message);
-                replaceMessage(message);
             }
+            System.out.println(message);
+            replaceMessage(message);
         }
 
     }
