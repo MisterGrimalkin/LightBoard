@@ -47,6 +47,8 @@ public class BusTimesUpdater extends Updater {
             }
         }
 
+        System.out.println(msg);
+
         addMessage(msg);
 
     }

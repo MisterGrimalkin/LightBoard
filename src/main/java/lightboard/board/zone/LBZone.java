@@ -333,9 +333,9 @@ public abstract class LBZone {
         return false;
     }
 
-    /////////////////////
-    // Polychome Board //
-    /////////////////////
+    //////////////////////
+    // Polychrome Board //
+    //////////////////////
 
     protected boolean drawPattern(int x, int y, double[][][] pattern, boolean clearBackground) {
         if ( boardType==BoardType.POLY ) {

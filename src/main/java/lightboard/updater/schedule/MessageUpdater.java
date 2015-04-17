@@ -34,6 +34,7 @@ public class MessageUpdater extends Updater {
         for ( int i=0; i< zones.size(); i++ ) {
             TextZone zone = zones.get(i);
             zone.overrideMessage(zone.wrap(messages.get(i)));
+            zone.resetScroll();
         }
     }
 

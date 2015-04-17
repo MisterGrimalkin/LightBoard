@@ -51,16 +51,16 @@ public class Zones {
 
     public static CompositeZone startFourSpinner(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
 
-        TextZone z1 = new TextZone(surface, LEFT_EDGE, BOTTOM_EDGE, 0, new SimpleFont());
+        TextZone z1 = new TextZone(surface, LEFT_EDGE, BOTTOM_EDGE, 0);
         z1.restPosition(RIGHT, TOP).restDuration(0).clear(false);
 
-        TextZone z2 = new TextZone(surface, TOP_EDGE, LEFT_EDGE, 0, new SimpleFont());
+        TextZone z2 = new TextZone(surface, TOP_EDGE, LEFT_EDGE, 0);
         z2.restPosition(RIGHT, BOTTOM).restDuration(0).clear(false);
 
-        TextZone z3 = new TextZone(surface, BOTTOM_EDGE, RIGHT_EDGE, 0, new SimpleFont());
+        TextZone z3 = new TextZone(surface, BOTTOM_EDGE, RIGHT_EDGE, 0);
         z3.restPosition(LEFT, TOP).restDuration(0).clear(false);
 
-        TextZone z4 = new TextZone(surface, RIGHT_EDGE, TOP_EDGE, 0, new SimpleFont());
+        TextZone z4 = new TextZone(surface, RIGHT_EDGE, TOP_EDGE, 0);
         z4.restPosition(LEFT, BOTTOM).restDuration(0).clear(false);
 
         for ( int i=3; i<messages.length; i+=4 ) {
@@ -78,6 +78,7 @@ public class Zones {
 
     public static TextZone startTelePrompter(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
         TextZone zone = TextZone.scrollUp(surface);
+        zone.region(x, y, width, height);
 
         StringBuilder sb = new StringBuilder();
         for ( String message : messages ) {

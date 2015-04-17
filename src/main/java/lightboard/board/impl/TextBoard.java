@@ -41,17 +41,19 @@ public class TextBoard implements PolychromeLightBoard {
 
     @Override
     public void dump(double[][][] data) {
+        StringBuilder sb = new StringBuilder();
         for ( int r=0; r<rows; r++ ) {
-            System.out.print((r<10?"0":"")+r+":");
+            sb.append((r < 10 ? "0" : "") + r + ":");
             for ( int c=0; c<cols; c++ ) {
                 double red = data[0][r][c];
                 double green = data[1][r][c];
                 double blue = data[2][r][c];
-                System.out.print(((red+green+blue)/3)>0.5 ? "#" : "-");
+                sb.append(((red + green + blue) / 3) > 0.5 ? "#" : "-");
             }
-            System.out.println();
+            sb.append("\n");
         }
-        System.out.println();
+        sb.append("\n");
+        System.out.println(sb.toString());
     }
 
     @Override

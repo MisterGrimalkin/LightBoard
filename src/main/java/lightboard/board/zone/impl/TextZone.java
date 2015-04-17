@@ -12,6 +12,10 @@ public class TextZone extends LBZone {
 
     private Font font;
 
+    public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration) {
+            this(surface, scrollFrom, scrollTo, restDuration, new SimpleFont());
+    }
+
     public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration, Font font) {
         super(surface);
         scroll(scrollFrom, scrollTo);
@@ -54,10 +58,6 @@ public class TextZone extends LBZone {
             clearOverride();
         }
         messageQueue.advanceMessage();
-//        MessageWrapper message = messageQueue.getCurrentMessage();
-//        scroll(message.getScrollFrom(), message.getScrollTo());
-//        restPosition(message.gethPosition(), message.getvPosition());
-//        restDuration(message.getRestDuration());
     }
 
     @Override
