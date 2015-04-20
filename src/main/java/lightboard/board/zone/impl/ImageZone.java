@@ -1,7 +1,7 @@
 package lightboard.board.zone.impl;
 
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LBZone;
+import lightboard.board.zone.LightBoardZone;
 import lightboard.util.MessageQueue;
 
 import javax.imageio.ImageIO;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.imgscalr.Scalr.Mode;
 import static org.imgscalr.Scalr.resize;
 
-public class ImageZone extends LBZone {
+public class ImageZone extends LightBoardZone {
 
     public static ImageZone fixed(LightBoardSurface s) {
         ImageZone zone = new ImageZone(s);

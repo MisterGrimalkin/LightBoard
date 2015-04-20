@@ -1,15 +1,12 @@
 package lightboard.board.impl;
 
 import com.pi4j.io.gpio.*;
-import lightboard.PiTest;
-import lightboard.board.PolychromeLightBoard;
+import lightboard.board.LightBoard;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BlankBoard implements PolychromeLightBoard {
-
-    private final static int CLOCK_INTERVAL = 500;
+public class BlankBoard implements LightBoard {
 
     final GpioController gpio = GpioFactory.getInstance();
 
@@ -21,6 +18,7 @@ public class BlankBoard implements PolychromeLightBoard {
     GpioPinDigitalOutput add3Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
     GpioPinDigitalOutput data1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW);
     GpioPinDigitalOutput outputEnable1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.HIGH);
+
     private int rows;
     private int cols;
 
@@ -28,18 +26,6 @@ public class BlankBoard implements PolychromeLightBoard {
         this.rows = rows;
         this.cols = cols;
     }
-
-    @Override
-    public void dump(double[][][] data) {
-
-    }
-
-    @Override
-    public void dump(double[][] data) {
-
-    }
-
-    private boolean tick = false;
 
     private int addr = 0;
 

@@ -3,11 +3,13 @@ package lightboard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lightboard.board.LightBoard;
+import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
 import lightboard.board.impl.BlankBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
+import lightboard.board.surface.MonochromeLightBoardSurface;
 import lightboard.board.surface.PolychromeLightBoardSurface;
 import lightboard.board.zone.impl.ImageZone;
 

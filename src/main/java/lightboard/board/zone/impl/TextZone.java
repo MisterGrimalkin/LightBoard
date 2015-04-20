@@ -1,14 +1,14 @@
 package lightboard.board.zone.impl;
 
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LBZone;
+import lightboard.board.zone.LightBoardZone;
 import lightboard.font.Font;
 import lightboard.font.SimpleFont;
 import lightboard.util.MessageQueue;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.MessageWrapper;
 
-public class TextZone extends LBZone {
+public class TextZone extends LightBoardZone {
 
     private Font font;
 

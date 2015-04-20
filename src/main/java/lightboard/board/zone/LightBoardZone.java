@@ -16,13 +16,13 @@ import static lightboard.util.MessageQueue.Edge.NO_SCROLL;
 import static lightboard.util.MessageQueue.HPosition.CENTRE;
 import static lightboard.util.MessageQueue.VPosition.MIDDLE;
 
-public abstract class LBZone {
+public abstract class LightBoardZone {
 
     private final BoardType boardType;
 
     protected final LightBoardSurface surface;
 
-    protected LBZone(LightBoardSurface surface) {
+    protected LightBoardZone(LightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
         if ( surface instanceof PolychromeLightBoardSurface ) {
@@ -48,11 +48,11 @@ public abstract class LBZone {
 
     private Timer timer;
 
-    public LBZone start() {
+    public LightBoardZone start() {
         return start(DEFAULT_TICK);
     }
 
-    public LBZone start(int scrollTick) {
+    public LightBoardZone start(int scrollTick) {
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override public void run() {
@@ -350,54 +350,54 @@ public abstract class LBZone {
     // Options //
     /////////////
 
-    public LBZone region(Region region) {
+    public LightBoardZone region(Region region) {
         this.region = region;
         return this;
     }
 
-    public LBZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
+    public LightBoardZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
         region = surface.safeRegion(regionLeft, regionTop, regionWidth, regionHeight);
         return this;
     }
 
-    public LBZone autoRender(boolean enableTickRender) {
+    public LightBoardZone autoRender(boolean enableTickRender) {
         this.autoRender = enableTickRender;
         return this;
     }
 
-    public LBZone autoReset(boolean autoReset) {
+    public LightBoardZone autoReset(boolean autoReset) {
         this.autoReset = autoReset;
         return this;
     }
 
-    public LBZone clear(boolean clear) {
+    public LightBoardZone clear(boolean clear) {
         this.clear = clear;
         return this;
     }
 
-    public LBZone outline(boolean outline) {
+    public LightBoardZone outline(boolean outline) {
         this.outline = outline;
         return this;
     }
 
-    public LBZone invert(boolean invert) {
+    public LightBoardZone invert(boolean invert) {
         this.invert = invert;
         return this;
     }
 
-    public LBZone scroll(Edge from, Edge to) {
+    public LightBoardZone scroll(Edge from, Edge to) {
         scrollFrom = from;
         scrollTo = to;
         return this;
     }
 
-    public LBZone restPosition(HPosition x, VPosition y) {
+    public LightBoardZone restPosition(HPosition x, VPosition y) {
         restPositionH = x;
         restPositionV = y;
         return this;
     }
 
-    public LBZone restDuration(int pause) {
+    public LightBoardZone restDuration(int pause) {
         restDuration = pause;
         return this;
     }

@@ -1,21 +1,21 @@
 package lightboard.board.zone.impl;
 
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LBZone;
+import lightboard.board.zone.LightBoardZone;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeZone extends LBZone {
+public class CompositeZone extends LightBoardZone {
 
-    private List<LBZone> zones = new ArrayList<>();
+    private List<LightBoardZone> zones = new ArrayList<>();
 
     private int width = 0;
     private int height = 0;
 
-    public CompositeZone(LightBoardSurface surface, LBZone... lbZones) {
+    public CompositeZone(LightBoardSurface surface, LightBoardZone... lightBoardZones) {
         super(surface);
-        for ( LBZone z : lbZones ) {
+        for ( LightBoardZone z : lightBoardZones) {
             zones.add(z);
             width = Math.max(width, z.getRegion().width);
             height = Math.max(height, z.getRegion().height);
@@ -29,7 +29,7 @@ public class CompositeZone extends LBZone {
     @Override
     public void tick() {
         super.tick();
-        for ( LBZone zone : zones ) {
+        for ( LightBoardZone zone : zones ) {
             zone.tick();
         }
     }
@@ -47,11 +47,11 @@ public class CompositeZone extends LBZone {
     @Override
     public boolean render() {
         boolean drawn = false;
-        for ( LBZone zone : zones ) {
+        for ( LightBoardZone zone : zones ) {
             drawn |= zone.render();
         }
         if ( !drawn ) {
-            for (LBZone zone : zones) {
+            for (LightBoardZone zone : zones) {
                 zone.resetScroll();
             }
         }
@@ -59,9 +59,9 @@ public class CompositeZone extends LBZone {
     }
 
     @Override
-    public LBZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
+    public LightBoardZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
         super.region(regionLeft, regionTop, regionWidth, regionHeight);
-        for ( LBZone zone : zones ) {
+        for ( LightBoardZone zone : zones ) {
             zone.region(region);
         }
         return this;

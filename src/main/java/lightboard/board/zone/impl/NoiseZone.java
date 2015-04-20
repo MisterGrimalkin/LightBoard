@@ -1,9 +1,9 @@
 package lightboard.board.zone.impl;
 
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LBZone;
+import lightboard.board.zone.LightBoardZone;
 
-public class NoiseZone extends LBZone {
+public class NoiseZone extends LightBoardZone {
 
     public static NoiseZone ripplingFlag(LightBoardSurface s) {
         return new NoiseZone(s, 0.5, 0.2, 0.8, 0.05, true, false);
@@ -29,7 +29,7 @@ public class NoiseZone extends LBZone {
     }
 
     @Override
-    public LBZone start() {
+    public LightBoardZone start() {
         return super.start(50);
     }
 

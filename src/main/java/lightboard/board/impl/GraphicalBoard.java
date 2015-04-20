@@ -11,7 +11,7 @@ import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
 
-public class GraphicalBoard implements MonochromeLightBoard, PolychromeLightBoard {
+public class GraphicalBoard implements PolychromeLightBoard {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 

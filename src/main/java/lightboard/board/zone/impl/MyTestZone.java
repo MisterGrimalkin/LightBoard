@@ -1,13 +1,13 @@
 package lightboard.board.zone.impl;
 
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LBZone;
+import lightboard.board.zone.LightBoardZone;
 import lightboard.util.MessageQueue.Edge;
 
 /**
  * Created by grimalkin on 06/04/15.
  */
-public class MyTestZone extends LBZone {
+public class MyTestZone extends LightBoardZone {
 
     public MyTestZone(LightBoardSurface surface) {
         super(surface);
