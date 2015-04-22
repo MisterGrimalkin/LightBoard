@@ -3,15 +3,12 @@ package lightboard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lightboard.board.LightBoard;
-import lightboard.board.MonochromeLightBoard;
-import lightboard.board.PolychromeLightBoard;
 import lightboard.board.impl.BlankBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.surface.MonochromeLightBoardSurface;
-import lightboard.board.surface.PolychromeLightBoardSurface;
-import lightboard.board.zone.impl.ImageZone;
+import lightboard.board.zone.impl.TextZone;
+import lightboard.updater.schedule.MessageUpdater;
 
 import static lightboard.board.zone.Zones.*;
 
@@ -50,14 +47,14 @@ public class Main extends Application {
         LightBoardSurface surface = new LightBoardSurface(board);
         surface.init();
 
-        startClock              (surface, COLS - CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
-        startBusStopDisplay     (surface, 0, 0,                     COLS - CLOCK_WIDTH, ROWS/2);
-        startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS - CLOCK_WIDTH, ROWS/2,         "bad");
+        startClock          (surface, COLS - CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
 
-//        ImageZone zone = ImageZone.scrollUp(surface);
-//        zone.region(0,ROWS,cols,rows-ROWS);
-//        zone.loadImage("test-image.jpg");
-//        zone.start();
+        TextZone busZone =  startBusStopDisplay     (surface, 0, 0,                     COLS - CLOCK_WIDTH, ROWS/2);
+        TextZone tubeZone = startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS - CLOCK_WIDTH, ROWS/2,         "bad");
+
+        MessageUpdater m = new MessageUpdater(busZone, tubeZone);
+        m.addMessages("Please take out the bins!","Recycling AND Landfill");
+        m.start(20000, false);
 
     }
 

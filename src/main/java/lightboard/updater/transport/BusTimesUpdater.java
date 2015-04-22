@@ -12,16 +12,12 @@ public class BusTimesUpdater extends Updater {
 
     private final static String TFL_BUS_URL = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1";
 
-    public static BusTimesUpdater updater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay) {
-        return new BusTimesUpdater(scroller, stopCode, busNumber, displayAs, resultsToDisplay);
-    }
-
     private final int stopCode;
     private final String busNumber;
     private final String displayAs;
     private final int resultsToDisplay;
 
-    private BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay) {
+    public BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay) {
         super(scroller);
         this.stopCode = stopCode;
         this.busNumber = busNumber;

@@ -86,7 +86,7 @@ public abstract class LightBoardZone {
     }
 
     private long lastTick;
-    private boolean resting;
+    protected boolean resting;
 
     private final static int DEFAULT_TICK = 40;
 
@@ -312,10 +312,6 @@ public abstract class LightBoardZone {
         }
         return false;
     }
-
-//    protected boolean clearPoint(int x, int y) {
-//        return drawPoint(x, y, 0.0);
-//    }
 
     protected boolean drawPattern(int x, int y, double[][] pattern) {
         if ( boardType==BoardType.MONO ) {

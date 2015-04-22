@@ -3,7 +3,6 @@ package lightboard.board.zone;
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.CompositeZone;
 import lightboard.board.zone.impl.TextZone;
-import lightboard.font.SimpleFont;
 import lightboard.updater.UpdaterBundle;
 import lightboard.updater.schedule.DateTimeUpdater;
 import lightboard.updater.transport.BusTimesUpdater;
@@ -38,13 +37,13 @@ public class Zones {
         zone.region(x, y, width, height).start();
 
         UpdaterBundle.bundle(
-                BusTimesUpdater.updater(zone, 53785, "W7", "Mus Hill", 3),
-                BusTimesUpdater.updater(zone, 56782, "W7", "Fins Pk", 3),
-                BusTimesUpdater.updater(zone, 76713, "W5", "Harngy", 3),
-                BusTimesUpdater.updater(zone, 76713, "41", "Harngy", 3),
-                BusTimesUpdater.updater(zone, 76985, "W5", "Archway", 3),
-                BusTimesUpdater.updater(zone, 56403, "41", "Archway", 3),
-                BusTimesUpdater.updater(zone, 56403, "91", "Traf Sqr", 3)
+                new BusTimesUpdater(zone, 53785, "W7", "Mus Hill", 3),
+                new BusTimesUpdater(zone, 56782, "W7", "Fins Pk", 3),
+                new BusTimesUpdater(zone, 76713, "W5", "Harngy", 3),
+                new BusTimesUpdater(zone, 76713, "41", "Harngy", 3),
+                new BusTimesUpdater(zone, 76985, "W5", "Archway", 3),
+                new BusTimesUpdater(zone, 56403, "41", "Archway", 3),
+                new BusTimesUpdater(zone, 56403, "91", "Traf Sqr", 3)
         ).start(45000);
         return zone;
     }

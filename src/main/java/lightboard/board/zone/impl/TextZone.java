@@ -12,15 +12,31 @@ public class TextZone extends LightBoardZone {
 
     private Font font;
 
+    private Edge defaultScrollFrom;
+    private Edge defaultScrollTo;
+    private MessageQueue.HPosition defaultRestH;
+    private MessageQueue.VPosition defaultRestV;
+    private int defaultRestDuration;
+
     public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration) {
             this(surface, scrollFrom, scrollTo, restDuration, new SimpleFont());
     }
 
     public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration, Font font) {
         super(surface);
-        scroll(scrollFrom, scrollTo);
-        restDuration(restDuration);
+        defaultScrollFrom = scrollFrom;
+        defaultScrollTo = scrollTo;
+        defaultRestH = MessageQueue.HPosition.CENTRE;
+        defaultRestV = MessageQueue.VPosition.MIDDLE;
+        defaultRestDuration = restDuration;
+        setDefaults();
         this.font = font;
+    }
+
+    private void setDefaults() {
+        scroll(defaultScrollFrom, defaultScrollTo);
+        restPosition(defaultRestH, defaultRestV);
+        restDuration(defaultRestDuration);
     }
 
 
@@ -48,8 +64,7 @@ public class TextZone extends LightBoardZone {
     @Override
     public boolean render() {
         MessageWrapper message = getCurrentMessage();
-        boolean drawn = drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()));
-        return drawn;
+        return drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()));
     }
 
     @Override
@@ -109,6 +124,10 @@ public class TextZone extends LightBoardZone {
 
     public void overrideMessage(MessageWrapper message) {
         overrideMessage = message;
+        resting = false;
+        scroll(message.getScrollFrom(), message.getScrollTo());
+        restPosition(message.gethPosition(), message.getvPosition());
+        restDuration(message.getRestDuration());
         resetScroll();
         override = true;
     }
@@ -116,6 +135,7 @@ public class TextZone extends LightBoardZone {
     public void clearOverride() {
         overrideMessage = null;
         override = false;
+        setDefaults();
     }
 
 }

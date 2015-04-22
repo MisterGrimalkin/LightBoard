@@ -2,23 +2,21 @@ package lightboard.updater.schedule;
 
 import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
+import lightboard.util.MessageQueue;
+import lightboard.util.MessageQueue.MessageWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageUpdater extends Updater {
 
-    public static MessageUpdater updater(TextZone... scrollers) {
-        return new MessageUpdater(scrollers);
-    }
-
     private List<TextZone> zones = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
-    private MessageUpdater(TextZone... scroller) {
-        super(scroller[0]);
-        for ( int i=0; i<scroller.length; i++ ) {
-            zones.add(scroller[i]);
+    public MessageUpdater(TextZone... zs) {
+        super(zs[0]);
+        for ( int i=0; i<zs.length; i++ ) {
+            this.zones.add(zs[i]);
         }
     }
 
@@ -33,8 +31,7 @@ public class MessageUpdater extends Updater {
     public void refresh() {
         for ( int i=0; i< zones.size(); i++ ) {
             TextZone zone = zones.get(i);
-            zone.overrideMessage(zone.wrap(messages.get(i)));
-            zone.resetScroll();
+            zone.overrideMessage(new MessageWrapper(messages.get(i), MessageQueue.Edge.TOP_EDGE, MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE, 6000));
         }
     }
 
