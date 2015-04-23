@@ -8,7 +8,13 @@ import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.TextZone;
+import lightboard.updater.schedule.MessageResource;
 import lightboard.updater.schedule.MessageUpdater;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+
+import java.net.URI;
 
 import static lightboard.board.zone.Zones.*;
 
@@ -29,6 +35,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        HttpServer server = startServer();
+
         int cols = getCols();
         int rows = getRows();
 
@@ -37,6 +45,7 @@ public class Main extends Application {
         String boardType = getParameters().getNamed().get("board");
         if ("graphical".equals(boardType)) {
             board = new GraphicalBoard(rows, cols, primaryStage, "Travel Board", ledRadius, ledSpacer).debugTo(new TextBoard(rows, cols));
+            ((GraphicalBoard)board).setServer(server);
         } else if ("text".equals(boardType)) {
             board = new TextBoard(rows, cols);
         } else {
@@ -53,8 +62,7 @@ public class Main extends Application {
         TextZone tubeZone = startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS - CLOCK_WIDTH, ROWS/2,         "bad");
 
         MessageUpdater m = new MessageUpdater(busZone, tubeZone);
-        m.addMessages("Please take out the bins!","Recycling AND Landfill");
-        m.start(20000, false);
+        MessageResource.bindUpdater(m);
 
     }
 
@@ -74,6 +82,13 @@ public class Main extends Application {
             rows = Integer.parseInt(rowsStr);
         } catch ( NumberFormatException e ) {}
         return rows;
+    }
+
+    public static final String BASE_URI = "http://192.168.0.3:8080/lightboard/";
+
+    public static HttpServer startServer() {
+        final ResourceConfig rc = new ResourceConfig().packages("lightboard");//.updater.schedule");
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
 }

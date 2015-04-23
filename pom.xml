@@ -8,18 +8,43 @@
     <artifactId>LightBoard</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <jersey.version>2.17</jersey.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <!-- Sync HTTP Calls -->
         <dependency>
             <groupId>org.javalite</groupId>
             <artifactId>javalite-common</artifactId>
             <version>1.4.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-http</artifactId>
+        </dependency>
 
+        <!-- Raspberry Pi -->
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
             <version>0.0.5</version>
         </dependency>
+
+        <!-- JPG Manipulation -->
         <dependency>
             <groupId>org.imgscalr</groupId>
             <artifactId>imgscalr-lib</artifactId>
@@ -27,6 +52,8 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

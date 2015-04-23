@@ -10,6 +10,7 @@ import javafx.stage.StageStyle;
 import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
+import org.glassfish.grizzly.http.server.HttpServer;
 
 public class GraphicalBoard implements PolychromeLightBoard {
 
@@ -50,6 +51,12 @@ public class GraphicalBoard implements PolychromeLightBoard {
         this.spacer = spacer;
     }
 
+    private HttpServer server;
+
+    public void setServer(HttpServer server) {
+        this.server = server;
+    }
+
     @Override
     public void init() {
 
@@ -78,9 +85,15 @@ public class GraphicalBoard implements PolychromeLightBoard {
         stage.setScene(new Scene(pane, getWidthPixels(), getHeightPixels()));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
-//        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
         stage.setTitle(title);
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            if ( server != null ) {
+                server.shutdown();
+            }
+        });
 
     }
 
@@ -117,6 +130,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
                 }
             }
         });
+
+
     }
 
 

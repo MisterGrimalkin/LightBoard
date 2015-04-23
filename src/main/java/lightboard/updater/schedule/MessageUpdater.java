@@ -27,11 +27,19 @@ public class MessageUpdater extends Updater {
         return this;
     }
 
+    public void postMessage(String... msg) {
+        messages.clear();
+        addMessages(msg);
+        refresh();
+    }
+
     @Override
     public void refresh() {
         for ( int i=0; i< zones.size(); i++ ) {
             TextZone zone = zones.get(i);
-            zone.overrideMessage(new MessageWrapper(messages.get(i), MessageQueue.Edge.TOP_EDGE, MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE, 6000));
+            if ( i<messages.size() ) {
+                zone.overrideMessage(new MessageWrapper(messages.get(i), MessageQueue.Edge.TOP_EDGE, MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE, 6000));
+            }
         }
     }
 
