@@ -7,6 +7,7 @@ import lightboard.updater.UpdaterBundle;
 import lightboard.updater.schedule.DateTimeUpdater;
 import lightboard.updater.transport.BusTimesUpdater;
 import lightboard.updater.transport.TubeStatusUpdater;
+import lightboard.util.MessageQueue;
 
 import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.LEFT;

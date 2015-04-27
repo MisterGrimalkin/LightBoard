@@ -3,9 +3,6 @@ package lightboard.updater.schedule;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-/**
- * Created by grimalkin on 23/04/15.
- */
 @Path("message")
 public class MessageResource {
 
@@ -15,15 +12,10 @@ public class MessageResource {
         MessageResource.updater = updater;
     }
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String simple() {
-        return "And illustrated with cartoons";
-    }
-
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public void postMessage(String message) {
+        System.out.println("Received Message: " + message);
         if ( updater!=null ) {
             updater.postMessage(message.split(";"));
         }
