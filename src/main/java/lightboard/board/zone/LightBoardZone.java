@@ -88,7 +88,7 @@ public abstract class LightBoardZone {
     private long lastTick;
     protected boolean resting;
 
-    private final static int DEFAULT_TICK = 40;
+    private final static int DEFAULT_TICK = 70;
 
 
     ///////////////

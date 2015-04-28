@@ -24,6 +24,8 @@ public class RealBoard implements LightBoard {
     // create custom MCP23017 GPIO provider
     MCP23017GpioProvider gpioProvider;
 
+    I2CBus bus;
+    I2CDevice device;
 //    GpioPinDigitalOutput clockPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
 //    GpioPinDigitalOutput storePin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.LOW);
 //    GpioPinDigitalOutput add0Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
@@ -53,14 +55,10 @@ public class RealBoard implements LightBoard {
 
     private int rows;
     private int cols;
-    private int address;
-    private int value;
 
-    public RealBoard(int rows, int cols, int address, int value) {
+    public RealBoard(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
-        this.address = address;
-        this.value = value;
     }
 
 
@@ -68,74 +66,121 @@ public class RealBoard implements LightBoard {
     public void init() {
         try {
             gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_0, 0x20);
+//            bus = I2CFactory.getInstance(I2CBus.BUS_0);
+//            device = bus.getDevice(0x20);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        clockPin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A0, "MyOutput-B0", PinState.LOW);
+//        clockPin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A0, "MyOutput-B0", PinState.LOW);
+        clockPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
         storePin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, "MyOutput-B1", PinState.LOW);
         outputEnableRowsPin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, "MyOutput-B2", PinState.LOW);
         addr0Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, "MyOutput-B3", PinState.HIGH);
         addr1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, "MyOutput-B4", PinState.LOW);
         addr2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, "MyOutput-B5", PinState.LOW);
         addr3Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A6, "MyOutput-B6", PinState.LOW);
-        data1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A7, "MyOutput-B7", PinState.LOW);
+//        data1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A7, "MyOutput-B7", PinState.LOW);
+        data1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.HIGH);
         outputEnable1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B0, "MyOutput-B0", PinState.HIGH);
         data2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B1, "MyOutput-B1", PinState.LOW);
         outputEnable2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B2, "MyOutput-B2", PinState.HIGH);
+
+        //get i2c bus
+//        System.out.println("Connected to bus OK!");
+
+        //get device itself
+//        System.out.println("Connected to device OK!");
 
     }
 
     @Override
     public void dump(boolean[][] data) {
+        try {
+            for (int row = 0; row < data.length; row++) {
+                sendSerialString(data[row]);
+                outputEnableRowsPin.high();
+                decodeRowAddress(row);
+                outputEnable1Pin.low();
+                storePin.high();
+                storePin.low();
+                outputEnable1Pin.high();
+                outputEnableRowsPin.low();
+//                Thread.sleep(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        long t = System.currentTimeMillis();
-        for (int row = 0; row < data.length; row++) {
-            if (BigInteger.valueOf(row).testBit(0)) {
+    private void sendSerialString(boolean[] data) throws InterruptedException {
+        Boolean lastValue = null;
+        for (int col = data.length - 1; col >= 0; col--) {
+            clockPin.low();
+//            data1Pin.low();
+            if ( lastValue==null || lastValue!=data[col] ) {
+                lastValue = data[col];
+                if (data[col]) {
+                    data1Pin.high();
+                } else {
+//                    data1Pin.high();
+                    data1Pin.low();
+                }
+            }
+            clockPin.high();
+        }
+    }
+
+    private Boolean lastAddr0 = null;
+    private Boolean lastAddr1 = null;
+    private Boolean lastAddr2 = null;
+    private Boolean lastAddr3 = null;
+
+
+    private void decodeRowAddress(int row) {
+        boolean addr0 = BigInteger.valueOf(row).testBit(0);
+        boolean addr1 = BigInteger.valueOf(row).testBit(1);
+        boolean addr2 = BigInteger.valueOf(row).testBit(2);
+        boolean addr3 = BigInteger.valueOf(row).testBit(3);
+
+        if (lastAddr0==null || addr0!=lastAddr0) {
+            lastAddr0 = addr0;
+            if (addr0) {
                 addr0Pin.high();
             } else {
                 addr0Pin.low();
             }
-            if (BigInteger.valueOf(row).testBit(1)) {
+        }
+        if (lastAddr1==null || addr1!=lastAddr1) {
+            lastAddr1 = addr1;
+            if (addr1) {
                 addr1Pin.high();
             } else {
                 addr1Pin.low();
             }
-            if (BigInteger.valueOf(row).testBit(2)) {
+        }
+        if (lastAddr2==null || addr2!=lastAddr2) {
+            lastAddr2 = addr2;
+            if (addr2) {
                 addr2Pin.high();
             } else {
                 addr2Pin.low();
             }
-            if (BigInteger.valueOf(row).testBit(3)) {
+        }
+        if (lastAddr3==null || addr3!=lastAddr3) {
+            lastAddr3 = addr3;
+            if (addr3) {
                 addr3Pin.high();
             } else {
                 addr3Pin.low();
             }
-
-            sendSerialString(data[row]);
         }
-
-        System.out.println(System.currentTimeMillis()-t);
-    }
-
-    private void sendSerialString(boolean[] data) {
-        for (int col = 0; col < data.length; col++) {
-            clockPin.low();
-            if (data[col]) {
-                data1Pin.high();
-            } else {
-                data1Pin.low();
-            }
-            clockPin.high();
-        }
-        storePin.high();
-        storePin.low();
     }
 
 
     @Override
     public int getRefreshInterval() {
-        return 450;
+        return 1;
     }
 
     @Override

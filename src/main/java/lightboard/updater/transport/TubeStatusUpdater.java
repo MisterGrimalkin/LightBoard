@@ -52,7 +52,7 @@ public class TubeStatusUpdater extends Updater {
                 if ( allowedLines.isEmpty() ) {
                     message = "-Could Not Parse TFL Data-";
                 } else if ( allowedLines.contains("BAD") ) {
-                    message = "All Tubes Good Service";
+                    message = "There is a Good Service on all TFL Lines, except the ones that are always a bit shit";
                 } else {
                     message = "-Invalid Line Specified-";
                 }
