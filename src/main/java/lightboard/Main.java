@@ -3,31 +3,27 @@ package lightboard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lightboard.board.LightBoard;
-import lightboard.board.impl.RealBoard;
 import lightboard.board.impl.GraphicalBoard;
+import lightboard.board.impl.RaspberryPiLightBoard;
 import lightboard.board.impl.TextBoard;
+import lightboard.board.surface.CompositeSurface;
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.ImageZone;
-import lightboard.board.zone.impl.NoiseZone;
 import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.updater.schedule.MessageUpdater;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-//import org.glassfish.grizzly.http.server.HttpServer;
-//import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-//import org.glassfish.jersey.server.ResourceConfig;
 
 import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 
-import static lightboard.board.zone.Zones.*;
+import static lightboard.board.zone.Zones.startBusStopDisplay;
+import static lightboard.board.zone.Zones.startTubeStatusDisplay;
 
 public class Main extends Application {
 
-    private final static int COLS = 45;
+    private final static int COLS = 90;
     private final static int ROWS = 16;
 
     private static int ledRadius = 2;
@@ -62,28 +58,33 @@ public class Main extends Application {
         } else if ("text".equals(boardType)) {
             board = new TextBoard(rows, cols);
         } else {
-            board = new RealBoard(rows, cols);
+            board = RaspberryPiLightBoard.makeBoard1();
         }
         board.init();
 
+//        LightBoard board2 = new GraphicalBoard(rows, cols, new Stage(), "Travel Board", ledRadius, ledSpacer).debugTo(new TextBoard(rows, cols));
+//        board2.init();
+
         LightBoardSurface surface = new LightBoardSurface(board);
-        surface.init().selfTest();
+        surface.init();
+//        LightBoardSurface surface2 = new LightBoardSurface(board2);
+
+//        CompositeSurface cSurface =
+//                new CompositeSurface(ROWS, COLS*2)
+//                .addSurface(surface, 0, 0)
+//                .addSurface(surface2, COLS, 0);
+//        cSurface.init();
 
 //        TextZone clockZone = startClock          (surface, 0, 0,    COLS, ROWS/2);
-//
-//        TextZone busZone =  startBusStopDisplay     (surface, 0, 0,                     COLS - CLOCK_WIDTH, ROWS/2);
-//        TextZone tubeZone = startTubeStatusDisplay  (surface, 0, ROWS/2,                COLS, ROWS/2,         "bad");
 
-//        ImageZone z = ImageZone.scrollUp(surface);
-//        z.loadImage("test.jpg");
-//        z.start();
-//        TextZone.fixed(surface).addMessage(0, "GOBLINS").start();
-//
-//        if ( server!=null ) {
-//            MessageUpdater m = new MessageUpdater(tubeZone);
-//            MessageResource.bindUpdater(m);
-//        }
-//        NoiseZone.ripplingFlag(surface).region(0,0,COLS,ROWS).start();
+        TextZone busZone =  startBusStopDisplay(surface, 0, 0, COLS, ROWS/2);
+        TextZone tubeZone = startTubeStatusDisplay(surface, 0, ROWS/2, COLS, ROWS/2,         "bad");
+
+        if ( server!=null ) {
+            MessageUpdater m = new MessageUpdater(busZone, tubeZone);
+            MessageResource.bindUpdater(m);
+        }
+
     }
 
     private String getIp() {

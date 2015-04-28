@@ -58,7 +58,7 @@ public abstract class LightBoardZone {
             @Override public void run() {
                 tick();
             }
-        }, 10, scrollTick);
+        }, 0, scrollTick);
         resetScroll();
         return this;
     }
@@ -88,7 +88,7 @@ public abstract class LightBoardZone {
     private long lastTick;
     protected boolean resting;
 
-    private final static int DEFAULT_TICK = 70;
+    private final static int DEFAULT_TICK = 40;
 
 
     ///////////////
@@ -234,6 +234,8 @@ public abstract class LightBoardZone {
     }
 
     protected void doRender() {
+
+//        while ( surface.saysWait() ) {}
 
         if ( clear ) {
             surface.clearRegion(region);

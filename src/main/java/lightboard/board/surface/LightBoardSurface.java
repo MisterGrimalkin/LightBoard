@@ -7,12 +7,12 @@ import java.util.TimerTask;
 
 public class LightBoardSurface {
 
-    private final int rows;
-    private final int cols;
+    private int rows;
+    private int cols;
 
-    protected final Region boardRegion;
+    protected Region boardRegion;
 
-    private final boolean[][] ledStatus;
+    private boolean[][] ledStatus;
 
     private final LightBoard[] boards;
 
@@ -20,24 +20,23 @@ public class LightBoardSurface {
 
         this.boards = boards;
 
-        if ( boards.length==0 ) {
-            throw new IllegalStateException("You must specify at least one LightBoard");
-        }
+        if ( boards.length>0 ) {
 
-        LightBoard firstBoard = boards[0];
-        rows = firstBoard.getRows();
-        cols = firstBoard.getCols();
-        ledStatus = new boolean[rows][cols];
+            LightBoard firstBoard = boards[0];
+            rows = firstBoard.getRows();
+            cols = firstBoard.getCols();
+            ledStatus = new boolean[rows][cols];
 
-        boardRegion = safeRegion(0,0,cols,rows);
+            boardRegion = safeRegion(0, 0, cols, rows);
 
-        for ( int i=0; i<boards.length; i++ ) {
-            LightBoard board = boards[i];
-            if (board.getRows() != rows || board.getCols() != cols) {
-                throw new IllegalStateException("All LightBoards must have the same dimensions");
+            for (int i = 0; i < boards.length; i++) {
+                LightBoard board = boards[i];
+                if (board.getRows() != rows || board.getCols() != cols) {
+                    throw new IllegalStateException("All LightBoards must have the same dimensions");
+                }
             }
-        }
 
+        }
     }
 
     public LightBoardSurface init() {
@@ -47,7 +46,7 @@ public class LightBoardSurface {
                     new TimerTask() { @Override public void run() {
                         board.dump(ledStatus);
                     }},
-                    1000, board.getRefreshInterval()
+                    0, board.getRefreshInterval()
             );
         }
         return this;
@@ -57,6 +56,15 @@ public class LightBoardSurface {
     ///////////////////
     // Light Control //
     ///////////////////
+
+    public boolean saysWait() {
+        for ( LightBoard lb : boards ) {
+            if ( lb.saysWait() ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean isOn(int x, int y) {
         return pointInRegion(x, y, boardRegion) && ledStatus[y][x];
@@ -213,25 +221,25 @@ public class LightBoardSurface {
         if ( top<0 ) {
             height += top;
         }
-        int safeLeft = left<0 ? 0 : left>=cols ? cols-1 : left;
-        int safeTop = top<0 ? 0 : top>=rows ? rows-1 : top;
-        int safeWidth = safeLeft+width > cols ? cols-safeLeft : width;
-        int safeHeight = safeTop+height > rows ? rows-safeTop : height;
+        int safeLeft = left<0 ? 0 : left>=getCols() ? getCols()-1 : left;
+        int safeTop = top<0 ? 0 : top>=getRows() ? getRows()-1 : top;
+        int safeWidth = safeLeft+width > getCols() ? getCols()-safeLeft : width;
+        int safeHeight = safeTop+height > getRows() ? getRows()-safeTop : height;
         return new Region(safeLeft, safeTop, safeWidth, safeHeight);
     }
 
     protected boolean pointInRegion(int x, int y, Region region) {
         if ( region==null ) {
-            region = new Region(0,0,rows,cols);
+            region = safeRegion(0, 0, getRows(), getCols());
         }
         return ( x>=region.left && x<=region.right && y>=region.top && y<=region.bottom );
     }
 
-    public final int getRows() {
+    public int getRows() {
         return rows;
     }
 
-    public final int getCols() {
+    public int getCols() {
         return cols;
     }
 
@@ -267,8 +275,8 @@ public class LightBoardSurface {
                 int floorX = (int) Math.floor(testX);
                 int floorY = (int) Math.floor(testY);
 
-                fillRegion(safeRegion(0, floorY, cols, 1));
-                fillRegion(safeRegion(floorX, 0, 1, rows));
+                fillRegion(safeRegion(0, floorY, getCols(), 1));
+                fillRegion(safeRegion(floorX, 0, 1, getRows()));
 
                 outlineRegion(safeRegion(floorX + 2, floorY + 2, 3, 3));
                 fillRegion(safeRegion(floorX - 4, floorY - 4, 3, 3));
@@ -290,13 +298,13 @@ public class LightBoardSurface {
                     invertRegion(boardRegion);
                 }
 
-                if (floorX < 0 || floorX >= cols) {
+                if (floorX < 0 || floorX >= getCols()) {
                     testX = floorX - testDeltaX;
                     testDeltaX = -testDeltaX;
                     testBounces++;
                 }
 
-                if (floorY < 0 || floorY >= rows) {
+                if (floorY < 0 || floorY >= getRows()) {
                     testY = floorY - testDeltaY;
                     testDeltaY = -testDeltaY;
                     testBounces++;

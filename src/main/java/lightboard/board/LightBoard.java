@@ -14,4 +14,6 @@ public interface LightBoard {
 
     int getCols();
 
+    boolean saysWait();
+
 }

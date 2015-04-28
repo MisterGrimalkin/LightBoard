@@ -195,8 +195,11 @@ public class GraphicalBoard implements PolychromeLightBoard {
     // Binary LightBoard //
     ///////////////////////
 
+    boolean wait = false;
+
     @Override
     public synchronized void dump(boolean[][] data) {
+        wait = true;
         if ( dumpToDebug && debugBoard!=null) {
             debugBoard.dump(data);
             dumpToDebug = false;
@@ -204,6 +207,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
         for ( int r=0; r<data.length; r++ ) {
             dumpBinaryRow(r, data[r]);
         }
+        wait = false;
     }
 
     private void dumpBinaryRow(int rowNumber, boolean... rowData) {
@@ -239,6 +243,11 @@ public class GraphicalBoard implements PolychromeLightBoard {
     @Override
     public int getCols() {
         return cols;
+    }
+
+    @Override
+    public boolean saysWait() {
+        return wait;
     }
 
     public int getHeightPixels() {

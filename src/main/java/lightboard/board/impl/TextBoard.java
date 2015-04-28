@@ -71,4 +71,9 @@ public class TextBoard implements PolychromeLightBoard {
         return cols;
     }
 
+    @Override
+    public boolean saysWait() {
+        return false;
+    }
+
 }
