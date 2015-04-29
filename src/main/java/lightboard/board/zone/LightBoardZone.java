@@ -1,5 +1,6 @@
 package lightboard.board.zone;
 
+import lightboard.Sync;
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.surface.LightBoardSurface.Region;
 import lightboard.board.surface.MonochromeLightBoardSurface;
@@ -46,19 +47,17 @@ public abstract class LightBoardZone {
     // Tick //
     //////////
 
-    private Timer timer;
-
     public LightBoardZone start() {
         return start(DEFAULT_TICK);
     }
 
     public LightBoardZone start(int scrollTick) {
-        timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override public void run() {
+        Sync.addTask(new Sync.Task((long)scrollTick) {
+            @Override
+            public void runTask() {
                 tick();
             }
-        }, 0, scrollTick);
+         });
         resetScroll();
         return this;
     }
@@ -79,16 +78,13 @@ public abstract class LightBoardZone {
     }
 
     public void stop() {
-        if ( timer!=null ) {
-            timer.cancel();
-        }
         surface.clearSurface();
     }
 
     private long lastTick;
     protected boolean resting;
 
-    private final static int DEFAULT_TICK = 40;
+    private final static int DEFAULT_TICK = 60;
 
 
     ///////////////

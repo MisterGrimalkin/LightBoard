@@ -35,6 +35,30 @@ public class RaspberryPiLightBoard implements LightBoard {
         return null;
     }
 
+    public static RaspberryPiLightBoard makeBoard2() {
+        try {
+            GpioController gpio = GpioFactory.getInstance();
+            MCP23017GpioProvider gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_0, 0x21);
+            return new RaspberryPiLightBoard(16, 90, 1,
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, PinState.HIGH),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A6, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.HIGH),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B0, PinState.HIGH),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B1, PinState.LOW),
+                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B2, PinState.HIGH)
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private int rows;
     private int cols;
     private int refreshInterval;
@@ -77,25 +101,25 @@ public class RaspberryPiLightBoard implements LightBoard {
 
     @Override
     public void dump(boolean[][] data) {
-//        long t = System.currentTimeMillis();
         wait = true;
         try {
             for (int row = 0; row < data.length; row++) {
+//                long t = System.currentTimeMillis();
                 sendSerialString(data[row]);
                 outputEnableRowsPin.high();
                 decodeRowAddress(row);
-                outputEnable1Pin.low();
+//                outputEnable1Pin.low();
                 storePin.high();
                 storePin.low();
-                outputEnable1Pin.high();
                 outputEnableRowsPin.low();
+//                outputEnable1Pin.high();
+//        System.out.println(System.currentTimeMillis()-t);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             wait = false;
         }
-//        System.out.println(System.currentTimeMillis()-t);
     }
 
 

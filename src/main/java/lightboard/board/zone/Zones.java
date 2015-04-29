@@ -36,13 +36,13 @@ public class Zones {
     public static TextZone startBusStopDisplay(LightBoardSurface surface, int x, int y, int width, int height) {
         TextZone zone = TextZone.scrollUp(surface);
         zone.region(x, y, width, height).start();
-        int numberOfBuses = 1;
+        int numberOfBuses = 3;
 
         UpdaterBundle.bundle(
                 new BusTimesUpdater(zone, 53785, "W7", "Mus Hill", numberOfBuses),
                 new BusTimesUpdater(zone, 56782, "W7", "Fins Pk", numberOfBuses),
                 new BusTimesUpdater(zone, 76713, "W5", "Harngy", numberOfBuses),
-                new BusTimesUpdater(zone, 76713, "41", "Harngy", numberOfBuses),
+                new BusTimesUpdater(zone, 76713, "41", "Tottnham", numberOfBuses),
                 new BusTimesUpdater(zone, 76985, "W5", "Archway", numberOfBuses),
                 new BusTimesUpdater(zone, 56403, "41", "Archway", numberOfBuses),
                 new BusTimesUpdater(zone, 56403, "91", "Traf Sqr", numberOfBuses)

@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lightboard.Sync;
 import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
@@ -90,6 +91,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
         stage.show();
 
         stage.setOnCloseRequest(event -> {
+            Sync.stop();
             if ( server != null ) {
                 server.shutdown();
             }

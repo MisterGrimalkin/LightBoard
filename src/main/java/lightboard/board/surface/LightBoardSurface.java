@@ -1,5 +1,6 @@
 package lightboard.board.surface;
 
+import lightboard.Sync;
 import lightboard.board.LightBoard;
 
 import java.util.Timer;
@@ -40,15 +41,16 @@ public class LightBoardSurface {
     }
 
     public LightBoardSurface init() {
-        for ( int i=0; i<boards.length; i++ ) {
-            final LightBoard board = boards[i];
-            new Timer(true).schedule(
-                    new TimerTask() { @Override public void run() {
-                        board.dump(ledStatus);
-                    }},
-                    0, board.getRefreshInterval()
-            );
-        }
+        System.out.println("Initialising Surface...");
+        Sync.addTask(new Sync.Task(null) {
+            @Override
+            public void runTask() {
+                for ( LightBoard board : boards ) {
+                    board.dump(ledStatus);
+                }
+            }
+        });
+        System.out.println("...Surface Initialised");
         return this;
     }
 

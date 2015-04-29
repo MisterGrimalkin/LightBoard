@@ -61,7 +61,7 @@ public class TubeStatusUpdater extends Updater {
                     message += "   Good Service All Other Lines";
                 }
             }
-            System.out.println(message);
+//            System.out.println(message);
             replaceMessage(message);
         }
 
