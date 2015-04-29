@@ -23,6 +23,7 @@ public class BusTimesUpdater extends Updater {
         this.busNumber = busNumber;
         this.displayAs = displayAs;
         this.resultsToDisplay = resultsToDisplay;
+        System.out.println("Bus Times Updater Ready....");
     }
 
     @Override

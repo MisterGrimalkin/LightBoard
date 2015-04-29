@@ -1,4 +1,4 @@
-package lightboard;
+package lightboard.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +12,14 @@ public class Sync {
     private static boolean run = false;
 
     public static void start() {
+        System.out.println("Staring Sync Thread....");
         run = true;
         syncThread = new Thread(() -> {
-            System.out.println("Staring Sync Thread... " + tasks.size());
+            System.out.println("Sync Thread Running");
             while (run) {
-                for ( Task task : tasks ) {
-                    task.checkAndRun();
-                }
+                tasks.forEach(Sync.Task::checkAndRun);
             }
-//            System.out.println("Stopped Sync Thread");
+            System.out.println("Sync Thread Stopped");
         });
         syncThread.setPriority(Thread.MAX_PRIORITY);
         syncThread.start();
@@ -31,7 +30,6 @@ public class Sync {
     }
 
     public static void stop() {
-//        syncThread.stop();
         run = false;
         syncThread = null;
     }
@@ -44,7 +42,9 @@ public class Sync {
         }
         public void checkAndRun() {
             long now = System.currentTimeMillis();
-            if ( interval==null || lastRun==null || now-lastRun>=interval ) {
+            if ( interval==null ) {
+                runTask();
+            } else if ( lastRun==null || now-lastRun>=interval ) {
                 runTask();
                 lastRun = now;
             }

@@ -27,10 +27,13 @@ public class TubeStatusUpdater extends Updater {
         for ( String line : lines ) {
             allowedLines.add(line.toUpperCase());
         }
+        System.out.println("Tube Status Updater Ready....");
     }
 
     @Override
     public void refresh() {
+
+        clearMessages();
 
         List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
         if ( tubeStatuses.isEmpty() ) {
@@ -43,6 +46,7 @@ public class TubeStatusUpdater extends Updater {
                      || allowedLines.contains(ts.getLineName().toUpperCase().split(" ")[0])
                      || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
                 ) {
+                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
                     sb.append(ts.getLineName()).append(":").append(ts.getStatusDescription()).append("  ");
                 }
             }
@@ -50,19 +54,22 @@ public class TubeStatusUpdater extends Updater {
             String message = sb.toString();
             if ( message.isEmpty() ) {
                 if ( allowedLines.isEmpty() ) {
-                    message = "-Could Not Parse TFL Data-";
+//                    message = "-Could Not Parse TFL Data-";
+                    replaceMessage("-Could Not Parse TFL Data-");
                 } else if ( allowedLines.contains("BAD") ) {
-                    message = "There is a Good Service on all TFL Lines, except the ones that are always a bit shit";
+//                    message = "There is a Good Service on all TFL Lines, except the ones that are always a bit shit";
+                    replaceMessage("Good Service on all TFL Lines");
                 } else {
-                    message = "-Invalid Line Specified-";
+//                    message = "-Invalid Line Specified-";
+                    replaceMessage("-Invalid Line Specified-");
                 }
             } else {
                 if ( allowedLines.contains("BAD") ) {
-                    message += "   Good Service All Other Lines";
+                    addMessage("Good Service All Other Lines");
                 }
             }
 //            System.out.println(message);
-            replaceMessage(message);
+//            replaceMessage(message);
         }
 
     }

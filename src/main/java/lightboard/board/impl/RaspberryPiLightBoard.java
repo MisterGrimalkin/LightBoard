@@ -11,141 +11,111 @@ import java.math.BigInteger;
 
 public class RaspberryPiLightBoard implements LightBoard {
 
-    public static RaspberryPiLightBoard makeBoard1() {
-        try {
-            GpioController gpio = GpioFactory.getInstance();
-            MCP23017GpioProvider gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_0, 0x20);
-            return new RaspberryPiLightBoard(16, 90, 1,
-                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A6, PinState.LOW),
-                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B0, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B1, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B2, PinState.HIGH)
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static RaspberryPiLightBoard makeBoard2() {
-        try {
-            GpioController gpio = GpioFactory.getInstance();
-            MCP23017GpioProvider gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_0, 0x21);
-            return new RaspberryPiLightBoard(16, 90, 1,
-                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A6, PinState.LOW),
-                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B0, PinState.HIGH),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B1, PinState.LOW),
-                gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_B2, PinState.HIGH)
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private int rows;
-    private int cols;
-    private int refreshInterval;
+    private final static int ROWS = 16;
+    private final static int COLS = 180;
 
     private GpioPinDigitalOutput clockPin;
     private GpioPinDigitalOutput storePin;
-    private GpioPinDigitalOutput outputEnableRowsPin;
+    private GpioPinDigitalOutput outputPin;
+    private GpioPinDigitalOutput data1PinR;
+    private GpioPinDigitalOutput data1PinG;
+    private GpioPinDigitalOutput data2PinR;
+    private GpioPinDigitalOutput data2PinG;
     private GpioPinDigitalOutput address0Pin;
     private GpioPinDigitalOutput address1Pin;
     private GpioPinDigitalOutput address2Pin;
     private GpioPinDigitalOutput address3Pin;
-    private GpioPinDigitalOutput data1Pin;
     private GpioPinDigitalOutput outputEnable1Pin;
-    private GpioPinDigitalOutput data2Pin;
     private GpioPinDigitalOutput outputEnable2Pin;
 
-    public RaspberryPiLightBoard(int rows, int cols, int refreshInterval, GpioPinDigitalOutput clockPin, GpioPinDigitalOutput storePin, GpioPinDigitalOutput outputEnableRowsPin, GpioPinDigitalOutput address0Pin, GpioPinDigitalOutput address1Pin, GpioPinDigitalOutput address2Pin, GpioPinDigitalOutput address3Pin, GpioPinDigitalOutput data1Pin, GpioPinDigitalOutput outputEnable1Pin, GpioPinDigitalOutput data2Pin, GpioPinDigitalOutput outputEnable2Pin) {
-        this.rows = rows;
-        this.cols = cols;
-        this.refreshInterval = refreshInterval;
-        this.clockPin = clockPin;
-        this.storePin = storePin;
-        this.outputEnableRowsPin = outputEnableRowsPin;
-        this.address0Pin = address0Pin;
-        this.address1Pin = address1Pin;
-        this.address2Pin = address2Pin;
-        this.address3Pin = address3Pin;
-        this.data1Pin = data1Pin;
-        this.outputEnable1Pin = outputEnable1Pin;
-        this.data2Pin = data2Pin;
-        this.outputEnable2Pin = outputEnable2Pin;
-    }
-
-    private boolean wait = false;
+    public RaspberryPiLightBoard() { }
 
     @Override
     public void init() {
-
+        System.out.println("Starting Raspberry Pi LightBoard....");
+        GpioController gpio = GpioFactory.getInstance();
+        MCP23017GpioProvider gpioProvider = null;
+        try {
+            gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_0, 0x20);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        clockPin =  gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
+        storePin =  gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
+        outputPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
+        data1PinR = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
+        data2PinR = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
+        data1PinG = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW);
+        data2PinG = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.LOW);
+        address0Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A0, PinState.LOW);
+        address1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, PinState.LOW);
+        address2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, PinState.LOW);
+        address3Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, PinState.LOW);
+        outputEnable1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, PinState.HIGH);
+        outputEnable2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, PinState.HIGH);
+        data1PinR.low();
+        data2PinR.low();
+        System.out.println("Board Ready");
     }
+
+    private int colour = 0;
+    private static final int R = 1;
+    private static final int G = 2;
+    private static final int Y = 3;
+
+    private long t = 0;
+    private static final long COLOUR_CHANGE_TIME = 30000;
 
     @Override
     public void dump(boolean[][] data) {
-        wait = true;
+        if ( System.currentTimeMillis()-t > COLOUR_CHANGE_TIME ) {
+            colour++;
+            if ( colour>Y ) colour = R;
+            t = System.currentTimeMillis();
+        }
         try {
             for (int row = 0; row < data.length; row++) {
-//                long t = System.currentTimeMillis();
                 sendSerialString(data[row]);
-                outputEnableRowsPin.high();
+                outputPin.high();
                 decodeRowAddress(row);
-//                outputEnable1Pin.low();
                 storePin.high();
                 storePin.low();
-                outputEnableRowsPin.low();
-//                outputEnable1Pin.high();
-//        System.out.println(System.currentTimeMillis()-t);
+                outputPin.low();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            wait = false;
         }
     }
 
-
-
     private void sendSerialString(boolean[] data) throws InterruptedException {
-        Boolean lastValue = null;
-        for (int col = data.length - 1; col >= 0; col--) {
+        Boolean lastValue1 = null;
+        Boolean lastValue2 = null;
+        for (int col = (data.length/2)-1; col >= 0; col--) {
+            int parallelCol = col + (COLS/2);
             clockPin.low();
-            if ( lastValue==null || lastValue!=data[col] ) {
-                lastValue = data[col];
+            if ( lastValue1==null || lastValue1!=data[col] ) {
+                lastValue1 = data[col];
                 if (data[col]) {
-                    data1Pin.high();
-//                    data2Pin.high();
+                    if ( colour!=G ) data1PinR.high();
+                    if ( colour!=R ) data1PinG.high();
                 } else {
-                    data1Pin.low();
-//                    data2Pin.low();
+                    if ( colour!=G ) data1PinR.low();
+                    if ( colour!=R ) data1PinG.low();
+                }
+            }
+            if ( lastValue2==null || lastValue2!=data[parallelCol] ) {
+                lastValue2 = data[parallelCol];
+                if (data[parallelCol]) {
+                    if ( colour!=G ) data2PinR.high();
+                    if ( colour!=R ) data2PinG.high();
+                } else {
+                    if ( colour!=G ) data2PinR.low();
+                    if ( colour!=R ) data2PinG.low();
                 }
             }
             clockPin.high();
         }
     }
-
-    private Boolean lastAddress0 = null;
-    private Boolean lastAddress1 = null;
-    private Boolean lastAddress2 = null;
-    private Boolean lastAddress3 = null;
 
     private void decodeRowAddress(int row) {
         boolean address0 = BigInteger.valueOf(row).testBit(0);
@@ -186,24 +156,24 @@ public class RaspberryPiLightBoard implements LightBoard {
         }
     }
 
+    private Boolean lastAddress0 = null;
+    private Boolean lastAddress1 = null;
+    private Boolean lastAddress2 = null;
+    private Boolean lastAddress3 = null;
+
     @Override
-    public int getRefreshInterval() {
-        return refreshInterval;
+    public Long getRefreshInterval() {
+        return null;
     }
 
     @Override
     public int getRows() {
-        return rows;
+        return ROWS;
     }
 
     @Override
     public int getCols() {
-        return cols;
-    }
-
-    @Override
-    public boolean saysWait() {
-        return wait;
+        return COLS;
     }
 
 }

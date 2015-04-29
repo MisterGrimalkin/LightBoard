@@ -1,7 +1,5 @@
 package lightboard.board.surface;
 
-import javassist.runtime.Inner;
-
 import java.util.ArrayList;
 import java.util.List;
 

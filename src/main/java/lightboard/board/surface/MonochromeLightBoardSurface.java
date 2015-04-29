@@ -1,6 +1,7 @@
 package lightboard.board.surface;
 
 import lightboard.board.MonochromeLightBoard;
+import lightboard.util.Sync;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,15 +25,16 @@ public class MonochromeLightBoardSurface extends LightBoardSurface {
 
     @Override
     public LightBoardSurface init() {
-        for ( int i=0; i<boards.length; i++ ) {
-            final MonochromeLightBoard board = boards[i];
-            new Timer(true).schedule(
-                    new TimerTask() { @Override public void run() {
-                        board.dump(ledValue);
-                    }},
-                    1000, board.getRefreshInterval()
-            );
+        System.out.println("Starting MonochromeLightBoard Surface....");
+        for (final MonochromeLightBoard board : boards) {
+            Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
+                @Override
+                public void runTask() {
+                    board.dump(ledValue);
+                }
+            });
         }
+        System.out.println("Surface Active");
         return this;
     }
 

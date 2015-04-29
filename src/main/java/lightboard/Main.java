@@ -11,20 +11,18 @@ import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.updater.schedule.MessageUpdater;
+import lightboard.util.Sync;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import java.net.InetAddress;
 import java.net.URI;
 
-import static lightboard.board.zone.Zones.startBusStopDisplay;
-import static lightboard.board.zone.Zones.startClock;
-import static lightboard.board.zone.Zones.startTubeStatusDisplay;
+import static lightboard.board.zone.Zones.*;
 
 public class Main extends Application {
 
-    private final static int COLS = 90;
+    private final static int COLS = 180;
     private final static int ROWS = 16;
 
     private static int ledRadius = 2;
@@ -39,48 +37,45 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        System.out.println("Starting Up....");
+
         HttpServer server = startServer();
 
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            System.out.println(addr.getHostAddress());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         int cols = COLS;
         int rows = ROWS;
 
         LightBoard board1;
-        LightBoard board2;
+//        LightBoard board2;
 
         String boardType = getParameters().getNamed().get("board");
         if ("graphical".equals(boardType)) {
             board1 = new GraphicalBoard(rows, cols, primaryStage, "Travel Board", ledRadius, ledSpacer).debugTo(new TextBoard(rows, cols));
             ((GraphicalBoard)board1).setServer(server);
-            board2 = new GraphicalBoard(rows, cols, new Stage(), "Travel Board", ledRadius, ledSpacer).debugTo(new TextBoard(rows, cols));
+//            board2 = new GraphicalBoard(rows, cols, new Stage(), "Travel Board", ledRadius, ledSpacer).debugTo(new TextBoard(rows, cols));
         } else if ("text".equals(boardType)) {
             board1 = new TextBoard(rows, cols);
-            board2 = new TextBoard(rows, cols);
+//            board2 = new TextBoard(rows, cols);
         } else {
-            board1 = RaspberryPiLightBoard.makeBoard1();
-            board2 = RaspberryPiLightBoard.makeBoard2();
+            board1 = new RaspberryPiLightBoard();
+//            board2 = RaspberryPiLightBoard.makeBoard2();
         }
         board1.init();
-        board2.init();
+//        board2.init();
 
         LightBoardSurface surface1 = new LightBoardSurface(board1);
-        LightBoardSurface surface2 = new LightBoardSurface(board2);
+        surface1.init();
+//        LightBoardSurface surface2 = new LightBoardSurface(board2);
 
-        CompositeSurface cSurface =
-                new CompositeSurface(ROWS, COLS*2)
-                .addSurface(surface1, 0, 0)
-                .addSurface(surface2, COLS, 0);
-        cSurface.init();
+//        CompositeSurface cSurface =
+//                new CompositeSurface(ROWS, COLS*2)
+//                .addSurface(surface1, 0, 0)
+//                .addSurface(surface2, COLS, 0);
+//        cSurface.init();
 
-        TextZone clockZone = startClock          (cSurface, (COLS*2)-CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
+        TextZone clockZone = startClock          (surface1, COLS-CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
 
-        TextZone busZone =  startBusStopDisplay(cSurface, 0, 0, (COLS*2)-CLOCK_WIDTH, ROWS/2);
-        TextZone tubeZone = startTubeStatusDisplay(cSurface, 0, ROWS/2, (COLS*2)-CLOCK_WIDTH, ROWS/2,         "bad");
+        TextZone busZone =  startBusStopDisplay(surface1, 0, 0, COLS-CLOCK_WIDTH, ROWS/2);
+        TextZone tubeZone = startTubeStatusDisplay(surface1, 0, ROWS/2, COLS-CLOCK_WIDTH, ROWS/2,         "bad");
 
         if ( server!=null ) {
             MessageUpdater m = new MessageUpdater(busZone, tubeZone);
@@ -101,10 +96,12 @@ public class Main extends Application {
 
     public HttpServer startServer() {
         String ip = getParameters().getNamed().get("ip");
-
         if ( ip!=null && !ip.isEmpty() ) {
+            System.out.println("Starting Web Server....");
             final ResourceConfig rc = new ResourceConfig().packages("lightboard");
-            return GrizzlyHttpServerFactory.createHttpServer(URI.create(getIp()), rc);
+            HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(getIp()), rc);
+            System.out.println("Web Service Online @ " + getIp());
+            return server;
         }
         return null;
     }

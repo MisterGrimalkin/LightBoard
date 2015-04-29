@@ -1,6 +1,5 @@
 package lightboard.board.zone;
 
-import lightboard.Sync;
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.surface.LightBoardSurface.Region;
 import lightboard.board.surface.MonochromeLightBoardSurface;
@@ -8,9 +7,7 @@ import lightboard.board.surface.PolychromeLightBoardSurface;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.HPosition;
 import lightboard.util.MessageQueue.VPosition;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import lightboard.util.Sync;
 
 import static java.lang.System.currentTimeMillis;
 import static lightboard.util.MessageQueue.Edge.NO_SCROLL;
@@ -47,10 +44,6 @@ public abstract class LightBoardZone {
     // Tick //
     //////////
 
-    public LightBoardZone start() {
-        return start(DEFAULT_TICK);
-    }
-
     public LightBoardZone start(int scrollTick) {
         Sync.addTask(new Sync.Task((long)scrollTick) {
             @Override
@@ -84,8 +77,6 @@ public abstract class LightBoardZone {
     private long lastTick;
     protected boolean resting;
 
-    private final static int DEFAULT_TICK = 60;
-
 
     ///////////////
     // Scrolling //
@@ -98,6 +89,8 @@ public abstract class LightBoardZone {
 
     private int restX = 0;
     private int restY = 0;
+
+    private final static int DELTA = 1;
 
     private int deltaX = 0;
     private int deltaY = 0;
@@ -141,24 +134,24 @@ public abstract class LightBoardZone {
                 contentLeft = restX;
                 contentTop = -getContentHeight();
                 deltaX = 0;
-                deltaY = 1;
+                deltaY = DELTA;
                 break;
             case LEFT_EDGE:
                 contentLeft = -getContentWidth();
                 contentTop = restY;
-                deltaX = 1;
+                deltaX = DELTA;
                 deltaY = 0;
                 break;
             case BOTTOM_EDGE:
                 contentLeft = restX;
                 contentTop = region.height;
                 deltaX = 0;
-                deltaY = -1;
+                deltaY = -DELTA;
                 break;
             case RIGHT_EDGE:
                 contentLeft = region.width;
                 contentTop = restY;
-                deltaX = -1;
+                deltaX = -DELTA;
                 deltaY = 0;
                 break;
             case NO_SCROLL:
@@ -174,18 +167,18 @@ public abstract class LightBoardZone {
         switch (scrollTo) {
             case TOP_EDGE:
                 deltaX = 0;
-                deltaY = -1;
+                deltaY = -DELTA;
                 break;
             case LEFT_EDGE:
-                deltaX = -1;
+                deltaX = -DELTA;
                 deltaY = 0;
                 break;
             case BOTTOM_EDGE:
                 deltaX = 0;
-                deltaY = 1;
+                deltaY = DELTA;
                 break;
             case RIGHT_EDGE:
-                deltaX = 1;
+                deltaX = DELTA;
                 deltaY = 0;
                 break;
             case NO_SCROLL:
@@ -230,8 +223,6 @@ public abstract class LightBoardZone {
     }
 
     protected void doRender() {
-
-//        while ( surface.saysWait() ) {}
 
         if ( clear ) {
             surface.clearRegion(region);

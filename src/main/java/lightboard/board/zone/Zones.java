@@ -7,7 +7,6 @@ import lightboard.updater.UpdaterBundle;
 import lightboard.updater.schedule.DateTimeUpdater;
 import lightboard.updater.transport.BusTimesUpdater;
 import lightboard.updater.transport.TubeStatusUpdater;
-import lightboard.util.MessageQueue;
 
 import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.LEFT;
@@ -19,25 +18,25 @@ public class Zones {
 
     public static TextZone startClock(LightBoardSurface surface, int x, int y, int width, int height) {
         TextZone clock = TextZone.fixed(surface);
-        clock.region(x, y, width, height).restDuration(500).start();
-
-        DateTimeUpdater.tickingClock(clock).start();
+        clock.region(x, y, width, height).restDuration(0);
+        clock.start(500);
+        DateTimeUpdater.tickingClock(clock).start(1000);
         return clock;
     }
 
     public static TextZone startTubeStatusDisplay(LightBoardSurface surface, int x, int y, int width, int height, String... linesToDisplay) {
         TextZone zone = TextZone.scrollLeft(surface);
-        zone.region(x, y, width, height).start();
-
+        zone.region(x, y, width, height).restDuration(1000);
+        zone.start(25);
         new TubeStatusUpdater(zone, linesToDisplay).start(60000);
         return zone;
     }
 
     public static TextZone startBusStopDisplay(LightBoardSurface surface, int x, int y, int width, int height) {
         TextZone zone = TextZone.scrollUp(surface);
-        zone.region(x, y, width, height).start();
+        zone.region(x, y, width, height).restDuration(3000);
+        zone.start(60);
         int numberOfBuses = 3;
-
         UpdaterBundle.bundle(
                 new BusTimesUpdater(zone, 53785, "W7", "Mus Hill", numberOfBuses),
                 new BusTimesUpdater(zone, 56782, "W7", "Fins Pk", numberOfBuses),
@@ -46,7 +45,7 @@ public class Zones {
                 new BusTimesUpdater(zone, 76985, "W5", "Archway", numberOfBuses),
                 new BusTimesUpdater(zone, 56403, "41", "Archway", numberOfBuses),
                 new BusTimesUpdater(zone, 56403, "91", "Traf Sqr", numberOfBuses)
-        ).start(45000);
+        ).start(58000);
         return zone;
     }
 
@@ -72,7 +71,7 @@ public class Zones {
         }
 
         CompositeZone zone = new CompositeZone(surface,z1,z2,z3,z4);
-        zone.region(x, y, width, height).start();
+        zone.region(x, y, width, height).start(25);
 
         return zone;
     }
@@ -86,7 +85,7 @@ public class Zones {
             sb.append(message).append("\n");
         }
 
-        zone.addMessage(0, sb.toString()).start();
+        zone.addMessage(0, sb.toString()).start(25);
 
         return zone;
     }

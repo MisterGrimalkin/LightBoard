@@ -7,10 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lightboard.Sync;
 import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
+import lightboard.util.Sync;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 public class GraphicalBoard implements PolychromeLightBoard {
@@ -28,7 +28,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
 
     private final static Color OFF = Color.color( RED_MIN, GREEN_MIN, BLUE_MIN);
 
-    private final static int LED_REFRESH_TIME = 60;
+    private final static Long LED_REFRESH_TIME = null;
 
     private final int rows;
     private final int cols;
@@ -60,6 +60,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
 
     @Override
     public void init() {
+
+        System.out.println("Starting UI Simulation LightBoard....");
 
         leds = new Circle[rows][cols];
         d = ledRadius*2;
@@ -96,6 +98,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
                 server.shutdown();
             }
         });
+
+        System.out.println("Board Ready");
 
     }
 
@@ -233,7 +237,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
     /////////////////////////
 
     @Override
-    public int getRefreshInterval() {
+    public Long getRefreshInterval() {
         return LED_REFRESH_TIME;
     }
 
@@ -245,11 +249,6 @@ public class GraphicalBoard implements PolychromeLightBoard {
     @Override
     public int getCols() {
         return cols;
-    }
-
-    @Override
-    public boolean saysWait() {
-        return wait;
     }
 
     public int getHeightPixels() {

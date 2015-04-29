@@ -18,12 +18,7 @@ public class DateTimeUpdater extends Updater {
     public DateTimeUpdater(TextZone zone, String... formats) {
         super(zone);
         this.formats = formats;
-
-    }
-
-    @Override
-    public void start() {
-        super.start(500);
+        System.out.println("Date/Time Updater Ready....");
     }
 
     @Override

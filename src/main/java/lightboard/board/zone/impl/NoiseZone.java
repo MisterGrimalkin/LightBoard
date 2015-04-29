@@ -29,11 +29,6 @@ public class NoiseZone extends LightBoardZone {
     }
 
     @Override
-    public LightBoardZone start() {
-        return super.start(50);
-    }
-
-    @Override
     public int getContentWidth() {
         return getRegion().width;
     }

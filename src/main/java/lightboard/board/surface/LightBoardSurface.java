@@ -1,7 +1,7 @@
 package lightboard.board.surface;
 
-import lightboard.Sync;
 import lightboard.board.LightBoard;
+import lightboard.util.Sync;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,16 +41,14 @@ public class LightBoardSurface {
     }
 
     public LightBoardSurface init() {
-        System.out.println("Initialising Surface...");
-        Sync.addTask(new Sync.Task(null) {
-            @Override
-            public void runTask() {
-                for ( LightBoard board : boards ) {
+        System.out.println("Starting LightBoard Surface....");
+        for ( final LightBoard board : boards ) {
+            Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
+                @Override public void runTask() {
                     board.dump(ledStatus);
-                }
-            }
-        });
-        System.out.println("...Surface Initialised");
+            }});
+        }
+        System.out.println("Surface Active");
         return this;
     }
 
@@ -58,15 +56,6 @@ public class LightBoardSurface {
     ///////////////////
     // Light Control //
     ///////////////////
-
-    public boolean saysWait() {
-        for ( LightBoard lb : boards ) {
-            if ( lb.saysWait() ) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public boolean isOn(int x, int y) {
         return pointInRegion(x, y, boardRegion) && ledStatus[y][x];

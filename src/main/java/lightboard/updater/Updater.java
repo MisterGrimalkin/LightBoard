@@ -1,9 +1,7 @@
 package lightboard.updater;
 
 import lightboard.board.zone.impl.TextZone;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import lightboard.util.Sync;
 
 public abstract class Updater {
 
@@ -21,32 +19,15 @@ public abstract class Updater {
     // Update Timer //
     //////////////////
 
-    public void start() {
-        start(DATA_REFRESH, true);
-    }
-
     public void start(int dataRefresh) {
-        start(dataRefresh, true);
-    }
-
-    public void start(int dataRefresh, boolean refreshOnStart) {
-        new Timer(true).schedule(new TimerTask() {
+        Sync.addTask(new Sync.Task((long)dataRefresh) {
             @Override
-            public void run() {
+            public void runTask() {
                 refresh();
             }
-        }, (refreshOnStart ? 10 : dataRefresh), dataRefresh);
+        });
+        System.out.println("Updater running every " + dataRefresh + "ms");
     }
-
-    public void fireOnce(int delay) {
-        new Timer(true).schedule(new TimerTask() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        }, delay+10);
-    }
-
 
     //////////////////////////
     // Messages to TextZone //
@@ -62,15 +43,12 @@ public abstract class Updater {
     }
 
     protected void addMessage(String... messages) {
-        for ( int i=0; i<messages.length; i++ ) {
-            zone.addMessage(id, messages[i]);
+        for (String message : messages) {
+            zone.addMessage(id, message);
         }
     }
 
-
     protected final int id;
     public static int nextId = 0;
-
-    public final static int DATA_REFRESH = 60000;
 
 }

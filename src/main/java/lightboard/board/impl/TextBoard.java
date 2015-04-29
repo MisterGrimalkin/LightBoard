@@ -13,7 +13,9 @@ public class TextBoard implements PolychromeLightBoard {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+        System.out.println("Text Board Ready");
+    }
 
     @Override
     public void dump(boolean[][] data) {
@@ -57,8 +59,8 @@ public class TextBoard implements PolychromeLightBoard {
     }
 
     @Override
-    public int getRefreshInterval() {
-        return 250;
+    public Long getRefreshInterval() {
+        return 250L;
     }
 
     @Override
@@ -69,11 +71,6 @@ public class TextBoard implements PolychromeLightBoard {
     @Override
     public int getCols() {
         return cols;
-    }
-
-    @Override
-    public boolean saysWait() {
-        return false;
     }
 
 }

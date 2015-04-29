@@ -1,11 +1,9 @@
 package lightboard.updater;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
+import lightboard.util.Sync;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,34 +18,21 @@ public class UpdaterBundle {
     private List<Updater> updaters = new ArrayList<>();
 
     private UpdaterBundle(Updater... upds) {
-        for ( int i=0; i<upds.length; i++ ) {
-            updaters.add(upds[i]);
-        }
-    }
-
-    public void start() {
-        start(Updater.DATA_REFRESH, true);
+        Collections.addAll(updaters, upds);
     }
 
     public void start(int dataRefresh) {
-        start(dataRefresh, true);
-    }
-
-    public void start(int dataRefresh, boolean refreshOnStart) {
-        Timeline updateData = new Timeline(new KeyFrame(
-                Duration.millis(dataRefresh),
-                ae -> refresh()));
-        updateData.setCycleCount(Animation.INDEFINITE);
-        updateData.play();
-        if ( refreshOnStart ) {
-            refresh();
-        }
+        Sync.addTask(new Sync.Task((long) dataRefresh) {
+            @Override
+            public void runTask() {
+                refresh();
+            }
+        });
+        System.out.println("UpdaterBundle running every " + dataRefresh + "ms");
     }
 
     public void refresh() {
-        for( Updater updater : updaters ) {
-            updater.refresh();
-        }
+        updaters.forEach((updater) -> updater.refresh());
     }
 
 
