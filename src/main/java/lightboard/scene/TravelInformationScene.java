@@ -31,9 +31,9 @@ public class TravelInformationScene extends Scene {
         Updater busArrivalsUpdater = UpdaterBundle.bundle(
                 new BusTimesUpdater(busArrivalsZone, 53785, "W7", "Mus Hill", numberOfBuses),
                 new BusTimesUpdater(busArrivalsZone, 56782, "W7", "Fins Pk", numberOfBuses),
-                new BusTimesUpdater(busArrivalsZone, 76713, "W5", "Harringay", numberOfBuses),
+                new BusTimesUpdater(busArrivalsZone, 76713, "W5", "Harringay", numberOfBuses, -3),
                 new BusTimesUpdater(busArrivalsZone, 76713, "41", "Tottenham", numberOfBuses),
-                new BusTimesUpdater(busArrivalsZone, 76985, "W5", "Archway", numberOfBuses),
+                new BusTimesUpdater(busArrivalsZone, 76985, "W5", "Archway", numberOfBuses, 3),
                 new BusTimesUpdater(busArrivalsZone, 56403, "41", "Archway", numberOfBuses),
                 new BusTimesUpdater(busArrivalsZone, 56403, "91", "Traf Sqr", numberOfBuses)
         );

@@ -16,13 +16,19 @@ public class BusTimesUpdater extends Updater {
     private final String busNumber;
     private final String displayAs;
     private final int resultsToDisplay;
+    private final int offset;
 
     public BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay) {
+        this(scroller, stopCode, busNumber, displayAs, resultsToDisplay, 0);
+    }
+
+    public BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay, int offset) {
         super(scroller);
         this.stopCode = stopCode;
         this.busNumber = busNumber;
         this.displayAs = displayAs;
         this.resultsToDisplay = resultsToDisplay;
+        this.offset = offset;
         System.out.println("Bus Times Updater Ready....");
     }
 
@@ -43,8 +49,6 @@ public class BusTimesUpdater extends Updater {
                 msg += " " + m;
             }
         }
-
-//        System.out.println(msg);
 
         addMessage(msg);
 
@@ -83,7 +87,10 @@ public class BusTimesUpdater extends Updater {
             if ( timecode!=null && dueTimes.size()<resultsToDisplay ) {
                 Date due = new Date(timecode-System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat("m");
-                dueTimes.add((sdf.format(due).equals("0") ? "due" : sdf.format(due)+"min"));
+                int time = Integer.parseInt(sdf.format(due)) + offset;
+                if ( time >= 0 ) {
+                    dueTimes.add(time == 0 ? "due" : time + "min");
+                }
             }
         }
         return messages;

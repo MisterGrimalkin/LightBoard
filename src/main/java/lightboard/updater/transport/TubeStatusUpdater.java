@@ -82,7 +82,7 @@ public class TubeStatusUpdater extends Updater {
             doc.getDocumentElement().normalize();
 
         } catch (Exception e) {
-            replaceMessage("-Error Querying TFL-");
+            replaceMessage("-Error Querying TfL-");
             e.printStackTrace();
         }
         return doc;

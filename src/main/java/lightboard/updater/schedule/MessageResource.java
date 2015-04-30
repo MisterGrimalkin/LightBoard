@@ -23,7 +23,6 @@ public class MessageResource {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public void postMessage(String message) {
-        System.out.println("Received Message: " + message);
         if ( updater!=null ) {
             updater.postMessage(message);
         }
