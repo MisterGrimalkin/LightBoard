@@ -12,7 +12,6 @@ import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
 import lightboard.updater.WebService;
 import lightboard.util.Sync;
-import org.glassfish.grizzly.http.server.HttpServer;
 
 public class GraphicalBoard implements PolychromeLightBoard {
 
@@ -94,8 +93,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
         stage.show();
 
         stage.setOnCloseRequest(event -> {
-            WebService.stop();
-            Sync.stop();
+            WebService.stopWebService();
+            Sync.stopSyncThread();
         });
 
         System.out.println("Board Ready");

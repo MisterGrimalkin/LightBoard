@@ -26,11 +26,25 @@ public class CompositeZone extends LightBoardZone {
         autoReset(false);
     }
 
+    private boolean paused;
+
+    @Override
+    public void pause() {
+        paused = true;
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+    }
+
     @Override
     public void tick() {
-        super.tick();
-        for ( LightBoardZone zone : zones ) {
-            zone.tick();
+        if ( !paused ) {
+            super.tick();
+            for (LightBoardZone zone : zones) {
+                zone.tick();
+            }
         }
     }
 
@@ -51,16 +65,14 @@ public class CompositeZone extends LightBoardZone {
             drawn |= zone.render();
         }
         if ( !drawn ) {
-            for (LightBoardZone zone : zones) {
-                zone.resetScroll();
-            }
+            zones.forEach(LightBoardZone::resetScroll);
         }
         return drawn;
     }
 
     @Override
-    public LightBoardZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
-        super.region(regionLeft, regionTop, regionWidth, regionHeight);
+    public LightBoardZone setRegion(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
+        super.setRegion(regionLeft, regionTop, regionWidth, regionHeight);
         for ( LightBoardZone zone : zones ) {
             zone.region(region);
         }

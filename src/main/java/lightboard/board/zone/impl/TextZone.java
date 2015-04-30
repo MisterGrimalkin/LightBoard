@@ -31,12 +31,18 @@ public class TextZone extends LightBoardZone {
         defaultRestDuration = restDuration;
         setDefaults();
         this.font = font;
+        addScrollCompleteHandler(() -> {
+            if ( override ) {
+                clearOverride();
+            }
+            messageQueue.advanceMessage();
+        });
     }
 
     private void setDefaults() {
         scroll(defaultScrollFrom, defaultScrollTo);
         restPosition(defaultRestH, defaultRestV);
-        restDuration(defaultRestDuration);
+        setRestDuration(defaultRestDuration);
     }
 
 
@@ -65,14 +71,6 @@ public class TextZone extends LightBoardZone {
     public boolean render() {
         MessageWrapper message = getCurrentMessage();
         return drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()));
-    }
-
-    @Override
-    public void onScrollComplete() {
-        if ( override ) {
-            clearOverride();
-        }
-        messageQueue.advanceMessage();
     }
 
     @Override
@@ -122,12 +120,16 @@ public class TextZone extends LightBoardZone {
     private boolean override = false;
     private MessageWrapper overrideMessage = null;
 
+    public boolean isOverride() {
+        return override;
+    }
+
     public void overrideMessage(MessageWrapper message) {
         overrideMessage = message;
         resting = false;
         scroll(message.getScrollFrom(), message.getScrollTo());
         restPosition(message.gethPosition(), message.getvPosition());
-        restDuration(message.getRestDuration());
+        setRestDuration(message.getRestDuration());
         resetScroll();
         override = true;
     }

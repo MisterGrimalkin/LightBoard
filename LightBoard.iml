@@ -15,6 +15,8 @@
     <orderEntry type="library" name="pi4j-core" level="project" />
     <orderEntry type="library" name="pi4j-core-0.0.5" level="project" />
     <orderEntry type="library" name="pi4j-device" level="project" />
+    <orderEntry type="library" name="Maven: com.pi4j:pi4j-gpio-extension:0.0.5" level="project" />
+    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Maven: org.javalite:javalite-common:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: jaxen:jaxen:1.1.4" level="project" />

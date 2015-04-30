@@ -62,7 +62,7 @@ public abstract class Font {
             if ( i==str.length()-1 ) {
                 height += rowHeight;
             } else if ( c==NL ) {
-                height += rowHeight+1;
+                height += rowHeight;
                 rowHeight = 0;
             }
         }
@@ -109,7 +109,7 @@ public abstract class Font {
                         result[row+cursorY][col+cursorX] = pattern[row][col];
                     }
                 }
-                cursorY += lineHeight+1;
+                cursorY += lineHeight;
             }
         }
         return result;

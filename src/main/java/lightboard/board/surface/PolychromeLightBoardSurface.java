@@ -3,9 +3,6 @@ package lightboard.board.surface;
 import lightboard.board.PolychromeLightBoard;
 import lightboard.util.Sync;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class PolychromeLightBoardSurface extends MonochromeLightBoardSurface {
 
     private final double[][][] ledPolyValue;

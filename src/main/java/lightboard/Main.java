@@ -7,32 +7,26 @@ import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.RaspberryPiLightBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.TextZone;
-import lightboard.updater.WebService;
+import lightboard.scene.TravelInformationScene;
+import lightboard.scene.WebServiceMessageScene;
 import lightboard.updater.schedule.MessageResource;
-import lightboard.updater.schedule.MessageUpdater;
-import lightboard.util.Sync;
-import org.glassfish.grizzly.http.server.HttpServer;
 
-import static lightboard.board.zone.Zones.*;
+import static lightboard.scene.SceneManager.addScene;
+import static lightboard.scene.SceneManager.cycleScenes;
+import static lightboard.updater.WebService.startWebService;
+import static lightboard.util.Sync.startSyncThread;
 
 public class Main extends Application {
 
     private final static int COLS = 180;
     private final static int ROWS = 16;
 
-    private final static int CLOCK_WIDTH = 30;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) {
 
         System.out.println("Starting Up....");
 
-        HttpServer server = WebService.start(getParameters().getNamed().get("ip"));
+        startWebService(getParameters().getNamed().get("ip"));
 
         LightBoard board;
         switch ( getBoardType() ) {
@@ -52,18 +46,20 @@ public class Main extends Application {
         LightBoardSurface surface = new LightBoardSurface(board);
         surface.init();
 
-        TextZone clockZone = startClock          (surface, COLS-CLOCK_WIDTH, 0,    CLOCK_WIDTH, ROWS);
+        addScene(0, new TravelInformationScene(surface));
+        addScene(1, new WebServiceMessageScene(surface));
+        cycleScenes(90000);
 
-        TextZone busZone =  startBusStopDisplay(surface, 0, 0, COLS-CLOCK_WIDTH, ROWS/2);
-        TextZone tubeZone = startTubeStatusDisplay(surface, 0, ROWS/2, COLS-CLOCK_WIDTH, ROWS/2,         "bad");
+        MessageResource.bindScene(1);
 
-        if ( server!=null ) {
-            MessageUpdater m = new MessageUpdater(busZone, tubeZone);
-            MessageResource.bindUpdater(m);
-        }
+        startSyncThread();
 
-        Sync.start();
+    }
 
+    public enum BoardType { TEXT, GRAPHICAL, RASPBERRY_PI }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
     private BoardType getBoardType() {
@@ -76,7 +72,5 @@ public class Main extends Application {
             return BoardType.RASPBERRY_PI;
         }
     }
-
-    public enum BoardType { TEXT, GRAPHICAL, RASPBERRY_PI }
 
 }

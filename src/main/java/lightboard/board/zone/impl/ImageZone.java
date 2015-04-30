@@ -39,7 +39,7 @@ public class ImageZone extends LightBoardZone {
         super(surface);
         scroll(MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.Edge.TOP_EDGE);
         clear(false);
-        restDuration(2000);
+        setRestDuration(2000);
     }
 
     public void loadImage(String filename) {

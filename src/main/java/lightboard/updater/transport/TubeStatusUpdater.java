@@ -37,7 +37,7 @@ public class TubeStatusUpdater extends Updater {
 
         List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
         if ( tubeStatuses.isEmpty() ) {
-            replaceMessage("-TFL Returned No Data-");
+            replaceMessage("-TfL Returned No Data-");
         } else {
 
             StringBuilder sb = new StringBuilder();
@@ -54,13 +54,10 @@ public class TubeStatusUpdater extends Updater {
             String message = sb.toString();
             if ( message.isEmpty() ) {
                 if ( allowedLines.isEmpty() ) {
-//                    message = "-Could Not Parse TFL Data-";
-                    replaceMessage("-Could Not Parse TFL Data-");
+                    replaceMessage("-Could Not Parse TfL Data-");
                 } else if ( allowedLines.contains("BAD") ) {
-//                    message = "There is a Good Service on all TFL Lines, except the ones that are always a bit shit";
-                    replaceMessage("Good Service on all TFL Lines");
+                    replaceMessage("Good Service on all TfL Lines");
                 } else {
-//                    message = "-Invalid Line Specified-";
                     replaceMessage("-Invalid Line Specified-");
                 }
             } else {
@@ -68,8 +65,7 @@ public class TubeStatusUpdater extends Updater {
                     addMessage("Good Service All Other Lines");
                 }
             }
-//            System.out.println(message);
-//            replaceMessage(message);
+
         }
 
     }

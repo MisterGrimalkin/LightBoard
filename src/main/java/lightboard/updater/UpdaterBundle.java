@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by grimalkin on 03/04/15.
- */
-public class UpdaterBundle {
+public class UpdaterBundle extends Updater {
 
     public static UpdaterBundle bundle(Updater... updaters) {
         return new UpdaterBundle(updaters);
@@ -18,17 +15,51 @@ public class UpdaterBundle {
     private List<Updater> updaters = new ArrayList<>();
 
     private UpdaterBundle(Updater... upds) {
+        super(null);
         Collections.addAll(updaters, upds);
     }
 
-    public void start(int dataRefresh) {
-        Sync.addTask(new Sync.Task((long) dataRefresh) {
+    private Long dataRefresh = 10000L;
+
+    @Override
+    public Updater setDataRefresh(int dataRefresh) {
+        return setDataRefresh((long)dataRefresh);
+    }
+
+    @Override
+    public Updater setDataRefresh(Long dataRefresh) {
+        this.dataRefresh = dataRefresh;
+        return this;
+    }
+
+    @Override
+    public void start() {
+        Sync.addTask(new Sync.Task(dataRefresh) {
             @Override
             public void runTask() {
-                refresh();
+                doRefresh();
             }
         });
         System.out.println("UpdaterBundle running every " + dataRefresh + "ms");
+    }
+
+    private boolean paused = false;
+
+    @Override
+    public void pause() {
+        paused = true;
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+        doRefresh();
+    }
+
+    private void doRefresh() {
+        if ( !paused ) {
+            refresh();
+        }
     }
 
     public void refresh() {

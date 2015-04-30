@@ -1,23 +1,25 @@
 package lightboard.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Sync {
 
     private static Thread syncThread;
 
-    private static List<Task> tasks = new ArrayList<>();
+    private static Map<Integer, Task> tasks = new HashMap<>();
 
     private static boolean run = false;
 
-    public static void start() {
+    public static void startSyncThread() {
         System.out.println("Staring Sync Thread....");
         run = true;
         syncThread = new Thread(() -> {
             System.out.println("Sync Thread Running");
             while (run) {
-                tasks.forEach(Sync.Task::checkAndRun);
+                for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
+                    entry.getValue().checkAndRun();
+                }
             }
             System.out.println("Sync Thread Stopped");
         });
@@ -25,28 +27,48 @@ public class Sync {
         syncThread.start();
     }
 
-    public static void addTask(Task task) {
-        tasks.add(task);
+    private static int nextTask = 0;
+
+    public static int addTask(Task task) {
+        tasks.put(nextTask, task);
+        return nextTask++;
     }
 
-    public static void stop() {
+    public static void resumeTask(int id) {
+        Task task = tasks.get(id);
+        if ( task!=null ) {
+            task.active = true;
+        }
+    }
+
+    public static void pauseTask(int id) {
+        Task task = tasks.get(id);
+        if ( task!=null ) {
+            task.active = false;
+        }
+    }
+
+    public static void stopSyncThread() {
         run = false;
         syncThread = null;
     }
 
     public static abstract class Task {
-        Long interval = null;
-        Long lastRun = null;
+        private boolean active = true;
+        private Long interval = null;
+        private Long lastRun = null;
         public Task(Long interval) {
             this.interval = interval;
         }
         public void checkAndRun() {
-            long now = System.currentTimeMillis();
-            if ( interval==null ) {
-                runTask();
-            } else if ( lastRun==null || now-lastRun>=interval ) {
-                runTask();
-                lastRun = now;
+            if ( active ) {
+                long now = System.currentTimeMillis();
+                if (interval == null) {
+                    runTask();
+                } else if (lastRun == null || now - lastRun >= interval) {
+                    runTask();
+                    lastRun = now;
+                }
             }
         }
         public abstract void runTask();

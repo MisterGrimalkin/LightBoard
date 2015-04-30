@@ -9,6 +9,9 @@ import lightboard.util.MessageQueue.HPosition;
 import lightboard.util.MessageQueue.VPosition;
 import lightboard.util.Sync;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.System.currentTimeMillis;
 import static lightboard.util.MessageQueue.Edge.NO_SCROLL;
 import static lightboard.util.MessageQueue.HPosition.CENTRE;
@@ -44,36 +47,56 @@ public abstract class LightBoardZone {
     // Tick //
     //////////
 
-    public LightBoardZone start(int scrollTick) {
-        Sync.addTask(new Sync.Task((long)scrollTick) {
+    public LightBoardZone setScrollTick(int scrollTick) {
+        return setScrollTick((long)scrollTick);
+    }
+
+    public LightBoardZone setScrollTick(Long scrollTick) {
+        this.scrollTick = scrollTick;
+        return this;
+    }
+
+    public LightBoardZone start() {
+        Sync.addTask(new Sync.Task(scrollTick) {
             @Override
             public void runTask() {
                 tick();
             }
-         });
+        });
+        onScrollComplete();
         resetScroll();
         return this;
     }
 
+    private boolean paused = true;
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void resume() {
+        paused = false;
+        tick();
+    }
+
     public void tick() {
-        if (resting) {
-            if ( currentTimeMillis()-lastTick > restDuration) {
-                resting = false;
-                initScroll(Scrolling.OUT);
+        if ( !paused ) {
+            if (resting) {
+                if (currentTimeMillis() - lastTick > restDuration) {
+                    resting = false;
+                    initScroll(Scrolling.OUT);
+                }
+            } else {
+                updateScroll();
+                if (autoRender) {
+                    doRender();
+                }
+                lastTick = currentTimeMillis();
             }
-        } else {
-            updateScroll();
-            if (autoRender) {
-                doRender();
-            }
-            lastTick = currentTimeMillis();
         }
     }
 
-    public void stop() {
-        surface.clearSurface();
-    }
-
+    private Long scrollTick = null;
     private long lastTick;
     protected boolean resting;
 
@@ -183,6 +206,7 @@ public abstract class LightBoardZone {
                 break;
             case NO_SCROLL:
                 if ( autoReset ) {
+                    onScrollComplete();
                     resetScroll();
                 }
                 break;
@@ -196,17 +220,19 @@ public abstract class LightBoardZone {
             resting = true;
         }
         if ( !contentVisible() && autoReset ) {
+            onScrollComplete();
             resetScroll();
         }
 
     }
 
     public void resetScroll() {
-        onScrollComplete();
         initScroll(Scrolling.IN);
     }
 
-    public void onScrollComplete() {}
+    public void onScrollComplete() {
+        scrollCompleteHandlers.forEach(ScrollCompleteHandler::onScrollComplete);
+    }
 
     private boolean contentVisible() {
         return contentLeft < region.width
@@ -229,6 +255,7 @@ public abstract class LightBoardZone {
         }
 
         if ( !render() && autoReset ) {
+            onScrollComplete();
             resetScroll();
         }
 
@@ -340,7 +367,7 @@ public abstract class LightBoardZone {
         return this;
     }
 
-    public LightBoardZone region(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
+    public LightBoardZone setRegion(int regionLeft, int regionTop, int regionWidth, int regionHeight) {
         region = surface.safeRegion(regionLeft, regionTop, regionWidth, regionHeight);
         return this;
     }
@@ -382,7 +409,7 @@ public abstract class LightBoardZone {
         return this;
     }
 
-    public LightBoardZone restDuration(int pause) {
+    public LightBoardZone setRestDuration(int pause) {
         restDuration = pause;
         return this;
     }
@@ -401,6 +428,16 @@ public abstract class LightBoardZone {
     private HPosition restPositionH = CENTRE;
     private VPosition restPositionV = MIDDLE;
     private int restDuration = 3000;
+
+    private List<ScrollCompleteHandler> scrollCompleteHandlers = new ArrayList<>();
+
+    public static interface  ScrollCompleteHandler {
+        void onScrollComplete();
+    }
+
+    public void addScrollCompleteHandler(ScrollCompleteHandler handler) {
+        scrollCompleteHandlers.add(handler);
+    }
 
 
     /////////////

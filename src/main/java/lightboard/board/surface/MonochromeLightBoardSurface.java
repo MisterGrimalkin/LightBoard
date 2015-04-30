@@ -3,9 +3,6 @@ package lightboard.board.surface;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.util.Sync;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class MonochromeLightBoardSurface extends LightBoardSurface {
 
     private final double[][] ledValue;

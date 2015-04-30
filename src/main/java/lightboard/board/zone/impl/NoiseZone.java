@@ -25,7 +25,7 @@ public class NoiseZone extends LightBoardZone {
         this.thresholdDelta = thresholdDelta;
         this.ripple = ripple;
         this.pulse = pulse;
-        restDuration(0);
+        setRestDuration(0);
     }
 
     @Override

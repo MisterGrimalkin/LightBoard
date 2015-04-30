@@ -19,14 +19,42 @@ public abstract class Updater {
     // Update Timer //
     //////////////////
 
-    public void start(int dataRefresh) {
-        Sync.addTask(new Sync.Task((long)dataRefresh) {
+    private Long dataRefresh = 10000L;
+
+    public Updater setDataRefresh(int dataRefresh) {
+        return setDataRefresh((long)dataRefresh);
+    }
+
+    public Updater setDataRefresh(Long dataRefresh) {
+        this.dataRefresh = dataRefresh;
+        return this;
+    }
+
+    public void start() {
+        Sync.addTask(new Sync.Task(dataRefresh) {
             @Override
             public void runTask() {
-                refresh();
+                doRefresh();
             }
         });
         System.out.println("Updater running every " + dataRefresh + "ms");
+    }
+
+    private boolean paused = true;
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void resume() {
+        paused = false;
+        doRefresh();
+    }
+
+    private void doRefresh() {
+        if ( !paused ) {
+            refresh();
+        }
     }
 
     //////////////////////////
@@ -39,12 +67,16 @@ public abstract class Updater {
     }
 
     protected void clearMessages() {
-        zone.clearMessages(id);
+        if ( zone!=null ) {
+            zone.clearMessages(id);
+        }
     }
 
     protected void addMessage(String... messages) {
-        for (String message : messages) {
-            zone.addMessage(id, message);
+        if ( zone!=null ) {
+            for (String message : messages) {
+                zone.addMessage(id, message);
+            }
         }
     }
 

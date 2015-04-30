@@ -10,7 +10,7 @@ public class WebService {
 
     private static HttpServer server;
 
-    public static HttpServer start(String ip) {
+    public static HttpServer startWebService(String ip) {
         server = null;
         if ( ip!=null ) {
             System.out.println("Starting Web Service....");
@@ -22,7 +22,7 @@ public class WebService {
         return server;
     }
 
-    public static void stop() {
+    public static void stopWebService() {
         if ( server!=null ) {
             server.shutdown();
         }

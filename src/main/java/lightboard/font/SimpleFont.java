@@ -23,6 +23,8 @@ public class SimpleFont extends Font {
         registerPattern('-', MINUS);
         registerPattern('=', EQUALS);
         registerPattern('+', PLUS);
+        registerPattern('(', OPEN_PAREN);
+        registerPattern(')', CLOSE_PAREN);
 
         registerPattern('0', ZERO);
         registerPattern('1', ONE);
@@ -98,7 +100,8 @@ public class SimpleFont extends Font {
             {i,i,i,i},
             {i,o,o,i},
             {i,o,o,i},
-            {i,o,o,i}};
+            {i,o,o,i},
+            {o,o,o,o}};
 
     private final static boolean[][] a =
            {{o,o,o,o},
@@ -107,7 +110,8 @@ public class SimpleFont extends Font {
             {o,o,o,i},
             {o,i,i,i},
             {i,o,o,i},
-            {o,i,i,i}};
+            {o,i,i,i},
+            {o,o,o,o}};
 
     private final static boolean[][] B =
            {{i,i,i,o},
@@ -116,7 +120,8 @@ public class SimpleFont extends Font {
             {i,i,i,o},
             {i,o,o,i},
             {i,o,o,i},
-            {i,i,i,o}};
+            {i,i,i,o},
+            {o,o,o,o}};
 
     private final static boolean[][] b =
            {{i,o,o,o},
@@ -125,7 +130,8 @@ public class SimpleFont extends Font {
             {i,o,o,i},
             {i,o,o,i},
             {i,o,o,i},
-            {i,i,i,o}};
+            {i,i,i,o},
+            {o,o,o,o}};
 
     private final static boolean[][] C =
            {{o,i,i,o},
@@ -134,7 +140,8 @@ public class SimpleFont extends Font {
             {i,o,o,o},
             {i,o,o,o},
             {i,o,o,i},
-            {o,i,i,o}};
+            {o,i,i,o},
+            {o,o,o,o}};
 
     private final static boolean[][] c =
            {{o,o,o,o},
@@ -143,7 +150,8 @@ public class SimpleFont extends Font {
             {i,o,o,o},
             {i,o,o,o},
             {i,o,o,o},
-            {o,i,i,i}};
+            {o,i,i,i},
+            {o,o,o,o}};
 
     private final static boolean[][] D =
            {{i,i,i,o},
@@ -152,7 +160,8 @@ public class SimpleFont extends Font {
             {i,o,o,i},
             {i,o,o,i},
             {i,o,o,i},
-            {i,i,i,o}};
+            {i,i,i,o},
+            {o,o,o,o}};
 
     private final static boolean[][] d =
            {{o,o,o,i},
@@ -161,7 +170,8 @@ public class SimpleFont extends Font {
             {i,o,o,i},
             {i,o,o,i},
             {i,o,o,i},
-            {o,i,i,i}};
+            {o,i,i,i},
+            {o,o,o,o}};
 
     private final static boolean[][] E =
            {{i,i,i},
@@ -170,7 +180,8 @@ public class SimpleFont extends Font {
             {i,i,o},
             {i,o,o},
             {i,o,o},
-            {i,i,i}};
+            {i,i,i},
+            {o,o,o}};
 
     private final static boolean[][] e =
             {{o,o,o,o},
@@ -179,7 +190,8 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,i,i,i},
             { i,o,o,o},
-            { o,i,i,i}};
+            { o,i,i,i},
+            { o,o,o,o}};
 
     private final static boolean[][] F =
            {{i,i,i},
@@ -188,7 +200,8 @@ public class SimpleFont extends Font {
             {i,i,o},
             {i,o,o},
             {i,o,o},
-            {i,o,o}};
+            {i,o,o},
+            {o,o,o}};
 
     private final static boolean[][] f =
            {{o,o,i},
@@ -197,7 +210,8 @@ public class SimpleFont extends Font {
             {i,i,i},
             {o,i,o},
             {o,i,o},
-            {o,i,o}};
+            {o,i,o},
+            {o,o,o}};
 
     private final static boolean[][] G =
            {{o,i,i,o},
@@ -206,16 +220,18 @@ public class SimpleFont extends Font {
             {i,o,o,o},
             {i,o,i,i},
             {i,o,o,i},
-            {o,i,i,o}};
+            {o,i,i,o},
+            {o,o,o,o}};
 
     private final static boolean[][] g =
            {{o,o,o,o},
             {o,o,o,o},
             {o,i,i,o},
             {i,o,o,i},
+            {i,o,o,i},
             {o,i,i,i},
             {o,o,o,i},
-            {i,i,i,o}};
+            {o,i,i,o}};
 
     private final static boolean[][] H =
            {{i,o,o,i},
@@ -224,7 +240,8 @@ public class SimpleFont extends Font {
             {i,i,i,i},
             {i,o,o,i},
             {i,o,o,i},
-            {i,o,o,i}};
+            {i,o,o,i},
+            {o,o,o,o}};
 
     private final static boolean[][] h =
            {{i,o,o,o},
@@ -233,7 +250,8 @@ public class SimpleFont extends Font {
             {i,o,o,i},
             {i,o,o,i},
             {i,o,o,i},
-            {i,o,o,i}};
+            {i,o,o,i},
+            {o,o,o,o}};
 
     private final static boolean[][] I =
            {{i,i,i},
@@ -242,7 +260,9 @@ public class SimpleFont extends Font {
             {o,i,o},
             {o,i,o},
             {o,i,o},
-            {i,i,i}};
+            {i,i,i},
+            {o,o,o}};
+
 
     private final static boolean[][] letter_i =
            {{i},
@@ -251,7 +271,8 @@ public class SimpleFont extends Font {
             {i},
             {i},
             {i},
-            {i}};
+            {i},
+            {o}};
 
     private final static boolean[][] J =
             {{o,i,i},
@@ -260,11 +281,13 @@ public class SimpleFont extends Font {
             { o,o,i},
             { o,o,i},
             { i,o,i},
-            { o,i,o}};
+            { o,i,o},
+            { o,o,o}};
 
     private final static boolean[][] j =
             {{o,i},
             { o,o},
+            { o,i},
             { o,i},
             { o,i},
             { o,i},
@@ -278,7 +301,8 @@ public class SimpleFont extends Font {
             { i,i,o,o},
             { i,o,i,o},
             { i,o,o,i},
-            { i,o,o,i}};
+            { i,o,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] k =
             {{i,o,o,o},
@@ -287,7 +311,8 @@ public class SimpleFont extends Font {
             { i,o,i,o},
             { i,i,o,o},
             { i,o,i,o},
-            { i,o,o,i}};
+            { i,o,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] L =
             {{i,o,o},
@@ -296,7 +321,8 @@ public class SimpleFont extends Font {
             { i,o,o},
             { i,o,o},
             { i,o,o},
-            { i,i,i}};
+            { i,i,i},
+            { o,o,o}};
 
     private final static boolean[][] l =
             {{i},
@@ -305,7 +331,8 @@ public class SimpleFont extends Font {
             { i},
             { i},
             { i},
-            { i}};
+            { i},
+            { o}};
 
     private final static boolean[][] M =
             {{i,o,o,o,i},
@@ -314,7 +341,8 @@ public class SimpleFont extends Font {
             { i,o,i,o,i},
             { i,o,o,o,i},
             { i,o,o,o,i},
-            { i,o,o,o,i}};
+            { i,o,o,o,i},
+            { o,o,o,o,o}};
 
     private final static boolean[][] m =
             {{o,o,o,o,o},
@@ -323,7 +351,8 @@ public class SimpleFont extends Font {
             { i,o,i,o,i},
             { i,o,i,o,i},
             { i,o,o,o,i},
-            { i,o,o,o,i}};
+            { i,o,o,o,i},
+            { o,o,o,o,o}};
 
     private final static boolean[][] N =
             {{i,o,o,i},
@@ -332,7 +361,8 @@ public class SimpleFont extends Font {
             { i,o,i,i},
             { i,o,o,i},
             { i,o,o,i},
-            { i,o,o,i}};
+            { i,o,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] n =
             {{o,o,o,o},
@@ -341,7 +371,8 @@ public class SimpleFont extends Font {
             { i,i,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { i,o,o,i}};
+            { i,o,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] O =
             {{o,i,i,o},
@@ -350,7 +381,8 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] letter_o =
             {{o,o,o,o},
@@ -359,7 +391,8 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] P =
             {{i,i,i,o},
@@ -368,12 +401,14 @@ public class SimpleFont extends Font {
             { i,i,i,o},
             { i,o,o,o},
             { i,o,o,o},
-            { i,o,o,o}};
+            { i,o,o,o},
+            { o,o,o,o}};
 
     private final static boolean[][] p =
             {{o,o,o,o},
             { o,o,o,o},
             { i,i,i,o},
+            { i,o,o,i},
             { i,o,o,i},
             { i,i,i,o},
             { i,o,o,o},
@@ -386,12 +421,14 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,o,o,i},
             { i,o,i,o},
-            { o,i,o,i}};
+            { o,i,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] q =
             {{o,o,o,o},
             { o,o,o,o},
             { o,i,i,i},
+            { i,o,o,i},
             { i,o,o,i},
             { o,i,i,i},
             { o,o,o,i},
@@ -404,7 +441,8 @@ public class SimpleFont extends Font {
             { i,i,i,o},
             { i,o,o,i},
             { i,o,o,i},
-            { i,o,o,i}};
+            { i,o,o,i},
+            { o,o,o,o}};
 
     private final static boolean[][] r =
             {{o,o,o,o},
@@ -413,7 +451,8 @@ public class SimpleFont extends Font {
             { i,i,o,o},
             { i,o,o,o},
             { i,o,o,o},
-            { i,o,o,o}};
+            { i,o,o,o},
+            { o,o,o,o}};
 
     private final static boolean[][] S =
             {{o,i,i,i},
@@ -422,7 +461,8 @@ public class SimpleFont extends Font {
             { o,i,i,o},
             { o,o,o,i},
             { o,o,o,i},
-            { i,i,i,o}};
+            { i,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] s =
             {{o,o,o,o},
@@ -431,7 +471,8 @@ public class SimpleFont extends Font {
             { i,o,o,o},
             { o,i,i,o},
             { o,o,o,i},
-            { i,i,i,o}};
+            { i,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] T =
             {{i,i,i},
@@ -440,7 +481,8 @@ public class SimpleFont extends Font {
             { o,i,o},
             { o,i,o},
             { o,i,o},
-            { o,i,o}};
+            { o,i,o},
+            { o,o,o}};
 
     private final static boolean[][] t =
             {{o,o,o},
@@ -449,7 +491,8 @@ public class SimpleFont extends Font {
             { o,i,o},
             { o,i,o},
             { o,i,o},
-            { o,i,o}};
+            { o,i,o},
+            { o,o,o}};
 
     private final static boolean[][] U =
             {{i,o,o,i},
@@ -458,7 +501,8 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] u =
             {{o,o,o,o},
@@ -467,7 +511,8 @@ public class SimpleFont extends Font {
             { i,o,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] V =
             {{i,o,o,o,i},
@@ -476,7 +521,8 @@ public class SimpleFont extends Font {
             { i,o,o,o,i},
             { i,o,o,o,i},
             { o,i,o,i,o},
-            { o,o,i,o,o}};
+            { o,o,i,o,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] v =
             {{o,o,o,o,o},
@@ -485,7 +531,8 @@ public class SimpleFont extends Font {
             { i,o,o,o,i},
             { i,o,o,o,i},
             { o,i,o,i,o},
-            { o,o,i,o,o}};
+            { o,o,i,o,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] W =
             {{i,o,o,o,i},
@@ -494,7 +541,8 @@ public class SimpleFont extends Font {
             { i,o,o,o,i},
             { i,o,i,o,i},
             { i,o,i,o,i},
-            { o,i,o,i,o}};
+            { o,i,o,i,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] w =
             {{o,o,o,o,o},
@@ -503,7 +551,8 @@ public class SimpleFont extends Font {
             { i,o,o,o,i},
             { i,o,i,o,i},
             { i,o,i,o,i},
-            { o,i,o,i,o}};
+            { o,i,o,i,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] X =
             {{i,o,o,o,i},
@@ -512,7 +561,8 @@ public class SimpleFont extends Font {
             { o,o,i,o,o},
             { o,i,o,i,o},
             { i,o,o,o,i},
-            { i,o,o,o,i}};
+            { i,o,o,o,i},
+            { o,o,o,o,o}};
 
     private final static boolean[][] x =
             {{o,o,o,o,o},
@@ -521,7 +571,8 @@ public class SimpleFont extends Font {
             { o,i,o,i,o},
             { o,o,i,o,o},
             { o,i,o,i,o},
-            { i,o,o,o,i}};
+            { i,o,o,o,i},
+            { o,o,o,o,o}};
 
     private final static boolean[][] Y =
             {{i,o,o,o,i},
@@ -530,16 +581,18 @@ public class SimpleFont extends Font {
             { o,o,i,o,o},
             { o,o,i,o,o},
             { o,o,i,o,o},
-            { o,o,i,o,o}};
+            { o,o,i,o,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] y =
-            {{o,o,o,o,o},
-            { o,o,o,o,o},
-            { o,i,o,o,i},
-            { o,i,o,o,i},
-            { o,o,i,i,i},
-            { o,o,o,o,i},
-            { o,i,i,i,o}};
+            {{o,o,o,o},
+            { o,o,o,o},
+            { i,o,o,i},
+            { i,o,o,i},
+            { i,o,o,i},
+            { o,i,i,i},
+            { o,o,o,i},
+            { o,i,i,o}};
 
     private final static boolean[][] Z =
             {{i,i,i,i},
@@ -548,7 +601,8 @@ public class SimpleFont extends Font {
             { o,i,o,o},
             { i,o,o,o},
             { i,o,o,o},
-            { i,i,i,i}};
+            { i,i,i,i},
+            { o,o,o,o}};
 
     private final static boolean[][] z =
             {{o,o,o,o},
@@ -557,7 +611,8 @@ public class SimpleFont extends Font {
             { o,o,i,o},
             { o,i,o,o},
             { i,o,o,o},
-            { i,i,i,i}};
+            { i,i,i,i},
+            { o,o,o,o}};
 
     private final static boolean[][] SPACE =
            {{o,o,o},
@@ -566,43 +621,48 @@ public class SimpleFont extends Font {
             {o,o,o},
             {o,o,o},
             {o,o,o},
+            {o,o,o},
             {o,o,o}};
 
     private final static boolean[][] COMMA =
-           {{o,o,o},
-            {o,o,o},
-            {o,o,o},
-            {o,o,o},
-            {i,i,o},
-            {o,i,o},
-            {i,o,o}};
+           {{o,o},
+            {o,o},
+            {o,o},
+            {o,o},
+            {o,o},
+            {o,o},
+            {i,o},
+            {i,o}};
 
     private final static boolean[][] FULLSTOP =
             {{o,o,o},
-            {o,o,o},
-            {o,o,o},
-            {o,o,o},
-            {o,o,o},
-            {i,i,o},
-            {i,i,o}};
+             {o,o,o},
+             {o,o,o},
+             {o,o,o},
+             {o,o,o},
+             {o,o,o},
+             {o,i,o},
+             {o,o,o}};
 
     private final static boolean[][] EXCLAMATION =
             {{i,o},
-            {i,o},
-            {i,o},
-            {i,o},
-            {i,o},
-            {o,o},
-            {i,o}};
+             {i,o},
+             {i,o},
+             {i,o},
+             {i,o},
+             {i,o},
+             {o,o},
+             {i,o}};
 
     private final static boolean[][] APOS =
-            {{i,o},
-            {i,o},
-            {o,o},
-            {o,o},
-            {o,o},
-            {o,o},
-            {o,o}};
+            {{i},
+             {i},
+             {o},
+             {o},
+             {o},
+             {o},
+             {o},
+             {o}};
 
     private final static boolean[][] QUESTION =
             {{o,i,i,i,o},
@@ -611,7 +671,8 @@ public class SimpleFont extends Font {
             { o,o,i,o,o},
             { o,o,i,o,o},
             { o,o,o,o,o},
-            { o,o,i,o,o}};
+            { o,o,i,o,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] DIAMOND =
             {{o,o,o,o,o},
@@ -620,6 +681,7 @@ public class SimpleFont extends Font {
             { i,o,i,o,i},
             { o,i,o,i,o},
             { o,o,i,o,o},
+            { o,o,o,o,o},
             { o,o,o,o,o}};
 
     private final static boolean[][] LEFT_ARROW =
@@ -629,6 +691,7 @@ public class SimpleFont extends Font {
             { i,i,i,i},
             { o,i,o,o},
             { o,o,i,o},
+            { o,o,o,o},
             { o,o,o,o}};
 
     private final static boolean[][] RIGHT_ARROW =
@@ -638,16 +701,18 @@ public class SimpleFont extends Font {
             { i,i,i,i},
             { o,o,i,o},
             { o,i,o,o},
+            { o,o,o,o},
             { o,o,o,o}};
 
     private final static boolean[][] ZERO =
             {{o,i,i,o},
             { i,o,o,i},
-            { i,i,o,i},
             { i,o,i,i},
+            { i,i,o,i},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] ONE =
             {{o,i,o},
@@ -656,7 +721,8 @@ public class SimpleFont extends Font {
             { o,i,o},
             { o,i,o},
             { o,i,o},
-            { i,i,i}};
+            { i,i,i},
+            { o,o,o}};
 
     private final static boolean[][] TWO =
             {{o,i,i,o},
@@ -665,7 +731,8 @@ public class SimpleFont extends Font {
             { o,o,i,o},
             { o,i,o,o},
             { i,o,o,o},
-            { i,i,i,i}};
+            { i,i,i,i},
+            { o,o,o,o}};
 
     private final static boolean[][] THREE =
             {{o,i,i,o},
@@ -674,7 +741,8 @@ public class SimpleFont extends Font {
             { o,i,i,o},
             { o,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] FOUR =
             {{o,o,o,i,o},
@@ -683,7 +751,8 @@ public class SimpleFont extends Font {
             { i,o,o,i,o},
             { i,i,i,i,i},
             { o,o,o,i,o},
-            { o,o,o,i,o}};
+            { o,o,o,i,o},
+            { o,o,o,o,o}};
 
     private final static boolean[][] FIVE =
             {{i,i,i,i},
@@ -692,7 +761,8 @@ public class SimpleFont extends Font {
             { i,i,i,o},
             { o,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] SIX =
             {{o,i,i,o},
@@ -701,7 +771,8 @@ public class SimpleFont extends Font {
             { i,i,i,o},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] SEVEN =
             {{i,i,i,i},
@@ -710,7 +781,8 @@ public class SimpleFont extends Font {
             { o,o,i,o},
             { o,o,i,o},
             { o,i,o,o},
-            { o,i,o,o}};
+            { o,i,o,o},
+            { o,o,o,o}};
 
     private final static boolean[][] EIGHT =
             {{o,i,i,o},
@@ -719,7 +791,8 @@ public class SimpleFont extends Font {
             { o,i,i,o},
             { i,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] NINE =
             {{o,i,i,o},
@@ -728,7 +801,8 @@ public class SimpleFont extends Font {
             { o,i,i,i},
             { o,o,o,i},
             { i,o,o,i},
-            { o,i,i,o}};
+            { o,i,i,o},
+            { o,o,o,o}};
 
     private final static boolean[][] EQUALS =
             {{o,o,o},
@@ -737,6 +811,7 @@ public class SimpleFont extends Font {
             { o,o,o},
             { i,i,i},
             { o,o,o},
+            { o,o,o},
             { o,o,o}};
 
     private final static boolean[][] MINUS =
@@ -744,6 +819,7 @@ public class SimpleFont extends Font {
             { o,o,o},
             { o,o,o},
             { i,i,i},
+            { o,o,o},
             { o,o,o},
             { o,o,o},
             { o,o,o}};
@@ -755,22 +831,45 @@ public class SimpleFont extends Font {
             { i,i,i},
             { o,i,o},
             { o,o,o},
+            { o,o,o},
             { o,o,o}};
 
     private final static boolean[][] COLON =
             {{o,o,o},
-            { o,o,o},
             { o,i,o},
             { o,o,o},
             { o,o,o},
+            { o,o,o},
             { o,i,o},
+            { o,o,o},
             { o,o,o}};
 
     private final static boolean[][] SEMICOLON =
             {{o,o,o},
-            { o,o,o},
             { o,i,o},
             { o,o,o},
+            { o,o,o},
+            { o,o,o},
+            { o,i,o},
+            { o,i,o},
+            { o,o,o}};
+
+    private final static boolean[][] OPEN_PAREN =
+            {{o,o,i},
+            { o,i,o},
+            { i,o,o},
+            { i,o,o},
+            { i,o,o},
+            { o,i,o},
+            { o,o,i},
+            { o,o,o}};
+
+    private final static boolean[][] CLOSE_PAREN =
+            {{i,o,o},
+            { o,i,o},
+            { o,o,i},
+            { o,o,i},
+            { o,o,i},
             { o,i,o},
             { i,o,o},
             { o,o,o}};
