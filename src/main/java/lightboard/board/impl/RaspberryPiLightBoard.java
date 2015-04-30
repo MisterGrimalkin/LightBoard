@@ -11,8 +11,8 @@ import java.math.BigInteger;
 
 public class RaspberryPiLightBoard implements LightBoard {
 
-    private final static int ROWS = 16;
-    private final static int COLS = 180;
+    private int rows = 16;
+    private int cols = 180;
 
     private GpioPinDigitalOutput clockPin;
     private GpioPinDigitalOutput storePin;
@@ -28,7 +28,10 @@ public class RaspberryPiLightBoard implements LightBoard {
     private GpioPinDigitalOutput outputEnable1Pin;
     private GpioPinDigitalOutput outputEnable2Pin;
 
-    public RaspberryPiLightBoard() { }
+    public RaspberryPiLightBoard(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+    }
 
     @Override
     public void init() {
@@ -91,7 +94,7 @@ public class RaspberryPiLightBoard implements LightBoard {
         Boolean lastValue1 = null;
         Boolean lastValue2 = null;
         for (int col = (data.length/2)-1; col >= 0; col--) {
-            int parallelCol = col + (COLS/2);
+            int parallelCol = col + (cols /2);
             clockPin.low();
             if ( lastValue1==null || lastValue1!=data[col] ) {
                 lastValue1 = data[col];
@@ -168,12 +171,12 @@ public class RaspberryPiLightBoard implements LightBoard {
 
     @Override
     public int getRows() {
-        return ROWS;
+        return rows;
     }
 
     @Override
     public int getCols() {
-        return COLS;
+        return cols;
     }
 
 }

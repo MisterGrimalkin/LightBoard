@@ -10,6 +10,7 @@ import javafx.stage.StageStyle;
 import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
+import lightboard.updater.WebService;
 import lightboard.util.Sync;
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -43,6 +44,11 @@ public class GraphicalBoard implements PolychromeLightBoard {
     private int ledRadius;
     private int spacer;
 
+    public GraphicalBoard(int rows, int cols, Stage stage) {
+        this(rows, cols, stage, "LightBoard", 2, 0);
+
+    }
+
     public GraphicalBoard(int rows, int cols, Stage stage, String title, int ledRadius, int spacer) {
         this.rows = rows;
         this.cols = cols;
@@ -50,12 +56,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
         this.title = title;
         this.ledRadius = ledRadius;
         this.spacer = spacer;
-    }
-
-    private HttpServer server;
-
-    public void setServer(HttpServer server) {
-        this.server = server;
+        debugTo(new TextBoard(rows, cols));
     }
 
     @Override
@@ -93,10 +94,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
         stage.show();
 
         stage.setOnCloseRequest(event -> {
+            WebService.stop();
             Sync.stop();
-            if ( server != null ) {
-                server.shutdown();
-            }
         });
 
         System.out.println("Board Ready");
@@ -136,7 +135,6 @@ public class GraphicalBoard implements PolychromeLightBoard {
                 }
             }
         });
-
 
     }
 
@@ -201,11 +199,8 @@ public class GraphicalBoard implements PolychromeLightBoard {
     // Binary LightBoard //
     ///////////////////////
 
-    boolean wait = false;
-
     @Override
     public synchronized void dump(boolean[][] data) {
-        wait = true;
         if ( dumpToDebug && debugBoard!=null) {
             debugBoard.dump(data);
             dumpToDebug = false;
@@ -213,7 +208,6 @@ public class GraphicalBoard implements PolychromeLightBoard {
         for ( int r=0; r<data.length; r++ ) {
             dumpBinaryRow(r, data[r]);
         }
-        wait = false;
     }
 
     private void dumpBinaryRow(int rowNumber, boolean... rowData) {
