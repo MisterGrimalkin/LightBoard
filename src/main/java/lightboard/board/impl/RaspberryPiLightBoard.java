@@ -4,12 +4,13 @@ import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
+import lightboard.board.HasColourSwitcher;
 import lightboard.board.LightBoard;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class RaspberryPiLightBoard implements LightBoard {
+public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
 
     private int rows = 16;
     private int cols = 180;
@@ -61,19 +62,21 @@ public class RaspberryPiLightBoard implements LightBoard {
         System.out.println("Board Ready");
     }
 
-    private int colour = 0;
-    private static final int R = 1;
-    private static final int G = 2;
-    private static final int Y = 3;
+    private static final int RED = 1;
+    private static final int GREEN = 2;
+    private static final int YELLOW = 3;
+
+    private boolean cycleColours = false;
+    private int colour = RED;
 
     private long t = 0;
-    private static final long COLOUR_CHANGE_TIME = 30000;
+    private long colourChangePeriod = 30000;
 
     @Override
     public void dump(boolean[][] data) {
-        if ( System.currentTimeMillis()-t > COLOUR_CHANGE_TIME ) {
+        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
             colour++;
-            if ( colour>Y ) colour = R;
+            if ( colour> YELLOW) colour = RED;
             t = System.currentTimeMillis();
         }
         try {
@@ -99,21 +102,21 @@ public class RaspberryPiLightBoard implements LightBoard {
             if ( lastValue1==null || lastValue1!=data[col] ) {
                 lastValue1 = data[col];
                 if (data[col]) {
-                    if ( colour!=G ) data1PinR.high();
-                    if ( colour!=R ) data1PinG.high();
+                    if ( colour!= GREEN) data1PinR.high();
+                    if ( colour!= RED) data1PinG.high();
                 } else {
-                    if ( colour!=G ) data1PinR.low();
-                    if ( colour!=R ) data1PinG.low();
+                    if ( colour!= GREEN) data1PinR.low();
+                    if ( colour!= RED) data1PinG.low();
                 }
             }
             if ( lastValue2==null || lastValue2!=data[parallelCol] ) {
                 lastValue2 = data[parallelCol];
                 if (data[parallelCol]) {
-                    if ( colour!=G ) data2PinR.high();
-                    if ( colour!=R ) data2PinG.high();
+                    if ( colour!= GREEN) data2PinR.high();
+                    if ( colour!= RED) data2PinG.high();
                 } else {
-                    if ( colour!=G ) data2PinR.low();
-                    if ( colour!=R ) data2PinG.low();
+                    if ( colour!= GREEN) data2PinR.low();
+                    if ( colour!= RED) data2PinG.low();
                 }
             }
             clockPin.high();
@@ -179,4 +182,36 @@ public class RaspberryPiLightBoard implements LightBoard {
         return cols;
     }
 
+    @Override
+    public void red() {
+        cycleColours = false;
+        colour = RED;
+        data1PinG.low();
+        data2PinG.low();
+    }
+
+    @Override
+    public void green() {
+        cycleColours = false;
+        colour = GREEN;
+        data1PinR.low();
+        data2PinR.low();
+    }
+
+    @Override
+    public void yellow() {
+        cycleColours = false;
+        colour = YELLOW;
+    }
+
+    @Override
+    public void blue() {
+        System.err.println("What is 'blue'?");
+    }
+
+    @Override
+    public void cycle(int ms) {
+        cycleColours = true;
+        colourChangePeriod = ms;
+    }
 }

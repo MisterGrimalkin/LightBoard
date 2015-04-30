@@ -27,6 +27,7 @@ public abstract class Scene {
 
     public void pause() {
         zones.forEach(LightBoardZone::pause);
+        zones.forEach(LightBoardZone::clear);
         updaters.forEach(Updater::pause);
     }
 

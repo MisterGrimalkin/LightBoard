@@ -20,7 +20,7 @@ public class WebServiceMessageScene extends Scene {
         zone
             .setScrollTick(60)
             .addScrollCompleteHandler(() -> {
-                SceneManager.advanceScene();
+                SceneManager.reloadScene();
                 zone.clearOverride();
             });
         zone.addMessage(0, "");

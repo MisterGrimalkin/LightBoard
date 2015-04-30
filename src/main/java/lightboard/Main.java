@@ -7,12 +7,14 @@ import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.RaspberryPiLightBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
+import lightboard.scene.ShopOpeningTimesScene;
 import lightboard.scene.TravelInformationScene;
+import lightboard.scene.WeatherForecastScene;
 import lightboard.scene.WebServiceMessageScene;
 import lightboard.updater.schedule.MessageResource;
+import lightboard.util.ColourResource;
 
-import static lightboard.scene.SceneManager.addScene;
-import static lightboard.scene.SceneManager.cycleScenes;
+import static lightboard.scene.SceneManager.*;
 import static lightboard.updater.WebService.startWebService;
 import static lightboard.util.Sync.startSyncThread;
 
@@ -31,10 +33,14 @@ public class Main extends Application {
         LightBoard board;
         switch ( getBoardType() ) {
             case RASPBERRY_PI:
-                board = new RaspberryPiLightBoard(ROWS, COLS);
+                RaspberryPiLightBoard raspberryPiLightBoard = new RaspberryPiLightBoard(ROWS, COLS);
+                ColourResource.addBoard(raspberryPiLightBoard);
+                board = raspberryPiLightBoard;
                 break;
             case GRAPHICAL:
-                board = new GraphicalBoard(ROWS, COLS, primaryStage);
+                GraphicalBoard graphicalBoard = new GraphicalBoard(ROWS, COLS, primaryStage);
+                ColourResource.addBoard(graphicalBoard);
+                board = graphicalBoard;
                 break;
             case TEXT:
             default:
@@ -46,11 +52,15 @@ public class Main extends Application {
         LightBoardSurface surface = new LightBoardSurface(board);
         surface.init();
 
-        addScene(0, new TravelInformationScene(surface));
-        addScene(1, new WebServiceMessageScene(surface));
-        cycleScenes(90000);
+        addScene(0, new WebServiceMessageScene(surface));
+        addScene(1, new TravelInformationScene(surface));
+        addScene(2, new ShopOpeningTimesScene(surface));
+        addScene(3, new WeatherForecastScene(surface));
+        startScenes();
+        loadScene(1);
+//        cycleScenes(90000);
 
-        MessageResource.bindScene(1);
+        MessageResource.bindScene(0);
 
         startSyncThread();
 

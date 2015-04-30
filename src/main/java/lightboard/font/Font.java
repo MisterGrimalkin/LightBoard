@@ -74,6 +74,9 @@ public abstract class Font {
     }
 
     public final boolean[][] renderString(String str, HPosition align) {
+        if ( str==null || str.isEmpty() ) {
+            return new boolean[1][1];
+        }
         int cols = getStringWidth(str);
         int rows = getStringHeight(str);
         boolean[][] result = new boolean[rows][cols];

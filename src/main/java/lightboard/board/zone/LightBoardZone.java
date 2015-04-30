@@ -304,7 +304,7 @@ public abstract class LightBoardZone {
         return surface.clearRegion(toDraw);
     }
 
-    protected boolean clear() {
+    public boolean clear() {
         return surface.clearRegion(region);
     }
 

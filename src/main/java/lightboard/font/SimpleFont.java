@@ -836,11 +836,11 @@ public class SimpleFont extends Font {
 
     private final static boolean[][] COLON =
             {{o,o,o},
-            { o,i,o},
-            { o,o,o},
-            { o,o,o},
             { o,o,o},
             { o,i,o},
+            { o,o,o},
+            { o,i,o},
+            { o,o,o},
             { o,o,o},
             { o,o,o}};
 

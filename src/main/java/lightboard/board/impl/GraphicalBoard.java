@@ -7,26 +7,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lightboard.board.HasColourSwitcher;
 import lightboard.board.LightBoard;
 import lightboard.board.MonochromeLightBoard;
 import lightboard.board.PolychromeLightBoard;
 import lightboard.updater.WebService;
 import lightboard.util.Sync;
 
-public class GraphicalBoard implements PolychromeLightBoard {
+public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
-    private final static double RED_MIN = 0.15;
-    private final static double RED_MAX = 1.0;
+    private double redMin = 0.05;
+    private double redMax = 1.0;
 
-    private final static double GREEN_MIN = 0.0;
-    private final static double GREEN_MAX = 0.0;
+    private double greenMin = 0.05;
+    private double greenMax = 1.0;
 
-    private final static double BLUE_MIN = 0.0;
-    private final static double BLUE_MAX = 0.0;
+    private double blueMin = 0.05;
+    private double blueMax = 1.0;
 
-    private final static Color OFF = Color.color( RED_MIN, GREEN_MIN, BLUE_MIN);
+    private Color off = Color.color(redMin, greenMin, blueMin);
 
     private final static Long LED_REFRESH_TIME = null;
 
@@ -76,7 +77,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
         // Create LED Board
         for ( int row=0; row<rows; row++ ) {
             for ( int col=0; col<cols; col++ ) {
-                Circle led = new Circle(ledRadius - spacer, OFF);
+                Circle led = new Circle(ledRadius - spacer, off);
                 led.setCenterX(d + col * d);
                 led.setCenterY(d + row * d);
                 board.getChildren().add(led);
@@ -88,7 +89,7 @@ public class GraphicalBoard implements PolychromeLightBoard {
         stage.setScene(new Scene(pane, getWidthPixels(), getHeightPixels()));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
-//        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
         stage.setTitle(title);
         stage.show();
 
@@ -184,9 +185,9 @@ public class GraphicalBoard implements PolychromeLightBoard {
     private void dumpMonoRow(int rowNumber, double... data) {
         Circle[] rowLights = leds[rowNumber];
         for ( int c=0; c<rowLights.length; c++ ) {
-            double red = RED_MIN + (data[c]*(RED_MAX-RED_MIN));
-            double green = GREEN_MIN + (data[c]*(GREEN_MAX-GREEN_MIN));
-            double blue = BLUE_MIN + (data[c]*(BLUE_MAX-BLUE_MIN));
+            double red = redMin + (data[c]*(redMax - redMin));
+            double green = greenMin + (data[c]*(greenMax - greenMin));
+            double blue = blueMin + (data[c]*(blueMax - blueMin));
             if ( rowLights[c]!=null ) {
                 rowLights[c].setFill(Color.color(red, green, blue));
             }
@@ -212,9 +213,9 @@ public class GraphicalBoard implements PolychromeLightBoard {
     private void dumpBinaryRow(int rowNumber, boolean... rowData) {
         Circle[] rowLights = leds[rowNumber];
         for ( int c=0; c<rowLights.length; c++ ) {
-            double red = rowData[c] ? RED_MAX : RED_MIN;
-            double green = rowData[c] ? GREEN_MAX : GREEN_MIN;
-            double blue = rowData[c] ? BLUE_MAX : BLUE_MIN;
+            double red = rowData[c] ? redMax : redMin;
+            double green = rowData[c] ? greenMax : greenMin;
+            double blue = rowData[c] ? blueMax : blueMin;
             if ( rowLights[c]!=null ) {
                 Color color = Color.color(red, green, blue);
                 if ( !rowLights[c].getFill().equals(color)) {
@@ -273,4 +274,54 @@ public class GraphicalBoard implements PolychromeLightBoard {
         return this;
     }
 
+    @Override
+    public void red() {
+        redMin = 0.05;
+        redMax = 1.0;
+        greenMin = 0;
+        greenMax = 0;
+        blueMin = 0;
+        blueMax = 0;
+    }
+
+    @Override
+    public void green() {
+        redMin = 0;
+        redMax = 0;
+        greenMin = 0.05;
+        greenMax = 1.0;
+        blueMin = 0;
+        blueMax = 0;
+    }
+
+    @Override
+    public void yellow() {
+        redMin = 0.05;
+        redMax = 1.0;
+        greenMin = 0.05;
+        greenMax = 1.0;
+        blueMin = 0;
+        blueMax = 0;
+    }
+
+    @Override
+    public void blue() {
+        redMin = 0;
+        redMax = 0;
+        greenMin = 0;
+        greenMax = 0;
+        blueMin = 0.05;
+        blueMax = 1.0;
+    }
+
+    @Override
+    public void cycle(int ms) {
+        redMin = 0.05;
+        redMax = 1.0;
+        greenMin = 0.05;
+        greenMax = 1.0;
+        blueMin = 0.05;
+        blueMax = 1.0;
+        System.err.println("Graphical Board Does Not Support Colour Cycling");
+    }
 }
