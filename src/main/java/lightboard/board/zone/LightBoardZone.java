@@ -403,7 +403,7 @@ public abstract class LightBoardZone {
         return this;
     }
 
-    public LightBoardZone restPosition(HPosition x, VPosition y) {
+    public LightBoardZone setRestPosition(HPosition x, VPosition y) {
         restPositionH = x;
         restPositionV = y;
         return this;

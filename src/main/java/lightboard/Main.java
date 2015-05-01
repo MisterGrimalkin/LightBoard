@@ -7,10 +7,9 @@ import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.RaspberryPiLightBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.board.surface.LightBoardSurface;
-import lightboard.scene.ShopOpeningTimesScene;
-import lightboard.scene.TravelInformationScene;
-import lightboard.scene.WeatherForecastScene;
-import lightboard.scene.WebServiceMessageScene;
+import lightboard.scene.impl.ShopOpeningTimesScene;
+import lightboard.scene.impl.TravelInformationScene;
+import lightboard.scene.impl.WebServiceMessageScene;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.util.ColourResource;
 
@@ -55,7 +54,7 @@ public class Main extends Application {
         addScene(0, new WebServiceMessageScene(surface));
         addScene(1, new TravelInformationScene(surface));
         addScene(2, new ShopOpeningTimesScene(surface));
-        addScene(3, new WeatherForecastScene(surface));
+//        addScene(3, new WeatherForecastScene(surface));
         startScenes();
         loadScene(1);
 //        cycleScenes(90000);

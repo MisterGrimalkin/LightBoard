@@ -1,8 +1,9 @@
-package lightboard.scene;
+package lightboard.scene.impl;
 
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.CompositeZone;
 import lightboard.board.zone.impl.TextZone;
+import lightboard.scene.Scene;
 
 import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.LEFT;
@@ -22,16 +23,16 @@ public class WordSpinScene extends Scene {
     public void build() {
 
         TextZone z1 = new TextZone(getSurface(), LEFT_EDGE, BOTTOM_EDGE, 0);
-        z1.restPosition(RIGHT, TOP).clear(false).setScrollTick(25);
+        z1.setRestPosition(RIGHT, TOP).clear(false).setScrollTick(25);
 
         TextZone z2 = new TextZone(getSurface(), TOP_EDGE, LEFT_EDGE, 0);
-        z2.restPosition(RIGHT, BOTTOM).clear(true).setScrollTick(25);
+        z2.setRestPosition(RIGHT, BOTTOM).clear(true).setScrollTick(25);
 
         TextZone z3 = new TextZone(getSurface(), BOTTOM_EDGE, RIGHT_EDGE, 0);
-        z3.restPosition(LEFT, TOP).clear(false);
+        z3.setRestPosition(LEFT, TOP).clear(false);
 
         TextZone z4 = new TextZone(getSurface(), RIGHT_EDGE, TOP_EDGE, 0);
-        z4.restPosition(LEFT, BOTTOM).clear(false);
+        z4.setRestPosition(LEFT, BOTTOM).clear(false);
 
         for ( int i=3; i<messages.length; i+=4 ) {
             z1.addMessage(0, messages[i-3]);

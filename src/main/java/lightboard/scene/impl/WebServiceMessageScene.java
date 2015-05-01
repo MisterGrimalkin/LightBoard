@@ -1,7 +1,9 @@
-package lightboard.scene;
+package lightboard.scene.impl;
 
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.TextZone;
+import lightboard.scene.Scene;
+import lightboard.scene.SceneManager;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.updater.schedule.MessageUpdater;
 

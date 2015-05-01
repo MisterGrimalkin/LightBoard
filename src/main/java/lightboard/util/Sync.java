@@ -12,7 +12,7 @@ public class Sync {
     private static boolean run = false;
 
     public static void startSyncThread() {
-        System.out.println("Staring Sync Thread....");
+        System.out.println("Staring Sync Thread with " + tasks.size() + " tasks....");
         run = true;
         syncThread = new Thread(() -> {
             System.out.println("Sync Thread Running");

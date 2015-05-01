@@ -1,7 +1,8 @@
-package lightboard.scene;
+package lightboard.scene.impl;
 
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.TextZone;
+import lightboard.scene.Scene;
 
 public class WeatherForecastScene extends Scene {
 
@@ -13,7 +14,7 @@ public class WeatherForecastScene extends Scene {
     public void build() {
         TextZone temp = TextZone.fixed(getSurface());
         temp.setScrollTick(25);
-        temp.addMessage(0, "This Scene is for Weather Data");
+        temp.addMessage(0, "Latest Report from MET Office:\nWeather will Happen. Probably.");
 
         registerZones(temp);
     }

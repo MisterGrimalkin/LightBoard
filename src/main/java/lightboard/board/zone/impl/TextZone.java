@@ -41,7 +41,7 @@ public class TextZone extends LightBoardZone {
 
     private void setDefaults() {
         scroll(defaultScrollFrom, defaultScrollTo);
-        restPosition(defaultRestH, defaultRestV);
+        setRestPosition(defaultRestH, defaultRestV);
         setRestDuration(defaultRestDuration);
     }
 
@@ -128,7 +128,7 @@ public class TextZone extends LightBoardZone {
         overrideMessage = message;
         resting = false;
         scroll(message.getScrollFrom(), message.getScrollTo());
-        restPosition(message.gethPosition(), message.getvPosition());
+        setRestPosition(message.gethPosition(), message.getvPosition());
         setRestDuration(message.getRestDuration());
         resetScroll();
         override = true;
