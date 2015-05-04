@@ -8,6 +8,8 @@ import lightboard.util.MessageQueue;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.MessageWrapper;
 
+import javax.xml.soap.Text;
+
 public class TextZone extends LightBoardZone {
 
     private Font font;
@@ -112,6 +114,10 @@ public class TextZone extends LightBoardZone {
         return new MessageWrapper(message, getScrollFrom(), getScrollTo(), getRestPositionH(), getRestPositionV(), getRestDuration());
     }
 
+    public TextZone setFont(Font font) {
+        this.font = font;
+        return this;
+    }
 
     //////////////
     // Override //

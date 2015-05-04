@@ -3,6 +3,7 @@ package lightboard.scene.impl;
 import lightboard.board.surface.LightBoardSurface;
 import lightboard.board.zone.impl.BinReminderZone;
 import lightboard.board.zone.impl.TextZone;
+import lightboard.font.SmallFont;
 import lightboard.scene.Scene;
 import lightboard.updater.Updater;
 import lightboard.updater.UpdaterBundle;
@@ -13,8 +14,8 @@ import lightboard.util.MessageQueue;
 
 public class TravelInformationScene extends Scene {
 
-    private static final int CLOCK_WIDTH = 30;
-    private static final int CLOCK_HEIGHT = 10;
+    private static final int CLOCK_WIDTH = 21;
+    private static final int CLOCK_HEIGHT = 7;
 
     public TravelInformationScene(LightBoardSurface surface) {
         super(surface);
@@ -36,7 +37,7 @@ public class TravelInformationScene extends Scene {
         TextZone busArrivalsZone = TextZone.scrollUp(getSurface());
         busArrivalsZone
             .setScrollTick(60)
-            .setRestDuration(3000)
+            .setRestDuration(2000)
             .setRegion(
                     0, 0, getCols() - CLOCK_WIDTH, getRows() / 2
             );
@@ -56,6 +57,7 @@ public class TravelInformationScene extends Scene {
         // Clock
         TextZone clockZone = TextZone.fixed(getSurface());
         clockZone
+            .setFont(new SmallFont())
             .setScrollTick(500)
             .setRestDuration(0)
             .setRegion(
@@ -70,7 +72,7 @@ public class TravelInformationScene extends Scene {
                 .setRestDuration(0)
                 .setRestPosition(MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE)
                 .setRegion(
-                        getCols() - CLOCK_WIDTH, 2 * getRows() / 3, CLOCK_WIDTH, getRows() - CLOCK_HEIGHT
+                        getCols() - CLOCK_WIDTH, CLOCK_HEIGHT + 1, CLOCK_WIDTH, getRows() - CLOCK_HEIGHT
                 );
 
         // Setup Scene

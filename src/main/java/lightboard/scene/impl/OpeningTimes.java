@@ -9,8 +9,43 @@ public class OpeningTimes {
     public static List<OpeningTimes> getLocalOpeningTimes() {
         List<OpeningTimes> result = new ArrayList<>();
         result.add(budgens());
+        result.add(haelan());
+        result.add(parkLocal());
         result.add(tesco());
         return result;
+    }
+
+    public static OpeningTimes budgens() {
+        return new OpeningTimes("Budgens")
+                .addTime("Monday",      "07:00", "23:00")
+                .addTime("Tuesday",     "07:00", "23:00")
+                .addTime("Wednesday",   "07:00", "23:00")
+                .addTime("Thursday",    "07:00", "23:00")
+                .addTime("Friday",      "07:00", "23:00")
+                .addTime("Saturday",    "07:00", "23:00")
+                .addTime("Sunday",      "12:00", "18:00");
+    }
+
+    public static OpeningTimes haelan() {
+        return new OpeningTimes("Haelan Centre")
+                .addTime("Monday",      "09:00", "18:00")
+                .addTime("Tuesday",     "09:00", "18:00")
+                .addTime("Wednesday",   "09:00", "18:00")
+                .addTime("Thursday",    "09:00", "18:00")
+                .addTime("Friday",      "09:00", "18:00")
+                .addTime("Saturday",    "09:00", "18:00")
+                .addTime("Sunday",      "11:30", "16:00");
+    }
+
+    public static OpeningTimes parkLocal() {
+        return new OpeningTimes("Park Local")
+                .addTime("Monday",      "08:00", "23:20")
+                .addTime("Tuesday",     "08:00", "23:20")
+                .addTime("Wednesday",   "08:00", "23:20")
+                .addTime("Thursday",    "08:00", "23:20")
+                .addTime("Friday",      "08:00", "23:20")
+                .addTime("Saturday",    "08:00", "23:20")
+                .addTime("Sunday",      "08:00", "23:20");
     }
 
     public static OpeningTimes tesco() {
@@ -23,17 +58,6 @@ public class OpeningTimes {
                 .addTime("Saturday",    "06:00", "00:00")
                 .addTime("Sunday",      "06:00", "00:00");
 
-    }
-
-    public static OpeningTimes budgens() {
-        return new OpeningTimes("Budgens")
-                .addTime("Monday",      "07:00", "23:00")
-                .addTime("Tuesday",     "07:00", "23:00")
-                .addTime("Wednesday",   "07:00", "23:00")
-                .addTime("Thursday",    "07:00", "23:00")
-                .addTime("Friday",      "07:00", "23:00")
-                .addTime("Saturday",    "07:00", "23:00")
-                .addTime("Sunday",      "12:00", "18:00");
     }
 
     private final String name;

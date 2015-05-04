@@ -15,9 +15,7 @@ public class BinReminderZone extends LightBoardZone {
     @Override
     public boolean render() {
         Date d = new Date();
-//        int minute = Integer.parseInt(new SimpleDateFormat("mm").format(d));
         String day = new SimpleDateFormat("EEEE").format(d);
-//        if ( minute % 2 == 0 ) {
         if ( day.equalsIgnoreCase("Monday") ) {
             return drawPattern(0,0,BIN_ICON);
         }
@@ -38,11 +36,11 @@ public class BinReminderZone extends LightBoardZone {
     private static final boolean i = true;
 
     private static final boolean[][] BIN_ICON =
-            {{o,i,i,o},
-             {i,i,i,i},
-             {i,o,o,i},
-             {i,o,o,i},
-             {o,i,o,i},
-             {o,i,i,i}};
+            {{o,o,i,i,i,o,o},
+             {o,i,i,i,i,i,o},
+             {o,i,o,o,o,i,o},
+             {o,i,o,o,o,i,o},
+             {o,i,o,o,o,i,o},
+             {o,o,i,i,i,o,o}};
 
 }

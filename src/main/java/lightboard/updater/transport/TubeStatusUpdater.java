@@ -39,14 +39,13 @@ public class TubeStatusUpdater extends Updater {
         if ( tubeStatuses.isEmpty() ) {
             replaceMessage("-TfL Returned No Data-");
         } else {
-
             StringBuilder sb = new StringBuilder();
             for (TubeStatus ts : tubeStatuses) {
                 if (    allowedLines.isEmpty()
                      || allowedLines.contains(ts.getLineName().toUpperCase().split(" ")[0])
                      || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
                 ) {
-                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
+//                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
                     sb.append(ts.getLineName()).append(":").append(ts.getStatusDescription()).append("  ");
                 }
             }
@@ -62,7 +61,8 @@ public class TubeStatusUpdater extends Updater {
                 }
             } else {
                 if ( allowedLines.contains("BAD") ) {
-                    addMessage("Good Service All Other Lines");
+                    message += " Good Service All Other Lines";
+                    replaceMessage(message);
                 }
             }
 
