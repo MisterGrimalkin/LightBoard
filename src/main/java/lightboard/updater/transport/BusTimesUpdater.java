@@ -29,7 +29,7 @@ public class BusTimesUpdater extends Updater {
         this.displayAs = displayAs;
         this.resultsToDisplay = resultsToDisplay;
         this.offset = offset;
-        System.out.println("Bus Times Updater Ready....");
+        System.out.println("Bus Times Updater for " + stopCode + ":" + busNumber + " Ready....");
     }
 
     @Override
@@ -42,15 +42,15 @@ public class BusTimesUpdater extends Updater {
         List<String> messages = parseResult(result).get(busNumber);
 
         String msg = busNumber + ">" + displayAs + ":";
-        if ( messages==null ) {
-            msg += " -none-";
-        } else {
+        if ( messages!=null ) {
+//            msg += " -none-";
+//        } else {
             for ( String m : messages ) {
                 msg += " " + m;
             }
+            addMessage(msg);
         }
 
-        addMessage(msg);
 
     }
 

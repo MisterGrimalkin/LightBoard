@@ -15,7 +15,6 @@ public class ClockZone extends TextZone {
         setScrollTick(500);
         setRestDuration(0);
         setRestPosition(MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE);
-//        outline(true);
     }
 
     public ClockZone(LightBoardSurface surface, MessageQueue.Edge scrollFrom, MessageQueue.Edge scrollTo, int restDuration, Font font) {
@@ -64,7 +63,8 @@ public class ClockZone extends TextZone {
              {i,i,i,i},
              {i,o,o,i},
              {i,o,o,i},
-             {o,i,i,o}};
+             {i,o,o,i},
+             {o,i,i,i}};
 
 
 }
