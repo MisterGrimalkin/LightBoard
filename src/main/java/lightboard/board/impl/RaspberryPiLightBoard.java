@@ -210,6 +210,11 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
     }
 
     @Override
+    public void multi() {
+
+    }
+
+    @Override
     public void cycle(int ms) {
         cycleColours = true;
         colourChangePeriod = ms;

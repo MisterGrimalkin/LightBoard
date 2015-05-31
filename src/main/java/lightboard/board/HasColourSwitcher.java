@@ -5,5 +5,6 @@ public interface HasColourSwitcher {
     void green();
     void yellow();
     void blue();
+    void multi();
     void cycle(int ms);
 }

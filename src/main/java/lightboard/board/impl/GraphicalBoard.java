@@ -138,13 +138,13 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     }
 
+    private Double dragOffsetX = null;
+    private Double dragOffsetY = null;
+
 
     ///////////////////////////
     // Polychrome LightBoard //
     ///////////////////////////
-
-    private Double dragOffsetX = null;
-    private Double dragOffsetY = null;
 
     @Override
     public void dump(double[][][] data) {
@@ -158,12 +158,25 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
                 double red = data[0][r][c];
                 double green = data[1][r][c];
                 double blue = data[2][r][c];
+                if ( colourOverride ) {
+                    if ( red>=0.5 || green>=0.5 || blue>=0.5 ) {
+                        red = redMax;
+                        green = greenMax;
+                        blue = blueMax;
+                    } else {
+                        red = redMin;
+                        green = greenMin;
+                        blue = blueMin;
+                    }
+                }
                 if ( leds[r][c]!=null ) {
                     leds[r][c].setFill(Color.color(red, green, blue));
                 }
             }
         }
     }
+
+    private boolean colourOverride = false;
 
 
     ///////////////////////////
@@ -286,6 +299,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     @Override
     public void green() {
+        colourOverride = true;
         redMin = 0;
         redMax = 0;
         greenMin = 0.05;
@@ -296,6 +310,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     @Override
     public void yellow() {
+        colourOverride = true;
         redMin = 0.05;
         redMax = 1.0;
         greenMin = 0.05;
@@ -306,12 +321,18 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     @Override
     public void blue() {
+        colourOverride = true;
         redMin = 0;
         redMax = 0;
         greenMin = 0;
         greenMax = 0;
         blueMin = 0.05;
         blueMax = 1.0;
+    }
+
+    @Override
+    public void multi() {
+        colourOverride = false;
     }
 
     @Override

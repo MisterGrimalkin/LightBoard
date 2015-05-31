@@ -42,6 +42,12 @@ public class ColourResource {
     }
 
     @POST
+    @Path("multi")
+    public void multi() {
+        boards.forEach(HasColourSwitcher::multi);
+    }
+
+    @POST
     @Path("cycle")
     public void cycle(@QueryParam("time") int time) {
         boards.forEach((hasColourSwitcher) -> hasColourSwitcher.cycle(time));
