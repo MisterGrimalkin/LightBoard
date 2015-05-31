@@ -289,6 +289,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     @Override
     public void red() {
+        colourOverride = true;
         redMin = 0.05;
         redMax = 1.0;
         greenMin = 0;

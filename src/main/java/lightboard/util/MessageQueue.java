@@ -179,6 +179,6 @@ public class MessageQueue {
     public enum VPosition { TOP, MIDDLE, BOTTOM }
     public enum HPosition { LEFT, CENTRE, RIGHT }
 
-    private final static MessageWrapper DEFAULT_MESSAGE = new MessageWrapper("* * *");
+    private final static MessageWrapper DEFAULT_MESSAGE = new MessageWrapper("{red}* {yellow}* {green}*");
 
 }
