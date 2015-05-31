@@ -1,9 +1,9 @@
-package lightboard.board.zone;
+package lightboard.zone;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.surface.LightBoardSurface.Region;
-import lightboard.board.surface.MonochromeLightBoardSurface;
-import lightboard.board.surface.PolychromeLightBoardSurface;
+import lightboard.surface.LightBoardSurface;
+import lightboard.surface.LightBoardSurface.Region;
+import lightboard.surface.MonoLightBoardSurface;
+import lightboard.surface.PolyLightBoardSurface;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.HPosition;
 import lightboard.util.MessageQueue.VPosition;
@@ -26,9 +26,9 @@ public abstract class LightBoardZone {
     protected LightBoardZone(LightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
-        if ( surface instanceof PolychromeLightBoardSurface ) {
+        if ( surface instanceof PolyLightBoardSurface) {
             boardType = BoardType.POLY;
-        } else if ( surface instanceof MonochromeLightBoardSurface ) {
+        } else if ( surface instanceof MonoLightBoardSurface) {
             boardType = BoardType.MONO;
         } else {
             boardType = BoardType.BINARY;
@@ -322,7 +322,7 @@ public abstract class LightBoardZone {
 
     protected boolean drawPoint(int x, int y, double value) {
         if ( boardType==BoardType.MONO ) {
-            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface)surface;
+            MonoLightBoardSurface mSurface = (MonoLightBoardSurface)surface;
             return mSurface.drawPoint(region.left+contentLeft+x, region.top+contentTop+y, value, region);
 
         }
@@ -331,7 +331,7 @@ public abstract class LightBoardZone {
 
     protected boolean drawPattern(int x, int y, double[][] pattern) {
         if ( boardType==BoardType.MONO ) {
-            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface) surface;
+            MonoLightBoardSurface mSurface = (MonoLightBoardSurface) surface;
             return mSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, region);
         }
         return false;
@@ -339,7 +339,7 @@ public abstract class LightBoardZone {
 
     protected boolean drawPattern(int x, int y, double[][] pattern, boolean clearBackground) {
         if ( boardType==BoardType.MONO ) {
-            MonochromeLightBoardSurface mSurface = (MonochromeLightBoardSurface) surface;
+            MonoLightBoardSurface mSurface = (MonoLightBoardSurface) surface;
             return mSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, clearBackground, region);
         }
         return false;
@@ -349,9 +349,13 @@ public abstract class LightBoardZone {
     // Polychrome Board //
     //////////////////////
 
+    public boolean isPoly() {
+        return ( boardType==BoardType.POLY );
+    }
+
     protected boolean drawPattern(int x, int y, double[][][] pattern, boolean clearBackground) {
         if ( boardType==BoardType.POLY ) {
-            PolychromeLightBoardSurface pSurface = (PolychromeLightBoardSurface) surface;
+            PolyLightBoardSurface pSurface = (PolyLightBoardSurface) surface;
             return pSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, clearBackground, region);
         }
         return false;

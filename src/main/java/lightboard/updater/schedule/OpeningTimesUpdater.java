@@ -1,8 +1,8 @@
 package lightboard.updater.schedule;
 
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.impl.OpeningTimes;
 import lightboard.updater.Updater;
+import lightboard.zone.impl.TextZone;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package lightboard.board.surface;
+package lightboard.surface;
 
 import java.util.ArrayList;
 import java.util.List;

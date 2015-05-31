@@ -1,4 +1,4 @@
-package lightboard.board.surface;
+package lightboard.surface;
 
 import lightboard.board.LightBoard;
 import lightboard.util.Sync;

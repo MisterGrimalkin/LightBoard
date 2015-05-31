@@ -1,9 +1,9 @@
 package lightboard.scene.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.CompositeZone;
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.Scene;
+import lightboard.surface.LightBoardSurface;
+import lightboard.zone.impl.CompositeZone;
+import lightboard.zone.impl.TextZone;
 
 import static lightboard.util.MessageQueue.Edge.*;
 import static lightboard.util.MessageQueue.HPosition.LEFT;

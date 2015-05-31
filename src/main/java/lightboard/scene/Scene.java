@@ -1,8 +1,8 @@
 package lightboard.scene;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LightBoardZone;
+import lightboard.surface.LightBoardSurface;
 import lightboard.updater.Updater;
+import lightboard.zone.LightBoardZone;
 
 import java.util.ArrayList;
 import java.util.Collections;

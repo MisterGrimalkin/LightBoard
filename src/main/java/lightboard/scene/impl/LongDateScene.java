@@ -1,11 +1,11 @@
 package lightboard.scene.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.Scene;
 import lightboard.scene.SceneManager;
+import lightboard.surface.LightBoardSurface;
 import lightboard.updater.Updater;
 import lightboard.updater.schedule.DateTimeUpdater;
+import lightboard.zone.impl.TextZone;
 
 import static lightboard.util.MessageQueue.Edge.BOTTOM_EDGE;
 import static lightboard.util.MessageQueue.Edge.TOP_EDGE;

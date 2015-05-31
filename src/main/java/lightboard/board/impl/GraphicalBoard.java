@@ -9,12 +9,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lightboard.board.HasColourSwitcher;
 import lightboard.board.LightBoard;
-import lightboard.board.MonochromeLightBoard;
-import lightboard.board.PolychromeLightBoard;
+import lightboard.board.MonoLightBoard;
+import lightboard.board.PolyLightBoard;
 import lightboard.updater.WebService;
 import lightboard.util.Sync;
 
-public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
+public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
@@ -29,7 +29,7 @@ public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
 
     private Color off = Color.color(redMin, greenMin, blueMin);
 
-    private final static Long LED_REFRESH_TIME = null;
+    private final static Long LED_REFRESH_TIME = 50L;
 
     private final int rows;
     private final int cols;
@@ -149,7 +149,7 @@ public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
     @Override
     public void dump(double[][][] data) {
         if ( allowPoly && dumpToDebug && debugBoard!=null) {
-            PolychromeLightBoard pBoard = (PolychromeLightBoard)debugBoard;
+            PolyLightBoard pBoard = (PolyLightBoard)debugBoard;
             pBoard.dump(data);
             dumpToDebug = false;
         }
@@ -173,7 +173,7 @@ public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
     @Override
     public void dump(double[][] data) {
         if ( allowMono && dumpToDebug && debugBoard!=null) {
-            MonochromeLightBoard mBoard = (MonochromeLightBoard)debugBoard;
+            MonoLightBoard mBoard = (MonoLightBoard)debugBoard;
             mBoard.dump(data);
             dumpToDebug = false;
         }
@@ -264,10 +264,10 @@ public class GraphicalBoard implements PolychromeLightBoard, HasColourSwitcher {
     private boolean allowPoly = false;
     public GraphicalBoard debugTo(LightBoard debugBoard) {
         this.debugBoard = debugBoard;
-        if ( debugBoard instanceof MonochromeLightBoard ) {
+        if ( debugBoard instanceof MonoLightBoard) {
             allowMono = true;
         }
-        if ( debugBoard instanceof PolychromeLightBoard ) {
+        if ( debugBoard instanceof PolyLightBoard) {
             allowMono = true;
             allowPoly = true;
         }

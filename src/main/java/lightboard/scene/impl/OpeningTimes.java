@@ -96,7 +96,7 @@ public class OpeningTimes {
             SimpleDateFormat sdf3 = new SimpleDateFormat("a");
             if ( now.before(open) ) {
                 String m = sdf2.format(open);
-                return name + " CLOSED until "
+                return "{red}" + name + " CLOSED until "
                         + sdf1.format(open) + ( m.equals(":00") ? "" : m ) + sdf3.format(open).toLowerCase();
             }
             if ( now.before(close) ) {
@@ -105,11 +105,11 @@ public class OpeningTimes {
                 if ( closingTime.equals("12am") ) {
                     closingTime = "Midnight";
                 }
-                return name + " OPEN until "+ closingTime;
+                return "{green}" + name + " OPEN until "+ closingTime;
             }
-            return name + " CLOSED";
+            return "{red}" + name + " CLOSED";
         }
-        return name + ": ???";
+        return "{yellow}" + name + ": ???";
     }
 
     public Date getOpeningDate() {

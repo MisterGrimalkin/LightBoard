@@ -2,14 +2,14 @@ package lightboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import lightboard.board.LightBoard;
+import lightboard.board.PolyLightBoard;
 import lightboard.board.impl.GraphicalBoard;
-import lightboard.board.impl.RaspberryPiLightBoard;
 import lightboard.board.impl.TextBoard;
-import lightboard.board.surface.LightBoardSurface;
 import lightboard.scene.impl.ShopOpeningTimesScene;
 import lightboard.scene.impl.TravelInformationScene;
 import lightboard.scene.impl.WebServiceMessageScene;
+import lightboard.surface.LightBoardSurface;
+import lightboard.surface.PolyLightBoardSurface;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.util.ColourResource;
 
@@ -19,6 +19,8 @@ import static lightboard.util.Sync.startSyncThread;
 
 public class Main extends Application {
 
+//    private final static int COLS = 192;
+//    private final static int ROWS = 32;
     private final static int COLS = 180;
     private final static int ROWS = 16;
 
@@ -29,13 +31,13 @@ public class Main extends Application {
 
         startWebService(getParameters().getNamed().get("ip"));
 
-        LightBoard board;
+        PolyLightBoard board;
         switch ( getBoardType() ) {
-            case RASPBERRY_PI:
-                RaspberryPiLightBoard raspberryPiLightBoard = new RaspberryPiLightBoard(ROWS, COLS);
-                ColourResource.addBoard(raspberryPiLightBoard);
-                board = raspberryPiLightBoard;
-                break;
+//            case RASPBERRY_PI:
+//                RaspberryPiLightBoard raspberryPiLightBoard = new RaspberryPiLightBoard(ROWS, COLS);
+//                ColourResource.addBoard(raspberryPiLightBoard);
+//                board = raspberryPiLightBoard;
+//                break;
             case GRAPHICAL:
                 GraphicalBoard graphicalBoard = new GraphicalBoard(ROWS, COLS, primaryStage);
                 ColourResource.addBoard(graphicalBoard);
@@ -48,7 +50,7 @@ public class Main extends Application {
         }
         board.init();
 
-        LightBoardSurface surface = new LightBoardSurface(board);
+        LightBoardSurface surface = new PolyLightBoardSurface(board);
         surface.init();
 
         addScene(0, new WebServiceMessageScene(surface));

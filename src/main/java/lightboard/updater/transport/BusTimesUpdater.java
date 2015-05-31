@@ -1,7 +1,7 @@
 package lightboard.updater.transport;
 
-import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
+import lightboard.zone.impl.TextZone;
 import org.javalite.http.Get;
 import org.javalite.http.Http;
 
@@ -41,7 +41,7 @@ public class BusTimesUpdater extends Updater {
 
         List<String> messages = parseResult(result).get(busNumber);
 
-        String msg = busNumber + ">" + displayAs + ":";
+        String msg = "{yellow}" + busNumber + ">" + displayAs + ":{green}";
         if ( messages!=null ) {
 //            msg += " -none-";
 //        } else {

@@ -1,8 +1,8 @@
 package lightboard.board.impl;
 
-import lightboard.board.PolychromeLightBoard;
+import lightboard.board.PolyLightBoard;
 
-public class TextBoard implements PolychromeLightBoard {
+public class TextBoard implements PolyLightBoard {
 
     private final int rows;
     private final int cols;

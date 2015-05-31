@@ -1,8 +1,8 @@
-package lightboard.board.zone.impl;
+package lightboard.zone.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LightBoardZone;
+import lightboard.surface.LightBoardSurface;
 import lightboard.util.MessageQueue;
+import lightboard.zone.LightBoardZone;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

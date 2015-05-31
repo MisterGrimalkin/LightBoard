@@ -1,7 +1,7 @@
-package lightboard.board.zone.impl;
+package lightboard.zone.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LightBoardZone;
+import lightboard.surface.LightBoardSurface;
+import lightboard.zone.LightBoardZone;
 
 import java.util.ArrayList;
 import java.util.List;

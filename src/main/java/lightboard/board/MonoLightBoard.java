@@ -1,6 +1,6 @@
 package lightboard.board;
 
-public interface MonochromeLightBoard extends LightBoard {
+public interface MonoLightBoard extends LightBoard {
 
     void dump(double[][] data);
 

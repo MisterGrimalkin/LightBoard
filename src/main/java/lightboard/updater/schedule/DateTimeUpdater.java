@@ -1,7 +1,7 @@
 package lightboard.updater.schedule;
 
-import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
+import lightboard.zone.impl.TextZone;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +26,7 @@ public class DateTimeUpdater extends Updater {
         if ( formatIndex >= formats.length ) {
             formatIndex = 0;
         }
-        replaceMessage(new SimpleDateFormat(formats[formatIndex++]).format(new Date()));
+        replaceMessage("{yellow}"+new SimpleDateFormat(formats[formatIndex++]).format(new Date()));
     }
 
 }

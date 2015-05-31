@@ -1,10 +1,10 @@
 package lightboard.scene.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.Scene;
+import lightboard.surface.LightBoardSurface;
 import lightboard.updater.schedule.DateTimeUpdater;
 import lightboard.updater.schedule.OpeningTimesUpdater;
+import lightboard.zone.impl.TextZone;
 
 import static lightboard.util.MessageQueue.HPosition.LEFT;
 import static lightboard.util.MessageQueue.VPosition.MIDDLE;

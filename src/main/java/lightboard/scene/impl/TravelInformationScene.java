@@ -1,13 +1,13 @@
 package lightboard.scene.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.ClockZone;
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.Scene;
+import lightboard.surface.LightBoardSurface;
 import lightboard.updater.Updater;
 import lightboard.updater.UpdaterBundle;
 import lightboard.updater.transport.BusTimesUpdater;
 import lightboard.updater.transport.TubeStatusUpdater;
+import lightboard.zone.impl.ClockZone;
+import lightboard.zone.impl.TextZone;
 
 public class TravelInformationScene extends Scene {
 

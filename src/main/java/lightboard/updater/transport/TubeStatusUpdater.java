@@ -1,7 +1,7 @@
 package lightboard.updater.transport;
 
-import lightboard.board.zone.impl.TextZone;
 import lightboard.updater.Updater;
+import lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,7 +37,7 @@ public class TubeStatusUpdater extends Updater {
 
         List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
         if ( tubeStatuses.isEmpty() ) {
-            replaceMessage("-TfL Returned No Data-");
+            replaceMessage("{red}-TfL Returned No Data-");
         } else {
             StringBuilder sb = new StringBuilder();
             for (TubeStatus ts : tubeStatuses) {
@@ -46,22 +46,23 @@ public class TubeStatusUpdater extends Updater {
                      || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
                 ) {
 //                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
-                    sb.append(ts.getLineName()).append(":").append(ts.getStatusDescription()).append("  ");
+                    String colour = ("Good Service".equals(ts.getStatusDescription()) ? "{green}" : "{red}" );
+                    sb.append("{yellow}").append(ts.getLineName()).append(":").append(colour).append(ts.getStatusDescription()).append("  ");
                 }
             }
 
             String message = sb.toString();
             if ( message.isEmpty() ) {
                 if ( allowedLines.isEmpty() ) {
-                    replaceMessage("-Could Not Parse TfL Data-");
+                    replaceMessage("{red}-Could Not Parse TfL Data-");
                 } else if ( allowedLines.contains("BAD") ) {
-                    replaceMessage("Good Service on all TfL Lines");
+                    replaceMessage("{green}Good Service on all TfL Lines");
                 } else {
-                    replaceMessage("-Invalid Line Specified-");
+                    replaceMessage("{red}-Invalid Line Specified-");
                 }
             } else {
                 if ( allowedLines.contains("BAD") ) {
-                    message += " Good Service All Other Lines";
+                    message += " {yellow}Good Service All Other Lines";
                     replaceMessage(message);
                 }
             }

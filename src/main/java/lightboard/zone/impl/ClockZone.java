@@ -1,8 +1,8 @@
-package lightboard.board.zone.impl;
+package lightboard.zone.impl;
 
-import lightboard.board.surface.LightBoardSurface;
 import lightboard.font.Font;
 import lightboard.font.SmallFont;
+import lightboard.surface.LightBoardSurface;
 import lightboard.util.MessageQueue;
 
 import java.text.SimpleDateFormat;
@@ -33,13 +33,21 @@ public class ClockZone extends TextZone {
             sdf = new SimpleDateFormat("HH mm");
         }
         colon = !colon;
-        String time = sdf.format(new Date());
-        String day = new SimpleDateFormat("EEE").format(new Date());
+        String time = "{green}"+sdf.format(new Date());
+        String day = "{green}"+new SimpleDateFormat("EEE").format(new Date());
 
-        drawn |= drawPattern(2,0,getFont().renderString(time));
-        drawn |= drawPattern(2,7,getFont().renderString(day));
-        if ( day.equalsIgnoreCase("Mon") ) {
-            drawn |= drawPattern(getFont().getStringWidth(day)+4,7,BIN_ICON);
+        if ( isPoly() ) {
+            drawn |= drawPattern(2, 0, getFont().renderString(time).getColourValues(), true);
+            drawn |= drawPattern(2, 7, getFont().renderString(day).getColourValues(), true);
+            if (day.equalsIgnoreCase("Mon")) {
+                drawn |= drawPattern(getFont().getStringWidth(day) + 4, 7, BIN_ICON);
+            }
+        } else {
+            drawn |= drawPattern(2, 0, getFont().renderString(time).getBinaryValues(), true);
+            drawn |= drawPattern(2, 7, getFont().renderString(day).getBinaryValues(), true);
+            if (day.equalsIgnoreCase("Mon")) {
+                drawn |= drawPattern(getFont().getStringWidth(day) + 4, 7, BIN_ICON);
+            }
         }
 
         return drawn;

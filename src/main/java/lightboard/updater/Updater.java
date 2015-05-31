@@ -1,7 +1,7 @@
 package lightboard.updater;
 
-import lightboard.board.zone.impl.TextZone;
 import lightboard.util.Sync;
+import lightboard.zone.impl.TextZone;
 
 public abstract class Updater {
 

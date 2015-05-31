@@ -1,8 +1,8 @@
 package lightboard.scene.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.impl.TextZone;
 import lightboard.scene.Scene;
+import lightboard.surface.LightBoardSurface;
+import lightboard.zone.impl.TextZone;
 
 public class WeatherForecastScene extends Scene {
 

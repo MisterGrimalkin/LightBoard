@@ -1,12 +1,12 @@
-package lightboard.board.zone.impl;
+package lightboard.zone.impl;
 
-import lightboard.board.surface.LightBoardSurface;
-import lightboard.board.zone.LightBoardZone;
 import lightboard.font.Font;
 import lightboard.font.SimpleFont;
+import lightboard.surface.LightBoardSurface;
 import lightboard.util.MessageQueue;
 import lightboard.util.MessageQueue.Edge;
 import lightboard.util.MessageQueue.MessageWrapper;
+import lightboard.zone.LightBoardZone;
 
 public class TextZone extends LightBoardZone {
 
@@ -70,7 +70,11 @@ public class TextZone extends LightBoardZone {
     @Override
     public boolean render() {
         MessageWrapper message = getCurrentMessage();
-        return drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()));
+        if ( isPoly() ) {
+            return drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()).getColourValues(), true);
+        } else {
+            return drawPattern(0, 0, font.renderString(message.getMessage(), message.gethPosition()).getBinaryValues(), true);
+        }
     }
 
     @Override
