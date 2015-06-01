@@ -168,6 +168,10 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
                         green = greenMin;
                         blue = blueMin;
                     }
+                } else if ( simulateRedGreenOnly ) {
+                    red = red>=0.5 ? redMax : redMin;
+                    green = green>=0.5 ? greenMax : greenMin;
+                    blue = blueMin;
                 }
                 if ( leds[r][c]!=null ) {
                     leds[r][c].setFill(Color.color(red, green, blue));
@@ -177,6 +181,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
     }
 
     private boolean colourOverride = false;
+    private boolean simulateRedGreenOnly = true;
 
 
     ///////////////////////////
@@ -334,6 +339,12 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
     @Override
     public void multi() {
         colourOverride = false;
+        redMin = 0.05;
+        redMax = 1.0;
+        greenMin = 0.05;
+        greenMax = 1.0;
+        blueMin = 0.05;
+        blueMax = 1.0;
     }
 
     @Override

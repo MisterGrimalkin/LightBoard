@@ -39,14 +39,15 @@ public class BusTimesUpdater extends Updater {
 
         String result = callWebService();
 
-        List<String> messages = parseResult(result).get(busNumber);
+        List<Long> dueTimes = parseResult(result).get(busNumber);
 
         String msg = "{yellow}" + busNumber + ">" + displayAs + ":{green}";
-        if ( messages!=null ) {
+        if ( dueTimes!=null ) {
+            Collections.sort(dueTimes);
 //            msg += " -none-";
 //        } else {
-            for ( String m : messages ) {
-                msg += " " + m;
+            for ( Long m : dueTimes ) {
+                msg += " " + (m==0 ? "due" : m + "min");
             }
             addMessage(msg);
         }
@@ -66,13 +67,13 @@ public class BusTimesUpdater extends Updater {
 
     }
 
-    private Map<String, List<String>> parseResult(String result) {
-        Map<String, List<String>> messages = new HashMap<>();
+    private Map<String, List<Long>> parseResult(String result) {
+        Map<String, List<Long>> messages = new HashMap<>();
         String[] lines = result.split("\n");
         for ( int l=1; l<lines.length; l++ ) {
             String[] cols = lines[l].split(",");
             String bus = cols[2].substring(1,cols[2].length()-1);
-            List<String> dueTimes = messages.get(bus);
+            List<Long> dueTimes = messages.get(bus);
             if ( dueTimes==null ) {
                 dueTimes = new ArrayList<>();
                 messages.put(bus, dueTimes);
@@ -87,9 +88,9 @@ public class BusTimesUpdater extends Updater {
             if ( timecode!=null && dueTimes.size()<resultsToDisplay ) {
                 Date due = new Date(timecode-System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat("m");
-                int time = Integer.parseInt(sdf.format(due)) + offset;
+                Long time = Long.parseLong(sdf.format(due)) + offset;
                 if ( time >= 0 ) {
-                    dueTimes.add(time == 0 ? "due" : time + "min");
+                    dueTimes.add(time);
                 }
             }
         }

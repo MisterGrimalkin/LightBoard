@@ -13,7 +13,6 @@ public class MessageQueueTest {
 
         messageQueue = new MessageQueue();
 
-        assertEquals("* * *", messageQueue.getCurrentMessage().getMessage());
         assertEquals(0, messageQueue.countMessages());
 
         messageQueue.setMaxMessages(1, 2);

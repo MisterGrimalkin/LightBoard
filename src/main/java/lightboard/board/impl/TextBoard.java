@@ -34,7 +34,7 @@ public class TextBoard implements PolyLightBoard {
         for ( int r=0; r<rows; r++ ) {
             System.out.print((r<10?"0":"")+r+":");
             for ( int c=0; c<cols; c++ ) {
-                System.out.print(data[r][c]>0.5 ? "#" : "-");
+                System.out.print(data[r][c]>=0.5 ? "#" : "-");
             }
             System.out.println();
         }
@@ -50,7 +50,7 @@ public class TextBoard implements PolyLightBoard {
                 double red = data[0][r][c];
                 double green = data[1][r][c];
                 double blue = data[2][r][c];
-                sb.append(((red + green + blue) / 3) > 0.5 ? "#" : "-");
+                sb.append(red>=0.5||green>=0.5||blue>=0.5 ? "#" : "-");
             }
             sb.append("\n");
         }

@@ -14,8 +14,13 @@ public class SceneManager {
     private static Map<Integer, Scene> scenes = new HashMap<>();
 
     public static void addScene(int id, Scene scene) {
+        addScene(id, scene, null, false);
+    }
+    public static void addScene(int id, Scene scene, Integer duration, boolean includeInCycle) {
         scenePointers.put(scenePointers.size(), id);
         scenes.put(id, scene);
+        scene.setSceneDuration(duration);
+        scene.setIncludeInCycle(includeInCycle);
         scene.build();
     }
 
@@ -35,32 +40,43 @@ public class SceneManager {
             if (scenePointer >= scenePointers.size()) {
                 scenePointer = 1;
             }
-            loadScene(scenePointers.get(scenePointer));
+            loadScene(scenePointers.get(scenePointer), true);
         }
     }
-
     public static boolean loadScene(Integer id) {
+        return loadScene(id, false);
+    }
+
+    public static boolean loadScene(Integer id, boolean skipIfNotInCycle) {
         Scene newScene = scenes.get(id);
         if ( newScene!=null ) {
-            if ( currentScene!=null ) {
-                currentScene.pause();
-            }
-            currentScene = newScene;
-            currentScene.resume();
-            if ( scenePointer==null ) {
-                for (Map.Entry<Integer,Integer> entry : scenePointers.entrySet() ) {
-                    if ( entry.getValue().equals(id) ) {
-                        scenePointer = entry.getKey();
+            if ( skipIfNotInCycle && !newScene.isIncludeInCycle() ) {
+                advanceScene();
+            } else {
+                if (currentScene != null) {
+                    currentScene.pause();
+                }
+                currentScene = newScene;
+                currentScene.resume();
+                if (scenePointer == null) {
+                    for (Map.Entry<Integer, Integer> entry : scenePointers.entrySet()) {
+                        if (entry.getValue().equals(id)) {
+                            scenePointer = entry.getKey();
+                        }
                     }
                 }
+                sceneLoaded = System.currentTimeMillis();
+                return true;
             }
-            return true;
         }
         return false;
     }
 
+    private static long sceneLoaded;
+
     public static void startScenes() {
         scenes.values().forEach((scene) -> { scene.start(); scene.pause(); });
+        advanceScene();
     }
 
     public static void cycleScenes(int time) {
@@ -68,12 +84,11 @@ public class SceneManager {
     }
 
     public static void cycleScenes(Long time) {
-        startScenes();
-        advanceScene();
-        Sync.addTask(new Sync.Task(time) {
+        Sync.addTask(new Sync.Task(1000L) {
             @Override
             public void runTask() {
-                if ( !sleeping ) {
+                long now = System.currentTimeMillis();
+                if ( currentScene.getSceneDuration()!=null && now-sceneLoaded >= currentScene.getSceneDuration() && !sleeping ) {
                     advanceScene();
                 }
             }

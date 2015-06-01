@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import lightboard.board.PolyLightBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.TextBoard;
+import lightboard.scene.impl.ImageScene;
 import lightboard.scene.impl.ShopOpeningTimesScene;
 import lightboard.scene.impl.TravelInformationScene;
 import lightboard.scene.impl.WebServiceMessageScene;
@@ -19,10 +20,10 @@ import static lightboard.util.Sync.startSyncThread;
 
 public class Main extends Application {
 
-//    private final static int COLS = 192;
-//    private final static int ROWS = 32;
-    private final static int COLS = 180;
-    private final static int ROWS = 16;
+    private final static int COLS = 192;
+    private final static int ROWS = 32;
+//    private final static int COLS = 180;
+//    private final static int ROWS = 16;
 
     @Override
     public void start(Stage primaryStage) {
@@ -54,12 +55,12 @@ public class Main extends Application {
         surface.init();
 
         addScene(0, new WebServiceMessageScene(surface));
-        addScene(1, new TravelInformationScene(surface));
-        addScene(2, new ShopOpeningTimesScene(surface));
+        addScene(1, new TravelInformationScene(surface), 10000, true);
+        addScene(2, new ShopOpeningTimesScene(surface), null, false);
+        addScene(3, new ImageScene(surface), null, true);
 //        addScene(3, new WeatherForecastScene(surface));
         startScenes();
-        loadScene(1);
-//        cycleScenes(90000);
+        cycleScenes(10000);
 
         MessageResource.bindScene(0);
 

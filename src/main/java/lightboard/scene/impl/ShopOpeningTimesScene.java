@@ -13,6 +13,7 @@ public class ShopOpeningTimesScene extends Scene {
 
     public ShopOpeningTimesScene(LightBoardSurface surface) {
         super(surface);
+        setSceneDuration(2000);
     }
 
     public void build() {

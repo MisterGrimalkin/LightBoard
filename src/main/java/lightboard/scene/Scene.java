@@ -14,6 +14,9 @@ public abstract class Scene {
     private List<LightBoardZone> zones = new ArrayList<>();
     private List<Updater> updaters = new ArrayList<>();
 
+    private Integer sceneDuration = 10000;
+    private boolean includeInCycle = true;
+
     public Scene(LightBoardSurface surface) {
         this.surface = surface;
     }
@@ -35,6 +38,22 @@ public abstract class Scene {
         zones.forEach(LightBoardZone::resetScroll);
         zones.forEach(LightBoardZone::resume);
         updaters.forEach(Updater::resume);
+    }
+
+    public Integer getSceneDuration() {
+        return sceneDuration;
+    }
+
+    public void setSceneDuration(Integer sceneDuration) {
+        this.sceneDuration = sceneDuration;
+    }
+
+    public boolean isIncludeInCycle() {
+        return includeInCycle;
+    }
+
+    public void setIncludeInCycle(boolean includeInCycle) {
+        this.includeInCycle = includeInCycle;
     }
 
     protected void registerZones(LightBoardZone... zone) {
