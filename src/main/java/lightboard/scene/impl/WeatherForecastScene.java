@@ -7,7 +7,7 @@ import lightboard.zone.impl.TextZone;
 public class WeatherForecastScene extends Scene {
 
     public WeatherForecastScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Weather");
     }
 
     @Override

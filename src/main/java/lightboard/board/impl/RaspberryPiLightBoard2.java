@@ -1,29 +1,34 @@
 package lightboard.board.impl;
 
 import com.pi4j.io.gpio.*;
+import com.pi4j.wiringpi.Gpio;
 import lightboard.board.HasColourSwitcher;
 import lightboard.board.LightBoard;
+import lightboard.board.PolyLightBoard;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
+import static com.pi4j.wiringpi.Gpio.OUTPUT;
+import static com.pi4j.wiringpi.Gpio.digitalWrite;
+
+public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher {
 
     private int rows = 16;
     private int cols = 180;
 
-    private GpioPinDigitalOutput clockPin;
-    private GpioPinDigitalOutput storePin;
-    private GpioPinDigitalOutput outputPin;
-    private GpioPinDigitalOutput data1PinR;
-    private GpioPinDigitalOutput data1PinG;
-    private GpioPinDigitalOutput data2PinR;
-    private GpioPinDigitalOutput data2PinG;
-    private GpioPinDigitalOutput address0Pin;
-    private GpioPinDigitalOutput address1Pin;
-    private GpioPinDigitalOutput address2Pin;
-    private GpioPinDigitalOutput address3Pin;
-    private GpioPinDigitalOutput outputEnable1Pin;
-    private GpioPinDigitalOutput outputEnable2Pin;
+    private int clock = 0;
+    private int store = 1;
+    private int output = 2;
+    private int data1R = 3;
+    private int data2R = 4;
+    private int data1G = 5;
+    private int data2G = 6;
+    private int addr0 = 21;
+    private int addr1 = 22;
+    private int addr2 = 23;
+    private int addr3 = 24;
 
     public RaspberryPiLightBoard2(int rows, int cols) {
         this.rows = rows;
@@ -33,35 +38,52 @@ public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
     @Override
     public void init() {
         System.out.println("Starting Raspberry Pi LightBoard, Greenpeace style....");
+
+        // IMPORTANT:
+        // It is necessary to set the pins up via the GpioFactory so that subsequent calls
+        // via the Gpio static methods use the wiringPi pin numbers
+
         GpioController gpio = GpioFactory.getInstance();
-        clockPin =  gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
-        storePin =  gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.LOW);
-        outputPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
-        data1PinR = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
-        data2PinR = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
-        data1PinG = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
-        data2PinG = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW);
-        address0Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_21, PinState.LOW);
-        address1Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_22, PinState.LOW);
-        address2Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, PinState.LOW);
-        address3Pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, PinState.LOW);
-//        address0Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A0, PinState.LOW);
-//        address1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A1, PinState.LOW);
-//        address2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A2, PinState.LOW);
-//        address3Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A3, PinState.LOW);
-//        outputEnable1Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A4, PinState.HIGH);
-//        outputEnable2Pin = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A5, PinState.HIGH);
-        data1PinR.low();
-        data2PinR.low();
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_21, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_22, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, PinState.LOW);
+        gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, PinState.LOW);
+
+        // This bit may not be necessary??
+        Gpio.pinMode(clock, OUTPUT);
+        Gpio.pinMode(store, OUTPUT);
+        Gpio.pinMode(output, OUTPUT);
+        Gpio.pinMode(data1R, OUTPUT);
+        Gpio.pinMode(data2R, OUTPUT);
+        Gpio.pinMode(data1G, OUTPUT);
+        Gpio.pinMode(data2G, OUTPUT);
+        Gpio.pinMode(addr0, OUTPUT);
+        Gpio.pinMode(addr1, OUTPUT);
+        Gpio.pinMode(addr2, OUTPUT);
+        Gpio.pinMode(addr3, OUTPUT);
+
+        digitalWrite(data1R, true);
+        digitalWrite(data1G, true);
+        digitalWrite(data2R, true);
+        digitalWrite(data2G, true);
+
         System.out.println("Board Ready");
     }
 
+    private static final int MULTI = 0;
     private static final int RED = 1;
     private static final int GREEN = 2;
     private static final int YELLOW = 3;
 
     private boolean cycleColours = false;
-    private int colour = RED;
+    private int colour = MULTI;
 
     private long t = 0;
     private long colourChangePeriod = 30000;
@@ -74,13 +96,13 @@ public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
             t = System.currentTimeMillis();
         }
         try {
-            for (int row = 0; row < data.length/2; row++) {
-                sendSerialString(data[row], data[row+(data.length/2)]);
-                outputPin.high();
+            for (int row = 0; row < rows/2; row++) {
+                sendSerialString(data[row], data[row + (data.length/2)]);
+                digitalWrite(output, true);
                 decodeRowAddress(row);
-                storePin.high();
-                storePin.low();
-                outputPin.low();
+                digitalWrite(store, true);
+                digitalWrite(store, false);
+                digitalWrite(output, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,25 +110,98 @@ public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
     }
 
     private void sendSerialString(boolean[] data1, boolean[] data2) throws InterruptedException {
-//        Boolean lastValue1 = null;
-//        Boolean lastValue2 = null;
-        for (int col = data1.length-1; col >= 0; col--) {
-            clockPin.low();
-            if (data1[col]) {
-                if ( colour!= GREEN) data1PinR.high();
-                if ( colour!= RED) data1PinG.high();
-            } else {
-                if ( colour!= GREEN) data1PinR.low();
-                if ( colour!= RED) data1PinG.low();
+        for (int col = 0; col < data1.length ; col++) {
+            digitalWrite(clock, false);
+            if (colour != GREEN) {
+                digitalWrite(data1R, !data1[col]);
+                digitalWrite(data2R, !data2[col]);
             }
-            if (data2[col]) {
-                if ( colour!= GREEN) data2PinR.high();
-                if ( colour!= RED) data2PinG.high();
-            } else {
-                if ( colour!= GREEN) data2PinR.low();
-                if ( colour!= RED) data2PinG.low();
+            if (colour != RED) {
+                digitalWrite(data1G, !data1[col]);
+                digitalWrite(data2G, !data2[col]);
             }
-            clockPin.high();
+            digitalWrite(clock, true);
+        }
+    }
+
+    @Override
+    public void dump(double[][][] data) {
+        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
+            colour++;
+            if ( colour> YELLOW) colour = RED;
+            t = System.currentTimeMillis();
+        }
+        try {
+            for (int row = 0; row < rows/2; row++) {
+                sendSerialString(data[0][row], data[1][row], data[0][row+data[0].length/2], data[1][row+data[0].length/2]);
+                digitalWrite(output, true);
+                decodeRowAddress(row);
+                digitalWrite(store, true);
+                digitalWrite(store, false);
+                digitalWrite(output, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendSerialString(double[] red1, double[] green1, double[] red2, double[] green2) throws InterruptedException {
+        for (int col = 0; col < red1.length ; col++) {
+            digitalWrite(clock, false);
+            if ( colour==MULTI ) {
+                if ( red1[col] >= 0.5 ) {
+                    digitalWrite(data1R, false);
+                } else {
+                    digitalWrite(data1R, true);
+                }
+                if ( green1[col] >= 0.5 ) {
+                    digitalWrite(data1G, false);
+                } else {
+                    digitalWrite(data1G, true);
+                }
+                if ( red2[col] >= 0.5 ) {
+                    digitalWrite(data2R, false);
+                } else {
+                    digitalWrite(data2R, true);
+                }
+                if ( green2[col] >= 0.5 ) {
+                    digitalWrite(data2G, false);
+                } else {
+                    digitalWrite(data2G, true);
+                }
+            } else {
+                if ( red1[col] >= 0.5 || green1[col] >= 0.5) {
+                    if ( colour==GREEN || colour==YELLOW ) {
+                        digitalWrite(data1G, false);
+                    }
+                    if ( colour==RED || colour==YELLOW ) {
+                        digitalWrite(data1R, false);
+                    }
+                } else {
+                    if ( colour==GREEN || colour==YELLOW ) {
+                        digitalWrite(data1G, true);
+                    }
+                    if ( colour==RED || colour==YELLOW ) {
+                        digitalWrite(data1R, true);
+                    }
+                }
+                if ( red2[col] >= 0.5 || green2[col] >= 0.5) {
+                    if ( colour==GREEN || colour==YELLOW ) {
+                        digitalWrite(data2G, false);
+                    }
+                    if ( colour==RED || colour==YELLOW ) {
+                        digitalWrite(data2R, false);
+                    }
+                } else {
+                    if ( colour==GREEN || colour==YELLOW ) {
+                        digitalWrite(data2G, true);
+                    }
+                    if ( colour==RED || colour==YELLOW ) {
+                        digitalWrite(data2R, true);
+                    }
+                }
+            }
+            digitalWrite(clock, true);
         }
     }
 
@@ -117,35 +212,19 @@ public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
         boolean address3 = BigInteger.valueOf(row).testBit(3);
         if (lastAddress0 ==null || address0!= lastAddress0) {
             lastAddress0 = address0;
-            if (address0) {
-                address0Pin.high();
-            } else {
-                address0Pin.low();
-            }
+            digitalWrite(addr0, address0);
         }
         if (lastAddress1 ==null || address1!= lastAddress1) {
+            digitalWrite(addr1, address1);
             lastAddress1 = address1;
-            if (address1) {
-                address1Pin.high();
-            } else {
-                address1Pin.low();
-            }
         }
         if (lastAddress2 ==null || address2!= lastAddress2) {
+            digitalWrite(addr2, address2);
             lastAddress2 = address2;
-            if (address2) {
-                address2Pin.high();
-            } else {
-                address2Pin.low();
-            }
         }
         if (lastAddress3 ==null || address3!= lastAddress3) {
+            digitalWrite(addr3, address3);
             lastAddress3 = address3;
-            if (address3) {
-                address3Pin.high();
-            } else {
-                address3Pin.low();
-            }
         }
     }
 
@@ -170,40 +249,36 @@ public class RaspberryPiLightBoard2 implements LightBoard, HasColourSwitcher {
     }
 
     @Override
-    public void red() {
-        cycleColours = false;
-        colour = RED;
-        data1PinG.low();
-        data2PinG.low();
+    public List<String> supportedColours() {
+        List<String> result = new ArrayList<>();
+        result.add("red");
+        result.add("green");
+        result.add("yellow");
+        result.add("multi");
+        return result;
     }
 
     @Override
-    public void green() {
-        cycleColours = false;
-        colour = GREEN;
-        data1PinR.low();
-        data2PinR.low();
+    public void colour(String colourName) {
+        System.out.println("COLOUR="+colourName);
+        if ("red".equals(colourName)) {
+            colour = RED;
+            digitalWrite(data1G, true);
+            digitalWrite(data2G, true);
+        } else if ("green".equals(colourName)) {
+            colour = GREEN;
+            digitalWrite(data1R, true);
+            digitalWrite(data2R, true);
+        } else if ("yellow".equals(colourName)) {
+            colour = YELLOW;
+        } else if ("multi".equals(colourName)) {
+            colour = MULTI;
+        }
     }
 
     @Override
-    public void yellow() {
-        cycleColours = false;
-        colour = YELLOW;
-    }
+    public void dump(double[][] data) {
+        throw new UnsupportedOperationException("This board does not support greyscale mode");
 
-    @Override
-    public void blue() {
-        System.err.println("What is 'blue'?");
-    }
-
-    @Override
-    public void multi() {
-
-    }
-
-    @Override
-    public void cycle(int ms) {
-        cycleColours = true;
-        colourChangePeriod = ms;
     }
 }

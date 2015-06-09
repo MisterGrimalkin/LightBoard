@@ -12,7 +12,7 @@ import static lightboard.util.MessageQueue.VPosition.MIDDLE;
 public class ShopOpeningTimesScene extends Scene {
 
     public ShopOpeningTimesScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Shop Hours");
         setSceneDuration(2000);
     }
 

@@ -3,12 +3,13 @@ package lightboard.scene.impl;
 import lightboard.scene.Scene;
 import lightboard.scene.SceneManager;
 import lightboard.surface.LightBoardSurface;
+import lightboard.zone.LightBoardZone;
 import lightboard.zone.impl.ImageZone;
 
 public class ImageScene extends Scene {
 
     public ImageScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Greenpeace Logo");
         setSceneDuration(null);
     }
 
@@ -21,9 +22,7 @@ public class ImageScene extends Scene {
 //        zone.loadImage("sb.jpg");
         zone.loadImage("gp192x32.jpg");
 //        zone.loadImage("gp180x16.jpg");
-        zone.addScrollCompleteHandler(() -> {
-            SceneManager.advanceScene();
-        });
+        zone.addScrollCompleteHandler(SceneManager::advanceScene);
 
         registerZones(zone);
 

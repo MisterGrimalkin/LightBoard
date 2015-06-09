@@ -6,6 +6,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("message")
 public class MessageResource {
@@ -22,13 +23,17 @@ public class MessageResource {
 
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
-    public void postMessage(String message) {
+    public Response postMessage(String message) {
         if ( updater!=null ) {
             updater.postMessage(message);
         }
         if ( scene!=null ) {
             SceneManager.loadScene(scene);
         }
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("Message posted: " + message)
+                .build();
     }
 
 

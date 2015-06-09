@@ -3,6 +3,7 @@ package lightboard.scene.impl;
 import lightboard.scene.Scene;
 import lightboard.scene.SceneManager;
 import lightboard.surface.LightBoardSurface;
+import lightboard.zone.LightBoardZone;
 import lightboard.zone.impl.TextZone;
 
 public class TeleprompterScene extends Scene {
@@ -22,7 +23,7 @@ public class TeleprompterScene extends Scene {
             };
 
     public TeleprompterScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Telepromter");
     }
 
     @Override

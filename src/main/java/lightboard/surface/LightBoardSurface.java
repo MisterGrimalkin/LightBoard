@@ -255,7 +255,7 @@ public class LightBoardSurface {
         selfTest(20, 0.5);
     }
 
-    public void selfTest(int tick, double speed) {
+    public void selfTest(int tick, final double speed) {
 
         new Timer(true).schedule(new TimerTask() {
             @Override

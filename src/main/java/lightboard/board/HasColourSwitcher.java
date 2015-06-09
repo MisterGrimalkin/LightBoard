@@ -1,10 +1,8 @@
 package lightboard.board;
 
+import java.util.List;
+
 public interface HasColourSwitcher {
-    void red();
-    void green();
-    void yellow();
-    void blue();
-    void multi();
-    void cycle(int ms);
+    List<String> supportedColours();
+    void colour(String colour);
 }

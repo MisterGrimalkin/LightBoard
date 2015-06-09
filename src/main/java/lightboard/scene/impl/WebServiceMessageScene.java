@@ -5,12 +5,13 @@ import lightboard.scene.SceneManager;
 import lightboard.surface.LightBoardSurface;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.updater.schedule.MessageUpdater;
+import lightboard.zone.LightBoardZone;
 import lightboard.zone.impl.TextZone;
 
 public class WebServiceMessageScene extends Scene {
 
     public WebServiceMessageScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Web Messages");
     }
 
     private TextZone zone;

@@ -16,7 +16,9 @@ public class Sync {
     public static void startSyncThread() {
         System.out.println("Staring Sync Thread with " + tasks.size() + " tasks....");
         run = true;
-        syncThread = new Thread(() -> {
+        syncThread = new Thread() {
+            @Override
+            public void run() {
             System.out.println("Sync Thread Running");
             while (run) {
                 for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
@@ -27,7 +29,7 @@ public class Sync {
                 }
             }
             System.out.println("Sync Thread Stopped");
-        });
+        }};
         syncThread.setPriority(Thread.MAX_PRIORITY);
         syncThread.start();
     }

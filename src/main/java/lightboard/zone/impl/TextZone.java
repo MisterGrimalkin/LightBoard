@@ -31,11 +31,14 @@ public class TextZone extends LightBoardZone {
         defaultRestDuration = restDuration;
         setDefaults();
         this.font = font;
-        addScrollCompleteHandler(() -> {
-            if ( override ) {
-                clearOverride();
+        addScrollCompleteHandler(new ScrollCompleteHandler() {
+            @Override
+            public void onScrollComplete() {
+                if (override) {
+                    TextZone.this.clearOverride();
+                }
+                messageQueue.advanceMessage();
             }
-            messageQueue.advanceMessage();
         });
     }
 
@@ -58,8 +61,16 @@ public class TextZone extends LightBoardZone {
         return new TextZone(s, Edge.RIGHT_EDGE, Edge.LEFT_EDGE, 3000, new SimpleFont());
     }
 
+    public static TextZone scrollRight(LightBoardSurface s) {
+        return new TextZone(s, Edge.LEFT_EDGE, Edge.RIGHT_EDGE, 3000, new SimpleFont());
+    }
+
     public static TextZone scrollUp(LightBoardSurface s) {
         return new TextZone(s, Edge.BOTTOM_EDGE, Edge.TOP_EDGE, 3000, new SimpleFont());
+    }
+
+    public static TextZone scrollDown(LightBoardSurface s) {
+        return new TextZone(s, Edge.TOP_EDGE, Edge.BOTTOM_EDGE, 3000, new SimpleFont());
     }
 
 

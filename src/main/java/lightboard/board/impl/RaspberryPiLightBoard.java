@@ -9,6 +9,8 @@ import lightboard.board.LightBoard;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
 
@@ -183,40 +185,31 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
     }
 
     @Override
-    public void red() {
-        cycleColours = false;
-        colour = RED;
-        data1PinG.low();
-        data2PinG.low();
+    public List<String> supportedColours() {
+        List<String> result = new ArrayList<>();
+        result.add("red");
+        result.add("green");
+        result.add("yellow");
+        result.add("multi");
+        return result;
     }
 
     @Override
-    public void green() {
-        cycleColours = false;
-        colour = GREEN;
-        data1PinR.low();
-        data2PinR.low();
+    public void colour(String colourName) {
+        if ("red".equals(colourName)) {
+            cycleColours = false;
+            colour = RED;
+            data1PinG.low();
+            data2PinG.low();
+        } else if ("green".equals(colourName)) {
+            cycleColours = false;
+            colour = GREEN;
+            data1PinR.low();
+            data2PinR.low();
+        } else if ("yellow".equals(colourName)) {
+            cycleColours = false;
+            colour = YELLOW;
+        }
     }
 
-    @Override
-    public void yellow() {
-        cycleColours = false;
-        colour = YELLOW;
-    }
-
-    @Override
-    public void blue() {
-        System.err.println("What is 'blue'?");
-    }
-
-    @Override
-    public void multi() {
-
-    }
-
-    @Override
-    public void cycle(int ms) {
-        cycleColours = true;
-        colourChangePeriod = ms;
-    }
 }

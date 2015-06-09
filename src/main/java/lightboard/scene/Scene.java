@@ -17,8 +17,11 @@ public abstract class Scene {
     private Integer sceneDuration = 10000;
     private boolean includeInCycle = true;
 
-    public Scene(LightBoardSurface surface) {
+    private String name;
+
+    public Scene(LightBoardSurface surface, String name) {
         this.surface = surface;
+        this.name = name;
     }
 
     public abstract void build();
@@ -80,4 +83,7 @@ public abstract class Scene {
         return false;
     }
 
+    public String getName() {
+        return name;
+    }
 }

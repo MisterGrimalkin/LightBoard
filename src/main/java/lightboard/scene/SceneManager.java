@@ -24,6 +24,10 @@ public class SceneManager {
         scene.build();
     }
 
+    public static Map<Integer, Scene> getScenes() {
+        return scenes;
+    }
+
     public static void reloadScene() {
         loadScene(scenePointers.get(scenePointer));
     }
@@ -75,15 +79,14 @@ public class SceneManager {
     private static long sceneLoaded;
 
     public static void startScenes() {
-        scenes.values().forEach((scene) -> { scene.start(); scene.pause(); });
+        for ( Scene scene : scenes.values() ) {
+            scene.start();
+            scene.pause();
+        }
         advanceScene();
     }
 
-    public static void cycleScenes(int time) {
-        cycleScenes((long)time);
-    }
-
-    public static void cycleScenes(Long time) {
+    public static void cycleScenes() {
         Sync.addTask(new Sync.Task(1000L) {
             @Override
             public void runTask() {

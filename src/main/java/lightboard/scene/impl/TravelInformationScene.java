@@ -14,7 +14,7 @@ public class TravelInformationScene extends Scene {
     private static final int CLOCK_WIDTH = 23;
 
     public TravelInformationScene(LightBoardSurface surface) {
-        super(surface);
+        super(surface, "Travel Information");
     }
 
     @Override

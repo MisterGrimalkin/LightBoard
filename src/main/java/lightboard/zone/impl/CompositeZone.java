@@ -42,8 +42,10 @@ public class CompositeZone extends LightBoardZone {
     public void tick() {
         if ( !paused ) {
             super.tick();
+//            render();
             for (LightBoardZone zone : zones) {
                 zone.tick();
+                zone.render();
             }
         }
     }
@@ -65,7 +67,9 @@ public class CompositeZone extends LightBoardZone {
             drawn |= zone.render();
         }
         if ( !drawn ) {
-            zones.forEach(LightBoardZone::resetScroll);
+            for ( LightBoardZone lightBoardZone : zones ) {
+                lightBoardZone.resetScroll();
+            }
         }
         return drawn;
     }
