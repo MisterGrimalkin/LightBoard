@@ -3,6 +3,7 @@ package lightboard.board.impl;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -34,7 +35,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     private Color off = Color.color(redMin, greenMin, blueMin);
 
-    private final static Long LED_REFRESH_TIME = 50L;
+    private final static Long LED_REFRESH_TIME = 60L;
 
     private final int rows;
     private final int cols;
@@ -130,13 +131,19 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
         });
 
         pane.setOnMouseClicked((e) -> {
-            if (e.isControlDown() && e.isAltDown()) {
-                if (e.isShiftDown()) {
-                    stage.hide();
-                    stage = new Stage();
-                    init();
-                } else {
-                    dumpToDebug = true;
+            if ( e.getButton()==MouseButton.SECONDARY ) {
+                stage.hide();
+                stage = new Stage();
+                init();
+            } else {
+                if (e.isControlDown() && e.isAltDown()) {
+                    if (e.isShiftDown()) {
+                        stage.hide();
+                        stage = new Stage();
+                        init();
+                    } else {
+                        dumpToDebug = true;
+                    }
                 }
             }
         });

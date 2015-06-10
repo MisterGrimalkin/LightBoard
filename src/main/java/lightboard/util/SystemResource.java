@@ -9,6 +9,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -63,5 +68,34 @@ public class SystemResource {
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("LightBoard Service is Alive").build();
+    }
+
+    public static void readName() {
+        try {
+            Properties prop = new Properties();
+            InputStream is = new FileInputStream("lightboard.properties");
+            prop.load(is);
+            if ( prop.getProperty("name")!=null ) {
+                name = prop.getProperty("name");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private static String name = "";
+
+    @GET
+    @Path("name")
+    @Produces(MediaType.TEXT_PLAIN)
+    public static Response getName() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(name)
+                .build();
     }
 }

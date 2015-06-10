@@ -12,6 +12,7 @@ import java.util.Map;
 public class SceneResource {
 
     @POST
+    @Path("load")
     public Response loadScene(@QueryParam("id") int id) {
         if ( SceneManager.loadScene(id) ) {
             return Response.ok()
@@ -26,6 +27,25 @@ public class SceneResource {
         }
     }
 
+    @GET
+    @Path("current")
+    public Response getCurrentScene() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(SceneManager.getCurrentSceneId())
+                .build();
+    }
+
+    @POST
+    @Path("cycle")
+    public Response cycleScene(@QueryParam("id") int id, @QueryParam("cycle") boolean cycle) {
+        SceneManager.getScenes().get(id).setIncludeInCycle(cycle);
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("Scene " + id + " Loaded")
+                .build();
+    }
+
     @POST
     @Path("advance")
     public Response advanceScene() {
@@ -36,23 +56,44 @@ public class SceneResource {
                 .build();
     }
 
+    @POST
+    @Path("cycle-on")
+    public Response cycleOn() {
+        SceneManager.setCycleMode(true);
+        return  Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("Cycle Mode Enabled")
+                .build();
+    }
+
+    @POST
+    @Path("cycle-off")
+    public Response cycleOff() {
+        SceneManager.setCycleMode(false);
+        return  Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("Cycle Mode Disable")
+                .build();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenes() {
         Map<Integer, Scene> scenes = SceneManager.getScenes();
-        JSONObject jsonWrapper = new JSONObject();
-        JSONArray ja = new JSONArray();
         JSONObject json = new JSONObject();
+        JSONArray ja = new JSONArray();
         for (Map.Entry<Integer, Scene> scene : scenes.entrySet() ) {
             if ( scene.getKey()!=0 ) {
                 JSONObject jsonScene = new JSONObject();
                 jsonScene.put("sceneId", scene.getKey() + "");
                 jsonScene.put("sceneName", scene.getValue().getName());
+                jsonScene.put("inCycle", scene.getValue().isIncludeInCycle());
                 ja.add(jsonScene);
             }
         }
-        jsonWrapper.put("scenes", ja);
-        String result = jsonWrapper.toString();
+        json.put("cycleMode", SceneManager.getCycleMode());
+        json.put("scenes", ja);
+        String result = json.toString();
         return  Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity(result)

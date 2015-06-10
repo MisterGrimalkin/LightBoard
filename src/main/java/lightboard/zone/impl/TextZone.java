@@ -31,14 +31,11 @@ public class TextZone extends LightBoardZone {
         defaultRestDuration = restDuration;
         setDefaults();
         this.font = font;
-        addScrollCompleteHandler(new ScrollCompleteHandler() {
-            @Override
-            public void onScrollComplete() {
-                if (override) {
-                    TextZone.this.clearOverride();
-                }
-                messageQueue.advanceMessage();
+        addScrollCompleteHandler(() -> {
+            if (override) {
+                TextZone.this.clearOverride();
             }
+            advanceMessage();
         });
     }
 
@@ -46,6 +43,10 @@ public class TextZone extends LightBoardZone {
         scroll(defaultScrollFrom, defaultScrollTo);
         setRestPosition(defaultRestH, defaultRestV);
         setRestDuration(defaultRestDuration);
+    }
+
+    public void advanceMessage() {
+        messageQueue.advanceMessage();
     }
 
 

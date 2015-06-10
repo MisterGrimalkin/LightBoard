@@ -10,18 +10,14 @@ import lightboard.board.PolyLightBoard;
 import lightboard.board.impl.GraphicalBoard;
 import lightboard.board.impl.RaspberryPiLightBoard2;
 import lightboard.board.impl.TextBoard;
-import lightboard.scene.impl.ImageScene;
-import lightboard.scene.impl.ShowerTicketsScene;
-import lightboard.scene.impl.TravelInformationScene;
-import lightboard.scene.impl.WebServiceMessageScene;
+import lightboard.scene.impl.*;
 import lightboard.surface.LightBoardSurface;
 import lightboard.surface.PolyLightBoardSurface;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.util.ColourResource;
+import lightboard.util.SystemResource;
 
-import static lightboard.scene.SceneManager.addScene;
-import static lightboard.scene.SceneManager.cycleScenes;
-import static lightboard.scene.SceneManager.startScenes;
+import static lightboard.scene.SceneManager.*;
 import static lightboard.updater.WebService.startWebService;
 import static lightboard.util.Sync.startSyncThread;
 
@@ -67,17 +63,18 @@ public class Main extends Application {
         } else {
 
             addScene(0, new WebServiceMessageScene(surface));
-            addScene(1, new TravelInformationScene(surface), 20000, true);
-            addScene(2, new ShowerTicketsScene(surface), 20000, true);
-//            addScene(3, new ShopOpeningTimesScene(surface), null, false);
-            addScene(3, new ImageScene(surface), null, true);
-//            addScene(1, new WeatherForecastScene(surface), 30000, false);
+            addScene(1, new ImageScene(surface), null, true);
+            addScene(2, new TravelInformationScene(surface), 20000, true);
+            addScene(3, new ShowerTicketsScene(surface), 20000, false);
+            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();
             cycleScenes();
+            loadScene(1);
 
             MessageResource.bindScene(0);
         }
 
+        SystemResource.readName();
         startSyncThread();
 
     }

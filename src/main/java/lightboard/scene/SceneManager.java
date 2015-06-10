@@ -8,6 +8,7 @@ import java.util.Map;
 public class SceneManager {
 
     private static Integer scenePointer = null;
+    private static Integer currentSceneId = 0;
     private static Scene currentScene = null;
 
     private static Map<Integer, Integer> scenePointers = new HashMap<>();
@@ -24,6 +25,10 @@ public class SceneManager {
         scene.build();
     }
 
+    public static Integer getCurrentSceneId() {
+        return currentSceneId;
+    }
+
     public static Map<Integer, Scene> getScenes() {
         return scenes;
     }
@@ -33,18 +38,20 @@ public class SceneManager {
     }
 
     public static void advanceScene() {
-        if ( scenes.isEmpty() ) {
-            throw new IllegalStateException("Must specify at least one scene");
-        }
-        if ( scenePointer==null ) {
-            scenePointer = 1;
-        }
-        if ( currentScene==null || ! currentScene.isBlocking() ) {
-            scenePointer++;
-            if (scenePointer >= scenePointers.size()) {
+        if ( cycleMode ) {
+            if (scenes.isEmpty()) {
+                throw new IllegalStateException("Must specify at least one scene");
+            }
+            if (scenePointer == null) {
                 scenePointer = 1;
             }
-            loadScene(scenePointers.get(scenePointer), true);
+            if (currentScene == null || !currentScene.isBlocking()) {
+                scenePointer++;
+                if (scenePointer >= scenePointers.size()) {
+                    scenePointer = 1;
+                }
+                loadScene(scenePointers.get(scenePointer), true);
+            }
         }
     }
     public static boolean loadScene(Integer id) {
@@ -52,6 +59,7 @@ public class SceneManager {
     }
 
     public static boolean loadScene(Integer id, boolean skipIfNotInCycle) {
+        currentSceneId = id;
         Scene newScene = scenes.get(id);
         if ( newScene!=null ) {
             if ( skipIfNotInCycle && !newScene.isIncludeInCycle() ) {
@@ -86,12 +94,25 @@ public class SceneManager {
         advanceScene();
     }
 
+    private static boolean cycleMode = false;
+
+    public static boolean getCycleMode() {
+        return cycleMode;
+    }
+
+    public static void setCycleMode(boolean mode) {
+        System.out.println("Cycle Mode " + mode);
+        cycleMode = mode;
+    }
+
+
     public static void cycleScenes() {
+        cycleMode = true;
         Sync.addTask(new Sync.Task(1000L) {
             @Override
             public void runTask() {
                 long now = System.currentTimeMillis();
-                if ( currentScene.getSceneDuration()!=null && now-sceneLoaded >= currentScene.getSceneDuration() && !sleeping ) {
+                if ( currentScene!=null && currentScene.getSceneDuration()!=null && now-sceneLoaded >= currentScene.getSceneDuration() && !sleeping ) {
                     advanceScene();
                 }
             }
