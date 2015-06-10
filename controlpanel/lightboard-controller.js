@@ -318,3 +318,4 @@ function shutdown() {
 function url(path) {
     return "http://" + baseUrl + ":" + port + "/lightboard/" + path;
 }
+
