@@ -145,7 +145,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>lightboard.Main</mainClass>
+                            <mainClass>net.amarantha.lightboard.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
