@@ -69,10 +69,7 @@ public class ImageZone extends LightBoardZone {
             case BINARY:
                 drawn = drawPattern(0, 0, convertedImageBinary, true);
                 break;
-            case MONO:
-                drawn = drawPattern(0, 0, convertedImage[3], true);
-                break;
-            case POLY:
+            case COLOUR:
                 drawn = drawPattern(0, 0, convertedImage, true);
                 break;
         }
@@ -85,25 +82,24 @@ public class ImageZone extends LightBoardZone {
         for ( int row=0; row<image.getHeight(); row++ ) {
             for ( int col=0; col<image.getWidth(); col++ ) {
                 int[] pixel = (image.getRaster().getPixel(col,row,new int[3]));
-                int red = pixel[0];
-                int green = pixel[1];
-                int blue = pixel[2];
-                int avg = ( red+green+blue ) / 3;
+                double red = pixel[0]/255.0;
+                double green = pixel[1]/255.0;
+                double blue = pixel[2]/255.0;
                 if ( row==0 || row==image.getHeight()-1 || col==0 || col==image.getWidth()-1 ) {
+                    // put blank space around image
                     convertedImage[0][row][col] = 0.0;
                     convertedImage[1][row][col] = 0.0;
                     convertedImage[2][row][col] = 0.0;
                     convertedImage[3][row][col] = 0.0;
                 } else {
-                    convertedImageBinary[row][col] = (avg/255.0)>=0.5;
-                    convertedImage[0][row][col] = red / 255.0;
-                    convertedImage[1][row][col] = green / 255.0;
-                    convertedImage[2][row][col] = blue / 255.0;
-                    convertedImage[3][row][col] = avg / 255.0;
+                    convertedImageBinary[row][col] = ( red>=0.5 || green>=0.5 || blue>=0.5 );
+                    convertedImage[0][row][col] = red;
+                    convertedImage[1][row][col] = green;
+                    convertedImage[2][row][col] = blue;
+                    convertedImage[3][row][col] = (red+green+blue) / 3;     // colour 3 is a grey-scale value (not really used anymore)
                 }
             }
         }
     }
 
-    private enum ImageMode { BINARY, MONO, POLY }
 }

@@ -1,18 +1,15 @@
 package lightboard;
 
-import com.pi4j.io.gpio.*;
-import com.pi4j.wiringpi.Gpio;
-import com.pi4j.wiringpi.GpioUtil;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lightboard.board.LightBoard;
-import lightboard.board.PolyLightBoard;
+import lightboard.board.RGBLightBoard;
 import lightboard.board.impl.GraphicalBoard;
-import lightboard.board.impl.RaspberryPiLightBoard2;
+import lightboard.board.impl.RaspPiGlastoLightBoard;
 import lightboard.board.impl.TextBoard;
 import lightboard.scene.impl.*;
 import lightboard.surface.LightBoardSurface;
-import lightboard.surface.PolyLightBoardSurface;
+import lightboard.surface.RGBLightBoardSurface;
 import lightboard.updater.schedule.MessageResource;
 import lightboard.util.ColourResource;
 import lightboard.util.SystemResource;
@@ -35,10 +32,10 @@ public class Main extends Application {
 
         startWebService(getParameters().getNamed().get("ip"));
 
-        PolyLightBoard board;
+        RGBLightBoard board;
         switch ( getBoardType() ) {
             case RASPBERRY_PI:
-                RaspberryPiLightBoard2 raspberryPiLightBoard = new RaspberryPiLightBoard2(ROWS, COLS);
+                RaspPiGlastoLightBoard raspberryPiLightBoard = new RaspPiGlastoLightBoard(ROWS, COLS);
                 ColourResource.addBoard(raspberryPiLightBoard);
                 board = raspberryPiLightBoard;
                 break;
@@ -54,7 +51,7 @@ public class Main extends Application {
         }
         board.init();
 
-        LightBoardSurface surface = new PolyLightBoardSurface(board);
+        LightBoardSurface surface = new RGBLightBoardSurface(board);
         surface.init();
 
         if ( getParameters().getUnnamed().contains("self-test") ) {

@@ -1,58 +1,58 @@
 package lightboard.board.impl;
 
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lightboard.board.HasColourSwitcher;
+import lightboard.board.ColourSwitcher;
 import lightboard.board.LightBoard;
-import lightboard.board.MonoLightBoard;
-import lightboard.board.PolyLightBoard;
+import lightboard.board.RGBLightBoard;
 import lightboard.updater.WebService;
+import lightboard.util.ColourNames;
 import lightboard.util.Sync;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
+import static lightboard.util.ColourNames.*;
 
-    private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
-
-    private double redMin = 0.05;
-    private double redMax = 1.0;
-
-    private double greenMin = 0.05;
-    private double greenMax = 1.0;
-
-    private double blueMin = 0.05;
-    private double blueMax = 1.0;
-
-    private Color off = Color.color(redMin, greenMin, blueMin);
+/**
+ * UI Simulation of a colour LightBoard
+ */
+public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
 
     private final static Long LED_REFRESH_TIME = 60L;
+
+    private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
     private final int rows;
     private final int cols;
 
     private Circle[][] leds;
 
-    private int d;
+    // Colour bounds for colour switching
+    private double redMin = 0.05;
+    private double redMax = 1.0;
+    private double greenMin = 0.05;
+    private double greenMax = 1.0;
+    private double blueMin = 0.05;
+    private double blueMax = 1.0;
+
+    // Simulate a board which only has Red and Green LEDs (does not apply to colour override)
+    private final static boolean RG_ONLY = true;
 
     private Stage stage;
-
     private String title;
     private int ledRadius;
+    private int d;
     private int spacer;
 
     public GraphicalBoard(int rows, int cols, Stage stage) {
-        this(rows, cols, stage, "LightBoard", 2, 0);
-
+        this(rows, cols, stage, "LightBoard Simulation", 2, 0);
     }
 
     public GraphicalBoard(int rows, int cols, Stage stage, String title, int ledRadius, int spacer) {
@@ -83,7 +83,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
         // Create LED Board
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                Circle led = new Circle(ledRadius - spacer, off);
+                Circle led = new Circle(ledRadius - spacer, Color.color(redMin, greenMin, blueMin));
                 led.setCenterX(d + col * d);
                 led.setCenterY(d + row * d);
                 board.getChildren().add(led);
@@ -99,6 +99,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
         stage.setTitle(title);
         stage.show();
 
+        // Shut down application when window is closed
         stage.setOnCloseRequest(event -> {
             WebService.stopWebService();
             Sync.stopSyncThread();
@@ -110,6 +111,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     private void addMouseHandlers(final Pane pane) {
 
+        // Drag window by holding button down anywhere inside it
         pane.setOnMouseDragged((e) -> {
             if (dragOffsetX == null || dragOffsetY == null) {
                 dragOffsetX = e.getX();
@@ -118,18 +120,19 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
             stage.setX(stage.getX() + e.getX() - dragOffsetX);
             stage.setY(stage.getY() + e.getY() - dragOffsetY);
         });
-
         pane.setOnMouseReleased((e) -> {
             dragOffsetX = null;
             dragOffsetY = null;
         });
 
+        // CTRL+SHIFT+MOUSE-CLICK => dump board state to console
         pane.setOnMouseClicked((e) -> {
             if (e.isControlDown() && e.isShiftDown()) {
                 dumpToDebug = !dumpToDebug;
             }
         });
 
+        // RIGHT-CLICK => reset UI window (because it messes up all the time - bug in JaxaFX maybe???)
         pane.setOnMouseClicked((e) -> {
             if ( e.getButton()==MouseButton.SECONDARY ) {
                 stage.hide();
@@ -154,14 +157,14 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
     private Double dragOffsetY = null;
 
 
-    ///////////////////////////
-    // Polychrome LightBoard //
-    ///////////////////////////
+    ///////////////////////
+    // Colour LightBoard //
+    ///////////////////////
 
     @Override
     public void dump(double[][][] data) {
         if (allowPoly && dumpToDebug && debugBoard != null) {
-            PolyLightBoard pBoard = (PolyLightBoard) debugBoard;
+            RGBLightBoard pBoard = (RGBLightBoard) debugBoard;
             pBoard.dump(data);
             dumpToDebug = false;
         }
@@ -180,7 +183,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
                         green = greenMin;
                         blue = blueMin;
                     }
-                } else if (simulateRedGreenOnly) {
+                } else if (RG_ONLY) {
                     red = red >= 0.5 ? redMax : redMin;
                     green = green >= 0.5 ? greenMax : greenMin;
                     blue = blueMin;
@@ -193,36 +196,6 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
     }
 
     private boolean colourOverride = false;
-    private boolean simulateRedGreenOnly = true;
-
-
-    ///////////////////////////
-    // Monochrome LightBoard //
-    ///////////////////////////
-
-    @Override
-    public void dump(double[][] data) {
-        if (allowMono && dumpToDebug && debugBoard != null) {
-            MonoLightBoard mBoard = (MonoLightBoard) debugBoard;
-            mBoard.dump(data);
-            dumpToDebug = false;
-        }
-        for (int r = 0; r < data.length; r++) {
-            dumpMonoRow(r, data[r]);
-        }
-    }
-
-    private void dumpMonoRow(int rowNumber, double... data) {
-        Circle[] rowLights = leds[rowNumber];
-        for (int c = 0; c < rowLights.length; c++) {
-            double red = redMin + (data[c] * (redMax - redMin));
-            double green = greenMin + (data[c] * (greenMax - greenMin));
-            double blue = blueMin + (data[c] * (blueMax - blueMin));
-            if (rowLights[c] != null) {
-                rowLights[c].setFill(Color.color(red, green, blue));
-            }
-        }
-    }
 
 
     ///////////////////////
@@ -290,35 +263,30 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
 
     private boolean dumpToDebug = false;
     private LightBoard debugBoard;
-    private boolean allowMono = false;
     private boolean allowPoly = false;
 
     public GraphicalBoard debugTo(LightBoard debugBoard) {
         this.debugBoard = debugBoard;
-        if (debugBoard instanceof MonoLightBoard) {
-            allowMono = true;
-        }
-        if (debugBoard instanceof PolyLightBoard) {
-            allowMono = true;
+        if (debugBoard instanceof RGBLightBoard) {
             allowPoly = true;
         }
         return this;
     }
 
     @Override
-    public List<String> supportedColours() {
+    public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add("red");
-        result.add("green");
-        result.add("yellow");
-        result.add("blue");
-        result.add("multi");
+        result.add(RED);
+        result.add(GREEN);
+        result.add(YELLOW);
+        result.add(BLUE);
+        result.add(MULTI);
         return result;
     }
 
     @Override
-    public void colour(String colour) {
-        if ("red".equals(colour)) {
+    public void setColour(String colour) {
+        if (RED.equals(colour)) {
             colourOverride = true;
             redMin = 0.05;
             redMax = 1.0;
@@ -326,7 +294,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
             greenMax = 0;
             blueMin = 0;
             blueMax = 0;
-        } else if ("green".equals(colour)) {
+        } else if (GREEN.equals(colour)) {
             colourOverride = true;
             redMin = 0;
             redMax = 0;
@@ -334,7 +302,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
             greenMax = 1.0;
             blueMin = 0;
             blueMax = 0;
-        } else if ("yellow".equals(colour)) {
+        } else if (YELLOW.equals(colour)) {
             colourOverride = true;
             redMin = 0.05;
             redMax = 1.0;
@@ -342,7 +310,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
             greenMax = 1.0;
             blueMin = 0;
             blueMax = 0;
-        } else if ("blue".equals(colour)) {
+        } else if (BLUE.equals(colour)) {
             colourOverride = true;
             redMin = 0;
             redMax = 0;
@@ -350,7 +318,7 @@ public class GraphicalBoard implements PolyLightBoard, HasColourSwitcher {
             greenMax = 0;
             blueMin = 0.05;
             blueMax = 1.0;
-        } else if ("multi".equals(colour)) {
+        } else if (MULTI.equals(colour)) {
             colourOverride = false;
             redMin = 0.05;
             redMax = 1.0;

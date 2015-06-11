@@ -5,7 +5,6 @@ import lightboard.scene.SceneManager;
 import lightboard.surface.LightBoardSurface;
 import lightboard.updater.Updater;
 import lightboard.updater.schedule.DateTimeUpdater;
-import lightboard.zone.LightBoardZone;
 import lightboard.zone.impl.TextZone;
 
 import static lightboard.util.MessageQueue.Edge.BOTTOM_EDGE;

@@ -3,7 +3,6 @@ package lightboard.scene.impl;
 import lightboard.scene.Scene;
 import lightboard.scene.SceneManager;
 import lightboard.surface.LightBoardSurface;
-import lightboard.zone.LightBoardZone;
 import lightboard.zone.impl.ImageZone;
 
 public class ImageScene extends Scene {

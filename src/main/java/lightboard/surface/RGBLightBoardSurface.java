@@ -1,15 +1,15 @@
 package lightboard.surface;
 
-import lightboard.board.PolyLightBoard;
+import lightboard.board.RGBLightBoard;
 import lightboard.util.Sync;
 
-public class PolyLightBoardSurface extends MonoLightBoardSurface {
+public class RGBLightBoardSurface extends LightBoardSurface {
 
     private final double[][][] ledPolyValue;
 
-    private final PolyLightBoard[] boards;
+    private final RGBLightBoard[] boards;
 
-    public PolyLightBoardSurface(PolyLightBoard... boards) {
+    public RGBLightBoardSurface(RGBLightBoard... boards) {
         super(boards);
         this.boards = boards;
         ledPolyValue = new double[3][getRows()][getCols()];
@@ -22,8 +22,8 @@ public class PolyLightBoardSurface extends MonoLightBoardSurface {
 
     @Override
     public LightBoardSurface init() {
-        System.out.println("Starting PolychromeLightBoard Surface....");
-        for (final PolyLightBoard board : boards) {
+        System.out.println("Starting ColourLightBoard Surface....");
+        for (final RGBLightBoard board : boards) {
             Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
                 @Override
                 public void runTask() {
@@ -41,9 +41,19 @@ public class PolyLightBoardSurface extends MonoLightBoardSurface {
     }
 
     @Override
-    public boolean drawPoint(int x, int y, double value, Region r) {
-        return drawPoint(x, y, value, value, value, r);
+    public boolean drawPoint(int x, int y, Region r) {
+        return drawPoint(x, y, 1.0, 1.0, 1.0, r);
     }
+
+    @Override
+    public boolean clearPoint(int x, int y, Region r) {
+        return drawPoint(x, y, 0.0, 0.0, 0.0, r);
+    }
+
+//    @Override
+//    public boolean drawPoint(int x, int y, double value, Region r) {
+//        return drawPoint(x, y, value, value, value, r);
+//    }
 
     public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
         if ( pointInRegion(x, y, r) ) {
@@ -56,7 +66,7 @@ public class PolyLightBoardSurface extends MonoLightBoardSurface {
         }
     }
 
-    public synchronized boolean drawPattern(int xPos, int yPos, double[][][] chr, boolean clearBackground, Region r) {
+    public synchronized boolean drawPattern(int xPos, int yPos, double[][][] chr, Region r) {
         boolean changed = false;
         if ( chr.length>=3 && chr[0].length>0 && chr[0][0].length> 0 ) {
             for (int x = 0; x < getCols(); x++) {

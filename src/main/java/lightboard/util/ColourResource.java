@@ -1,7 +1,6 @@
 package lightboard.util;
 
-import lightboard.board.HasColourSwitcher;
-import lightboard.board.LightBoard;
+import lightboard.board.ColourSwitcher;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -18,9 +17,9 @@ import java.util.Set;
 @Path("colour")
 public class ColourResource {
 
-    private static List<HasColourSwitcher> boards = new ArrayList<>();
+    private static List<ColourSwitcher> boards = new ArrayList<>();
 
-    public static <T extends HasColourSwitcher> void addBoard(T board) {
+    public static <T extends ColourSwitcher> void addBoard(T board) {
         boards.add(board);
     }
 
@@ -29,8 +28,8 @@ public class ColourResource {
         JSONObject jsonWrapper = new JSONObject();
         JSONArray ja = new JSONArray();
         Set<String> colourNames = new HashSet<>();
-        for ( HasColourSwitcher board : boards ) {
-            for ( String c : board.supportedColours() ) {
+        for ( ColourSwitcher board : boards ) {
+            for ( String c : board.getSupportedColours() ) {
                 colourNames.add(c);
             }
         }
@@ -49,8 +48,8 @@ public class ColourResource {
 
     @POST
     public Response colour(@QueryParam("name") final String name) {
-        for (HasColourSwitcher hasColourSwitcher : boards ) {
-            hasColourSwitcher.colour(name);
+        for (ColourSwitcher colourSwitcher : boards ) {
+            colourSwitcher.setColour(name);
         }
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")

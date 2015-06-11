@@ -1,10 +1,13 @@
 package lightboard.board.impl;
 
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
-import lightboard.board.HasColourSwitcher;
-import lightboard.board.LightBoard;
-import lightboard.board.PolyLightBoard;
+import lightboard.board.ColourSwitcher;
+import lightboard.board.RGBLightBoard;
+import lightboard.util.ColourNames;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -12,12 +15,17 @@ import java.util.List;
 
 import static com.pi4j.wiringpi.Gpio.OUTPUT;
 import static com.pi4j.wiringpi.Gpio.digitalWrite;
+import static lightboard.util.ColourNames.*;
 
-public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher {
+/**
+ * Second implementation using RaspPi - this one for the Greenpeace field at Glastonbury 2015
+ */
+public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
-    private int rows = 16;
-    private int cols = 180;
+    private final int rows;
+    private final int cols;
 
+    // wiringPi pin numbers
     private int clock = 0;
     private int store = 1;
     private int output = 2;
@@ -30,7 +38,7 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
     private int addr2 = 23;
     private int addr3 = 24;
 
-    public RaspberryPiLightBoard2(int rows, int cols) {
+    public RaspPiGlastoLightBoard(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
     }
@@ -56,19 +64,6 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
         gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, PinState.LOW);
         gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, PinState.LOW);
 
-        // This bit may not be necessary??
-        Gpio.pinMode(clock, OUTPUT);
-        Gpio.pinMode(store, OUTPUT);
-        Gpio.pinMode(output, OUTPUT);
-        Gpio.pinMode(data1R, OUTPUT);
-        Gpio.pinMode(data2R, OUTPUT);
-        Gpio.pinMode(data1G, OUTPUT);
-        Gpio.pinMode(data2G, OUTPUT);
-        Gpio.pinMode(addr0, OUTPUT);
-        Gpio.pinMode(addr1, OUTPUT);
-        Gpio.pinMode(addr2, OUTPUT);
-        Gpio.pinMode(addr3, OUTPUT);
-
         digitalWrite(data1R, true);
         digitalWrite(data1G, true);
         digitalWrite(data2R, true);
@@ -77,22 +72,27 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
         System.out.println("Board Ready");
     }
 
-    private static final int MULTI = 0;
-    private static final int RED = 1;
-    private static final int GREEN = 2;
-    private static final int YELLOW = 3;
+    private static final int MULTI_MODE = 0;
+    private static final int RED_MODE = 1;
+    private static final int GREEN_MODE = 2;
+    private static final int YELLOW_MODE = 3;
 
     private boolean cycleColours = false;
-    private int colour = MULTI;
+    private int colour = MULTI_MODE;
 
     private long t = 0;
     private long colourChangePeriod = 30000;
+
+
+    /////////////////
+    // Binary Data //
+    /////////////////
 
     @Override
     public void dump(boolean[][] data) {
         if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
             colour++;
-            if ( colour> YELLOW) colour = RED;
+            if ( colour> YELLOW_MODE) colour = RED_MODE;
             t = System.currentTimeMillis();
         }
         try {
@@ -112,11 +112,11 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
     private void sendSerialString(boolean[] data1, boolean[] data2) throws InterruptedException {
         for (int col = 0; col < data1.length ; col++) {
             digitalWrite(clock, false);
-            if (colour != GREEN) {
-                digitalWrite(data1R, !data1[col]);
+            if (colour != GREEN_MODE) {
+                digitalWrite(data1R, !data1[col]);      // on this board the serial data is inverted
                 digitalWrite(data2R, !data2[col]);
             }
-            if (colour != RED) {
+            if (colour != RED_MODE) {
                 digitalWrite(data1G, !data1[col]);
                 digitalWrite(data2G, !data2[col]);
             }
@@ -124,16 +124,21 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
         }
     }
 
+
+    /////////////////
+    // Colour Data //
+    /////////////////
+
     @Override
     public void dump(double[][][] data) {
         if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
             colour++;
-            if ( colour> YELLOW) colour = RED;
+            if ( colour> YELLOW_MODE) colour = RED_MODE;
             t = System.currentTimeMillis();
         }
         try {
             for (int row = 0; row < rows/2; row++) {
-                sendSerialString(data[0][row], data[1][row], data[0][row+data[0].length/2], data[1][row+data[0].length/2]);
+                sendSerialString(data[0][row], data[1][row], data[0][row+rows/2], data[1][row+rows/2]);
                 digitalWrite(output, true);
                 decodeRowAddress(row);
                 digitalWrite(store, true);
@@ -148,7 +153,7 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
     private void sendSerialString(double[] red1, double[] green1, double[] red2, double[] green2) throws InterruptedException {
         for (int col = 0; col < red1.length ; col++) {
             digitalWrite(clock, false);
-            if ( colour==MULTI ) {
+            if ( colour==MULTI_MODE) {
                 if ( red1[col] >= 0.5 ) {
                     digitalWrite(data1R, false);
                 } else {
@@ -171,32 +176,32 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
                 }
             } else {
                 if ( red1[col] >= 0.5 || green1[col] >= 0.5) {
-                    if ( colour==GREEN || colour==YELLOW ) {
+                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data1G, false);
                     }
-                    if ( colour==RED || colour==YELLOW ) {
+                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data1R, false);
                     }
                 } else {
-                    if ( colour==GREEN || colour==YELLOW ) {
+                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data1G, true);
                     }
-                    if ( colour==RED || colour==YELLOW ) {
+                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data1R, true);
                     }
                 }
                 if ( red2[col] >= 0.5 || green2[col] >= 0.5) {
-                    if ( colour==GREEN || colour==YELLOW ) {
+                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data2G, false);
                     }
-                    if ( colour==RED || colour==YELLOW ) {
+                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data2R, false);
                     }
                 } else {
-                    if ( colour==GREEN || colour==YELLOW ) {
+                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data2G, true);
                     }
-                    if ( colour==RED || colour==YELLOW ) {
+                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
                         digitalWrite(data2R, true);
                     }
                 }
@@ -249,36 +254,30 @@ public class RaspberryPiLightBoard2 implements PolyLightBoard, HasColourSwitcher
     }
 
     @Override
-    public List<String> supportedColours() {
+    public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add("red");
-        result.add("green");
-        result.add("yellow");
-        result.add("multi");
+        result.add(RED);
+        result.add(GREEN);
+        result.add(YELLOW);
+        result.add(MULTI);
         return result;
     }
 
     @Override
-    public void colour(String colourName) {
-        System.out.println("COLOUR="+colourName);
-        if ("red".equals(colourName)) {
-            colour = RED;
+    public void setColour(String colourName) {
+        if (RED.equals(colourName)) {
+            colour = RED_MODE;
             digitalWrite(data1G, true);
             digitalWrite(data2G, true);
-        } else if ("green".equals(colourName)) {
-            colour = GREEN;
+        } else if (GREEN.equals(colourName)) {
+            colour = GREEN_MODE;
             digitalWrite(data1R, true);
             digitalWrite(data2R, true);
-        } else if ("yellow".equals(colourName)) {
-            colour = YELLOW;
-        } else if ("multi".equals(colourName)) {
-            colour = MULTI;
+        } else if (YELLOW.equals(colourName)) {
+            colour = YELLOW_MODE;
+        } else if (MULTI.equals(colourName)) {
+            colour = MULTI_MODE;
         }
     }
 
-    @Override
-    public void dump(double[][] data) {
-        throw new UnsupportedOperationException("This board does not support greyscale mode");
-
-    }
 }

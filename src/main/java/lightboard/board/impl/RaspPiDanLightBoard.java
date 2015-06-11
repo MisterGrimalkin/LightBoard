@@ -4,15 +4,21 @@ import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
-import lightboard.board.HasColourSwitcher;
+import lightboard.board.ColourSwitcher;
 import lightboard.board.LightBoard;
+import lightboard.util.ColourNames;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
+import static lightboard.util.ColourNames.*;
+
+/**
+ * The first real LED board implementation - the salvaged "Dan Light Board"
+ */
+public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
 
     private int rows = 16;
     private int cols = 180;
@@ -31,7 +37,7 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
     private GpioPinDigitalOutput outputEnable1Pin;
     private GpioPinDigitalOutput outputEnable2Pin;
 
-    public RaspberryPiLightBoard(int rows, int cols) {
+    public RaspPiDanLightBoard(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
     }
@@ -64,12 +70,12 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
         System.out.println("Board Ready");
     }
 
-    private static final int RED = 1;
-    private static final int GREEN = 2;
-    private static final int YELLOW = 3;
+    private static final int RED_MODE = 1;
+    private static final int GREEN_MODE = 2;
+    private static final int YELLOW_MODE = 3;
 
     private boolean cycleColours = false;
-    private int colour = RED;
+    private int colour = RED_MODE;
 
     private long t = 0;
     private long colourChangePeriod = 30000;
@@ -78,7 +84,7 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
     public void dump(boolean[][] data) {
         if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
             colour++;
-            if ( colour> YELLOW) colour = RED;
+            if ( colour> YELLOW_MODE) colour = RED_MODE;
             t = System.currentTimeMillis();
         }
         try {
@@ -104,21 +110,21 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
             if ( lastValue1==null || lastValue1!=data[col] ) {
                 lastValue1 = data[col];
                 if (data[col]) {
-                    if ( colour!= GREEN) data1PinR.high();
-                    if ( colour!= RED) data1PinG.high();
+                    if ( colour!= GREEN_MODE) data1PinR.high();
+                    if ( colour!= RED_MODE) data1PinG.high();
                 } else {
-                    if ( colour!= GREEN) data1PinR.low();
-                    if ( colour!= RED) data1PinG.low();
+                    if ( colour!= GREEN_MODE) data1PinR.low();
+                    if ( colour!= RED_MODE) data1PinG.low();
                 }
             }
             if ( lastValue2==null || lastValue2!=data[parallelCol] ) {
                 lastValue2 = data[parallelCol];
                 if (data[parallelCol]) {
-                    if ( colour!= GREEN) data2PinR.high();
-                    if ( colour!= RED) data2PinG.high();
+                    if ( colour!= GREEN_MODE) data2PinR.high();
+                    if ( colour!= RED_MODE) data2PinG.high();
                 } else {
-                    if ( colour!= GREEN) data2PinR.low();
-                    if ( colour!= RED) data2PinG.low();
+                    if ( colour!= GREEN_MODE) data2PinR.low();
+                    if ( colour!= RED_MODE) data2PinG.low();
                 }
             }
             clockPin.high();
@@ -185,30 +191,30 @@ public class RaspberryPiLightBoard implements LightBoard, HasColourSwitcher {
     }
 
     @Override
-    public List<String> supportedColours() {
+    public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add("red");
-        result.add("green");
-        result.add("yellow");
-        result.add("multi");
+        result.add(RED);
+        result.add(GREEN);
+        result.add(YELLOW);
+        result.add(MULTI);
         return result;
     }
 
     @Override
-    public void colour(String colourName) {
-        if ("red".equals(colourName)) {
+    public void setColour(String colourName) {
+        if (RED.equals(colourName)) {
             cycleColours = false;
-            colour = RED;
+            colour = RED_MODE;
             data1PinG.low();
             data2PinG.low();
-        } else if ("green".equals(colourName)) {
+        } else if (GREEN.equals(colourName)) {
             cycleColours = false;
-            colour = GREEN;
+            colour = GREEN_MODE;
             data1PinR.low();
             data2PinR.low();
-        } else if ("yellow".equals(colourName)) {
+        } else if (YELLOW.equals(colourName)) {
             cycleColours = false;
-            colour = YELLOW;
+            colour = YELLOW_MODE;
         }
     }
 

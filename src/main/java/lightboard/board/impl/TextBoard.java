@@ -1,8 +1,11 @@
 package lightboard.board.impl;
 
-import lightboard.board.PolyLightBoard;
+import lightboard.board.RGBLightBoard;
 
-public class TextBoard implements PolyLightBoard {
+/**
+ * Simple implementation of a colour LightBoard that dumps board state to the console
+ */
+public class TextBoard implements RGBLightBoard {
 
     private final int rows;
     private final int cols;
@@ -23,18 +26,6 @@ public class TextBoard implements PolyLightBoard {
             System.out.print((r<10?"0":"")+r+":");
             for ( int c=0; c<cols; c++ ) {
                 System.out.print(data[r][c] ? "#" : "-");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    @Override
-    public void dump(double[][] data) {
-        for ( int r=0; r<rows; r++ ) {
-            System.out.print((r<10?"0":"")+r+":");
-            for ( int c=0; c<cols; c++ ) {
-                System.out.print(data[r][c]>=0.5 ? "#" : "-");
             }
             System.out.println();
         }
