@@ -2,6 +2,7 @@ package net.amarantha.lightboard.zone;
 
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.HPosition;
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.entity.VPosition;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.RGBLightBoardSurface;
@@ -304,30 +305,12 @@ public abstract class LightBoardZone {
         return surface.clearRegion(region);
     }
 
-    protected boolean drawPattern(int x, int y, boolean[][] pattern) {
+    protected boolean drawPattern(int x, int y, Pattern pattern) {
         return surface.drawPattern(region.left+contentLeft+x, region.top+contentTop+y, pattern, region);
     }
 
-    protected boolean drawPattern(int x, int y, boolean[][] pattern, boolean clearBackground) {
+    protected boolean drawPattern(int x, int y, Pattern pattern, boolean clearBackground) {
         return surface.drawPattern(region.left+contentLeft+x, region.top+contentTop+y, pattern, clearBackground, region);
-    }
-
-    //////////////////
-    // Colour Board //
-    //////////////////
-
-    public boolean isPoly() {
-        return ( boardType==BoardType.COLOUR);
-    }
-
-    protected boolean drawPattern(int x, int y, double[][][] pattern, boolean clearBackground) {
-        if ( boardType==BoardType.COLOUR ) {
-            RGBLightBoardSurface pSurface = (RGBLightBoardSurface) surface;
-            return pSurface.drawPattern(region.left + contentLeft + x, region.top + contentTop + y, pattern, region);
-        } else {
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-        return false;
     }
 
 

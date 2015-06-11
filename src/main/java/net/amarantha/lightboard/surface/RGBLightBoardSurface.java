@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.RGBLightBoard;
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.util.Sync;
 
 public class RGBLightBoardSurface extends LightBoardSurface {
@@ -61,8 +62,10 @@ public class RGBLightBoardSurface extends LightBoardSurface {
         }
     }
 
-    public synchronized boolean drawPattern(int xPos, int yPos, double[][][] chr, Region r) {
+    @Override
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
         boolean changed = false;
+        double[][][] chr = pattern.getColourValues();
         if ( chr.length>=3 && chr[0].length>0 && chr[0][0].length> 0 ) {
             for (int x = 0; x < getCols(); x++) {
                 for (int y = 0; y < getRows(); y++) {

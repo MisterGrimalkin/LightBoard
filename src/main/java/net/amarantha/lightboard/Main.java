@@ -2,6 +2,7 @@ package net.amarantha.lightboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.RGBLightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
@@ -59,10 +60,10 @@ public class Main extends Application {
         } else {
 
             addScene(0, new WebServiceMessageScene(surface));
-            addScene(1, new ImageScene(surface), null, true);
-            addScene(2, new TravelInformationScene(surface), 20000, true);
-            addScene(3, new ShowerTicketsScene(surface), 20000, false);
-            addScene(4, new MessageScrollerScene(surface), 10000, false);
+            addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
+            addScene(2, new ShowerTicketsScene(surface), 20000, true);
+            addScene(3, new TravelInformationScene(surface), 20000, false);
+//            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();
             cycleScenes();
             loadScene(1);

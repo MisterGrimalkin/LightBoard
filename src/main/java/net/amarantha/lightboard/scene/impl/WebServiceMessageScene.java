@@ -3,7 +3,7 @@ package net.amarantha.lightboard.scene.impl;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.updater.schedule.MessageUpdater;
+import net.amarantha.lightboard.updater.schedule.OldMessageUpdater;
 import net.amarantha.lightboard.webservice.MessageResource;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
@@ -27,7 +27,7 @@ public class WebServiceMessageScene extends Scene {
             });
         zone.addMessage(0, "");
 
-        MessageUpdater updater = new MessageUpdater(zone);
+        OldMessageUpdater updater = new OldMessageUpdater(zone);
         MessageResource.bindUpdater(updater);
 
         registerZones(zone);

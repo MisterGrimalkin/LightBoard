@@ -7,4 +7,4 @@ java \
 -Dcom.sun.management.jmxremote.ssl=false \
 -Djava.library.path=native/libpi4j.so \
 -cp "lib/*:target/classes" \
-lightboard.Main $*
+net.amarantha.lightboard.Main $*

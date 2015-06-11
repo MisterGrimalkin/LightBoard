@@ -7,8 +7,11 @@ import net.amarantha.lightboard.zone.impl.ImageZone;
 
 public class ImageScene extends Scene {
 
-    public ImageScene(LightBoardSurface surface) {
-        super(surface, "Greenpeace Logo");
+    private String filename;
+
+    public ImageScene(LightBoardSurface surface, String image) {
+        super(surface, "Image Banner");
+        this.filename = image;
         setSceneDuration(null);
     }
 
@@ -17,10 +20,8 @@ public class ImageScene extends Scene {
 
         ImageZone zone = ImageZone.scrollUp(getSurface());
         zone.setScrollTick(50);
-        zone.setRestDuration(3000);
-//        zone.loadImage("sb.jpg");
-        zone.loadImage("gp192x32.jpg");
-//        zone.loadImage("gp180x16.jpg");
+        zone.setRestDuration(1000);
+        zone.loadImage(filename);
         zone.addScrollCompleteHandler(SceneManager::advanceScene);
 
         registerZones(zone);

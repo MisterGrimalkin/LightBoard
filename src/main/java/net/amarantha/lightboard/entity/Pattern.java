@@ -15,6 +15,41 @@ public class Pattern {
         colourValues = new double[3][rows][cols];
     }
 
+    public Pattern(boolean[][] binaryValues) {
+        this.binaryValues = binaryValues;
+        colourValues = new double[3][binaryValues.length][binaryValues[0].length];
+        for ( int r=0; r<binaryValues.length; r++ ) {
+            for ( int c=0; c<binaryValues[0].length; c++ ) {
+                double value = binaryValues[r][c] ? 1.0 : 0.0;
+                colourValues[0][r][c] = value;
+                colourValues[1][r][c] = value;
+                colourValues[2][r][c] = value;
+            }
+        }
+    }
+
+    public Pattern(Colour[][] colourPoints) {
+        colourValues = new double[3][colourPoints.length][colourPoints[0].length];
+        for ( int r=0; r<colourPoints.length; r++ ) {
+            for ( int c=0; c<colourPoints[0].length; c++ ) {
+                colourValues[0][r][c] = colourPoints[r][c].getRed();
+                colourValues[1][r][c] = colourPoints[r][c].getGreen();
+                colourValues[2][r][c] = colourPoints[r][c].getBlue();
+                binaryValues[r][c] = ( colourValues[0][r][c]>=0.5 || colourValues[1][r][c]>=0.5 || colourValues[2][r][c]>=0.5 );
+            }
+        }
+    }
+
+    public Pattern(double[][][] colourValues) {
+        this.colourValues = colourValues;
+        binaryValues = new boolean[colourValues[0].length][colourValues[0][0].length];
+        for ( int r=0; r<colourValues[0].length; r++ ) {
+            for (int c = 0; c < colourValues[0][0].length; c++) {
+                binaryValues[r][c] = ( colourValues[0][r][c]>=0.5 || colourValues[1][r][c]>=0.5 || colourValues[2][r][c]>=0.5 );
+            }
+        }
+    }
+
     public void setPenColour(Colour penColour) {
         this.penColour = penColour;
     }

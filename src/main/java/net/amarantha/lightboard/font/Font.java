@@ -13,28 +13,32 @@ public abstract class Font {
 
     public final static char NL = '\n';
 
-    private Map<Character, boolean[][]> chars = new HashMap<>();
+    private Map<Character, Pattern> chars = new HashMap<>();
 
     public final void registerPattern(char key, boolean[][] bits) {
-        chars.put(key, bits);
+        registerPattern(key, new Pattern(bits));
     }
 
-    public final boolean[][] getPattern(char key) {
+    public final void registerPattern(char key, Pattern pattern) {
+        chars.put(key, pattern);
+    }
+
+    public final Pattern getPattern(char key) {
         return chars.get(key);
     }
 
     public final int getHeight(char key) {
-        boolean[][] c = getPattern(key);
+        Pattern c = getPattern(key);
         if ( c!=null ) {
-            return c.length;
+            return c.getRows();
         }
         return 0;
     }
 
     public final int getWidth(char key) {
-        boolean[][] c = getPattern(key);
+        Pattern c = getPattern(key);
         if ( c!=null ) {
-            return c[0].length;
+            return c.getCols();
         }
         return 0;
     }
@@ -110,6 +114,7 @@ public abstract class Font {
         if ( lines.length==1 ) {
             int cursorX = 0;
             boolean inTag = false;
+            boolean penMode = false;
             String tag = "";
             for ( int c=0; c<str.length(); c++ ) {
                 char chr = str.charAt(c);
@@ -130,12 +135,17 @@ public abstract class Font {
                 } else {
                     if ( chr=='{' ) {
                         inTag = true;
+                        penMode = true;
                     } else {
-                        boolean[][] pattern = getPattern(chr);
+                        Pattern pattern = getPattern(chr);
                         if (pattern != null) {
-                            for (int row = 0; row < pattern.length; row++) {
-                                for (int col = 0; col < pattern[0].length; col++) {
-                                    result.drawPoint(row, col + cursorX, pattern[row][col]);
+                            for (int row = 0; row < pattern.getRows(); row++) {
+                                for (int col = 0; col < pattern.getCols(); col++) {
+                                    if ( penMode ) {
+                                        result.drawPoint(row, col + cursorX, pattern.getBinaryPoint(row, col));
+                                    } else {
+                                        result.drawPoint(row, col + cursorX, pattern.getColourPoint(row, col));
+                                    }
                                 }
                             }
                             cursorX += getWidth(chr) + 1;

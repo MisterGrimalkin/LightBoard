@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.zone.impl;
 
 import net.amarantha.lightboard.entity.Edge;
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.zone.LightBoardZone;
 import org.imgscalr.Scalr;
@@ -32,6 +33,7 @@ public class ImageZone extends LightBoardZone {
         return zone;
     }
 
+    Pattern imagePattern;
     double[][][] convertedImage;
     boolean[][] convertedImageBinary;
 
@@ -64,15 +66,7 @@ public class ImageZone extends LightBoardZone {
 
     @Override
     public boolean render() {
-        boolean drawn = false;
-        switch ( getBoardType() )  {
-            case BINARY:
-                drawn = drawPattern(0, 0, convertedImageBinary, true);
-                break;
-            case COLOUR:
-                drawn = drawPattern(0, 0, convertedImage, true);
-                break;
-        }
+        boolean drawn = drawPattern(0, 0, imagePattern, true);
         return drawn;
     }
 
@@ -100,6 +94,7 @@ public class ImageZone extends LightBoardZone {
                 }
             }
         }
+        imagePattern = new Pattern(convertedImage);
     }
 
 }

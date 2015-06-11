@@ -84,11 +84,7 @@ public class TextZone extends LightBoardZone {
     @Override
     public boolean render() {
         MessageWrapper message = getCurrentMessage();
-        if ( isPoly() ) {
-            return drawPattern(0, 0, font.renderString(message.getMessage(), message.getHPosition()).getColourValues(), true);
-        } else {
-            return drawPattern(0, 0, font.renderString(message.getMessage(), message.getHPosition()).getBinaryValues(), true);
-        }
+        return drawPattern(0, 0, font.renderString(message.getMessage(), message.getHPosition()), true);
     }
 
     @Override
@@ -128,6 +124,10 @@ public class TextZone extends LightBoardZone {
 
     public MessageWrapper wrap(String message) {
         return new MessageWrapper(message, getScrollFrom(), getScrollTo(), getRestPositionH(), getRestPositionV(), getRestDuration());
+    }
+
+    public void setMaxMessagesPerSource(int id, int max) {
+        messageQueue.setMaxMessages(id, max);
     }
 
     public TextZone setFont(Font font) {

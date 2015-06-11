@@ -49,7 +49,11 @@ public class MessageQueue {
                     advanceMessage();
                 } else {
                     List<MessageWrapper> messages = allMessages.get(source);
-                    int messagePointer = messagePointers.get(source);
+                    Integer messagePointer = messagePointers.get(source);
+                    if ( messagePointer==null || messagePointer>=messages.size() ) {
+                        messagePointers.put(source, 0);
+                        messagePointer = 0;
+                    }
                     if ( messages!=null && !messages.isEmpty() ) {
                         currentMessage = messages.get(messagePointer);
                         messagesForThisSource++;
@@ -95,7 +99,7 @@ public class MessageQueue {
 
     public void clearMessages(Integer key) {
         getOrCreateMessageList(key).clear();
-        messagePointers.put(key, 0);
+//        messagePointers.put(key, 0);
     }
 
     public void setMaxMessages(Integer key, int max) {
@@ -120,7 +124,7 @@ public class MessageQueue {
             msgs = new ArrayList<>();
             allMessages.put(key, msgs);
             sources.add(key);
-            messagePointers.put(key, 0);
+//            messagePointers.put(key, 0);
             if ( maxMessages.get(key)==null ) {
                 maxMessages.put(key, 2);
             }

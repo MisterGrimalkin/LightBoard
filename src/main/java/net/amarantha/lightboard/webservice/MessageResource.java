@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import net.amarantha.lightboard.scene.SceneManager;
-import net.amarantha.lightboard.updater.schedule.MessageUpdater;
+import net.amarantha.lightboard.updater.schedule.OldMessageUpdater;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -12,11 +12,11 @@ import javax.ws.rs.core.Response;
 @Path("message")
 public class MessageResource {
 
-    private static MessageUpdater updater;
+    private static OldMessageUpdater updater;
 
     private static Integer scene = null;
 
-    public static void bindUpdater(MessageUpdater updater) {
+    public static void bindUpdater(OldMessageUpdater updater) {
         MessageResource.updater = updater;
     }
 

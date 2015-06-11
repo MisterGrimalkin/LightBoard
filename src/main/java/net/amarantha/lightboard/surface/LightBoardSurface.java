@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.util.Sync;
 
 import java.util.Timer;
@@ -92,15 +93,16 @@ public class LightBoardSurface {
         }
     }
 
-    public boolean drawPattern(int xPos, int yPos, boolean[][] chr) {
-        return drawPattern(xPos, yPos, chr, boardRegion);
+    public boolean drawPattern(int xPos, int yPos, Pattern pattern) {
+        return drawPattern(xPos, yPos, pattern, boardRegion);
     }
-    public synchronized boolean drawPattern(int xPos, int yPos, boolean[][] chr, Region r) {
-        return drawPattern(xPos, yPos, chr, false, r);
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, Region r) {
+        return drawPattern(xPos, yPos, pattern, false, r);
     }
 
-    public synchronized boolean drawPattern(int xPos, int yPos, boolean[][] chr, boolean clearBackground, Region r) {
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
         boolean changed = false;
+        boolean[][] chr = pattern.getBinaryValues();
         if ( chr.length>0 && chr[0].length> 0 ) {
             for (int x = 0; x < chr[0].length; x++) {
                 for (int y = 0; y < chr.length; y++) {
@@ -245,6 +247,8 @@ public class LightBoardSurface {
 
     public void selfTest(int tick, final double speed) {
 
+        final Pattern testPat = new Pattern(testPattern);
+
         new Timer(true).schedule(new TimerTask() {
             @Override
             public void run() {
@@ -261,8 +265,8 @@ public class LightBoardSurface {
                 fillRegion(safeRegion(floorX - 4, floorY - 4, 3, 3));
                 clearPoint(floorX - 3, floorY - 3);
 
-                drawPattern(floorX - 4, floorY + 2, testPattern);
-                drawPattern(floorX + 2, floorY - 4, testPattern);
+                drawPattern(floorX - 4, floorY + 2, testPat);
+                drawPattern(floorX + 2, floorY - 4, testPat);
 
                 drawPoint(floorX - 4, floorY - 5);
                 drawPoint(floorX - 4, floorY + 5);
