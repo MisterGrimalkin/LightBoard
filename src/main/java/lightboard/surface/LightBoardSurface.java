@@ -6,6 +6,9 @@ import lightboard.util.Sync;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * The surface holds the state and writes to the board
+ */
 public class LightBoardSurface {
 
     private int rows;

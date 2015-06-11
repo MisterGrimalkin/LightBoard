@@ -1,5 +1,7 @@
 package lightboard.font;
 
+import lightboard.entity.Colour;
+import lightboard.entity.Pattern;
 import lightboard.util.MessageQueue.HPosition;
 
 import java.util.HashMap;
@@ -131,7 +133,7 @@ public abstract class Font {
                         if (pattern != null) {
                             for (int row = 0; row < pattern.length; row++) {
                                 for (int col = 0; col < pattern[0].length; col++) {
-                                    result.setPoint(row, col+cursorX, pattern[row][col]);
+                                    result.drawPoint(row, col + cursorX, pattern[row][col]);
                                 }
                             }
                             cursorX += getWidth(chr) + 1;
@@ -151,65 +153,15 @@ public abstract class Font {
                 }
                 int lineHeight = getStringHeight(line);
                 Pattern pattern = renderString(line);
-                for ( int row=0; row<pattern.rows(); row++ ) {
-                    for ( int col=0; col<pattern.cols(); col++ ) {
-                        result.setPoint(row+cursorY, col+cursorX, pattern.getBinaryPoint(row,col));
+                for ( int row=0; row<pattern.getRows(); row++ ) {
+                    for ( int col=0; col<pattern.getCols(); col++ ) {
+                        result.drawPoint(row + cursorY, col + cursorX, pattern.getColourPoint(row, col));
                     }
                 }
                 cursorY += lineHeight;
             }
         }
         return result;
-    }
-
-    public class Pattern {
-        private boolean[][] binaryValues;
-        private double[][][] colourValues;
-        private Colour penColour = new Colour(1.0, 1.0, 1.0);
-        public Pattern(int rows, int cols) {
-            binaryValues = new boolean[rows][cols];
-            colourValues = new double[3][rows][cols];
-        }
-        public void setPoint(int row, int col, boolean value) {
-            if ( row < rows() && col < cols() ) {
-                binaryValues[row][col] = value;
-                colourValues[0][row][col] = (value ? penColour.red : 0);
-                colourValues[1][row][col] = (value ? penColour.green : 0);
-                colourValues[2][row][col] = (value ? penColour.blue : 0);
-            }
-        }
-        public boolean getBinaryPoint(int row, int col) {
-            return binaryValues[row][col];
-        }
-        public Colour getColourPoint(int row, int col) {
-            return new Colour(colourValues[0][row][col], colourValues[1][row][col], colourValues[2][row][col]);
-        }
-        public int rows() {
-            return binaryValues.length;
-        }
-        public int cols() {
-            return binaryValues[0].length;
-        }
-        public boolean[][] getBinaryValues() {
-            return binaryValues;
-        }
-        public double[][][] getColourValues() {
-            return colourValues;
-        }
-        public void setPenColour(Colour penColour) {
-            this.penColour = penColour;
-        }
-    }
-
-    public class Colour {
-        private double red;
-        private double green;
-        private double blue;
-        public Colour(double red, double green, double blue) {
-            this.red = red;
-            this.green = green;
-            this.blue = blue;
-        }
     }
 
 }
