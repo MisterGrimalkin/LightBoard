@@ -226,9 +226,7 @@ public abstract class LightBoardZone {
     }
 
     public void onScrollComplete() {
-        for ( ScrollCompleteHandler handler : scrollCompleteHandlers ) {
-            handler.onScrollComplete();
-        }
+        scrollCompleteHandlers.forEach(ScrollCompleteHandler::onScrollComplete);
     }
 
     private boolean contentVisible() {

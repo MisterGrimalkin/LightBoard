@@ -115,7 +115,6 @@ function loadScenes() {
     req.send();
 }
 
-var currentScene;
 
 function changeTrackScene() {
     if ( !document.getElementById("trackScene").checked ) {
@@ -125,6 +124,8 @@ function changeTrackScene() {
         }
     }
 }
+
+var currentScene;
 
 function updateCurrentScene() {
     if ( document.getElementById("trackScene").checked ) {
