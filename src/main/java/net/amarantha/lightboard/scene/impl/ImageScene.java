@@ -20,7 +20,7 @@ public class ImageScene extends Scene {
 
         ImageZone zone = ImageZone.scrollUp(getSurface());
         zone.setScrollTick(50);
-        zone.setRestDuration(1000);
+        zone.setRestDuration(2500);
         zone.loadImage(filename);
         zone.addScrollCompleteHandler(SceneManager::advanceScene);
 

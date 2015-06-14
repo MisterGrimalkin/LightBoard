@@ -25,7 +25,7 @@ public class MessageUpdater extends Updater {
                     new MessageBundle("Admin", 1, "red")
                         .addMessage("Please Collect A Ticket From The Shower Steward")
                         .addMessage("If Your Number Has Already Been Called You Can Still Use It")
-                        .addMessage("Please Respect The Showers and Don't Leave Pubes Everywhere")
+                        .addMessage("Another Shower Is Possible")
                 )
                 .addBundle(
                     new MessageBundle("User", 2, "green")
@@ -77,10 +77,10 @@ public class MessageUpdater extends Updater {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String b = mapper.writeValueAsString(wrapper);
-            System.out.println(b);
+//            System.out.println(b);
 
             MessageBundle.Wrapper w = mapper.readValue(b, MessageBundle.Wrapper.class);
-            System.out.println();
+//            System.out.println();
 
 //            mapper.readValue(b, )
         } catch (IOException e) {

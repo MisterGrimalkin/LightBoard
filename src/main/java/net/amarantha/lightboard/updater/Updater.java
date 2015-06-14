@@ -3,6 +3,9 @@ package net.amarantha.lightboard.updater;
 import net.amarantha.lightboard.util.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public abstract class Updater {
 
     protected TextZone zone;
@@ -31,12 +34,19 @@ public abstract class Updater {
     }
 
     public void start() {
-        Sync.addTask(new Sync.Task(dataRefresh) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void runTask() {
+            public void run() {
                 doRefresh();
             }
-        });
+        }, 0, dataRefresh);
+//        Sync.addTask(new Sync.Task(dataRefresh) {
+//            @Override
+//            public void runTask() {
+//                doRefresh();
+//            }
+//        });
         System.out.println("Updater running every " + dataRefresh + "ms");
     }
 

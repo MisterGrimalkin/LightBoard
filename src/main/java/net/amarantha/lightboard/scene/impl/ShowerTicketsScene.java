@@ -29,8 +29,8 @@ public class ShowerTicketsScene extends Scene {
         TextZone messageZone = TextZone.scrollLeft(getSurface());
         messageZone
                 .setRegion(0, getRows() - 9, getCols(), 9)
-                .setScrollTick(15)
-                .setRestDuration(0)
+                .setScrollTick(20)
+                .setRestDuration(2000)
         ;
 
         MessageUpdater updater = new MessageUpdater(messageZone);

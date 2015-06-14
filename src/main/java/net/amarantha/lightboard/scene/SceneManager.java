@@ -4,6 +4,8 @@ import net.amarantha.lightboard.util.Sync;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SceneManager {
 
@@ -107,24 +109,37 @@ public class SceneManager {
 
     public static void cycleScenes() {
         cycleMode = true;
-        Sync.addTask(new Sync.Task(1000L) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void runTask() {
+            public void run() {
                 long now = System.currentTimeMillis();
-                if (currentScene != null && currentScene.getSceneDuration() != null && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
+                if (currentScene != null && currentScene.getSceneDuration() != null
+                        && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
                     advanceScene();
                 }
             }
-        });
+        }, 0, 5000);
+//        Sync.addTask(new Sync.Task(1000L) {
+//            @Override
+//            public void runTask() {
+//                long now = System.currentTimeMillis();
+//                if (currentScene != null && currentScene.getSceneDuration() != null && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
+//                    advanceScene();
+//                }
+//            }
+//        });
     }
 
     private static boolean sleeping = false;
 
     public static void sleep() {
         currentScene.pause();
+        sleeping = true;
     }
 
     public static void wake() {
         currentScene.resume();
+        sleeping = false;
     }
 }

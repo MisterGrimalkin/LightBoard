@@ -32,7 +32,13 @@ public class Main extends Application {
 
         System.out.println("Starting Up....");
 
-        WebService.startWebService(getParameters().getNamed().get("ip"));
+        SystemResource.loadConfig();
+
+        if ( !getParameters().getUnnamed().contains("noserver") ) {
+            WebService.startWebService(SystemResource.getIp());
+        }
+
+        SystemResource.detectMessageServer();
 
         RGBLightBoard board;
         switch ( getBoardType() ) {
@@ -63,8 +69,8 @@ public class Main extends Application {
 
             addScene(0, new WebServiceMessageScene(surface));
             addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
-            addScene(2, new ShowerTicketsScene(surface), 20000, true);
-            addScene(3, new TravelInformationScene(surface), 20000, false);
+            addScene(2, new ShowerTicketsScene(surface), 10000, true);
+//            addScene(3, new TravelInformationScene(surface), 15000, true);
 //            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();
             cycleScenes();
@@ -73,7 +79,6 @@ public class Main extends Application {
             MessageResource.bindScene(0);
         }
 
-        SystemResource.loadConfig();
         startSyncThread();
 
     }

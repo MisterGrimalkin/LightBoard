@@ -23,7 +23,7 @@ public class MessageResource {
     public static void bindScene(int sceneNumber) { scene = sceneNumber; }
 
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+//    @Consumes(MediaType.TEXT_PLAIN)
     public Response postMessage(String message) {
         if ( updater!=null ) {
             updater.postMessage(message);
