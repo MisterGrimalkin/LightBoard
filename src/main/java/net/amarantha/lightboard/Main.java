@@ -8,12 +8,11 @@ import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.impl.ImageScene;
 import net.amarantha.lightboard.scene.impl.ShowerTicketsScene;
-import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.RGBLightBoardSurface;
 import net.amarantha.lightboard.webservice.ColourResource;
-import net.amarantha.lightboard.webservice.MessageResource;
+import net.amarantha.lightboard.webservice.BroadcastMessageResource;
 import net.amarantha.lightboard.webservice.SystemResource;
 import net.amarantha.lightboard.webservice.WebService;
 
@@ -68,15 +67,15 @@ public class Main extends Application {
         } else {
 
             addScene(0, new WebServiceMessageScene(surface));
-            addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
-            addScene(2, new ShowerTicketsScene(surface), 10000, true);
+            addScene(1, new ShowerTicketsScene(surface), 60000, true);
+            addScene(2, new ImageScene(surface, "gp192x32.jpg"), null, true);
 //            addScene(3, new TravelInformationScene(surface), 15000, true);
 //            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();
             cycleScenes();
-            loadScene(1);
+            loadScene(2);
 
-            MessageResource.bindScene(0);
+            BroadcastMessageResource.bindScene(0);
         }
 
         startSyncThread();

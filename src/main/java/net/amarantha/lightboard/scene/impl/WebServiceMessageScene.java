@@ -4,7 +4,7 @@ import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.OldMessageUpdater;
-import net.amarantha.lightboard.webservice.MessageResource;
+import net.amarantha.lightboard.webservice.BroadcastMessageResource;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 public class WebServiceMessageScene extends Scene {
@@ -28,7 +28,7 @@ public class WebServiceMessageScene extends Scene {
         zone.addMessage(0, "");
 
         OldMessageUpdater updater = new OldMessageUpdater(zone);
-        MessageResource.bindUpdater(updater);
+        BroadcastMessageResource.bindUpdater(updater);
 
         registerZones(zone);
         registerUpdaters(updater);

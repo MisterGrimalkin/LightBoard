@@ -102,6 +102,7 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
         stage.setOnCloseRequest(event -> {
             WebService.stopWebService();
             Sync.stopSyncThread();
+            System.exit(0);
         });
 
         System.out.println("Board Ready");

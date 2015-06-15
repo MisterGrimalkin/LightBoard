@@ -17,7 +17,7 @@ public class WebService {
             System.out.println("Starting Web Service....");
             String fullUri = "http://"+ip+":8001/lightboard/";
             final ResourceConfig rc = new ResourceConfig().packages("net.amarantha.lightboard.webservice");
-            rc.register(LoggingFilter.class);
+//            rc.register(LoggingFilter.class);
             server = GrizzlyHttpServerFactory.createHttpServer(URI.create(fullUri), rc);
             System.out.println("Web Service Online @ " + fullUri);
         }

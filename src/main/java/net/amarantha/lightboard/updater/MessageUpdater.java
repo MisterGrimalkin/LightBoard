@@ -20,22 +20,22 @@ public class MessageUpdater extends Updater {
 
         wrapper = new MessageBundle.Wrapper();
 
-        wrapper
-                .addBundle(
-                    new MessageBundle("Admin", 1, "red")
-                        .addMessage("Please Collect A Ticket From The Shower Steward")
-                        .addMessage("If Your Number Has Already Been Called You Can Still Use It")
-                        .addMessage("Another Shower Is Possible")
-                )
-                .addBundle(
-                    new MessageBundle("User", 2, "green")
-                        .addMessage("Awesome bands on tonight")
-                        .addMessage("Isn't this great?")
-                        .addMessage("Some Other Stuff")
-                        .addMessage("And We Have Things to Tell you")
-                        .addMessage("I need some breakfast")
-                );
-
+//        wrapper
+//                .addBundle(
+//                    new MessageBundle("Admin", 1, "red")
+//                        .addMessage("Please Collect A Ticket From The Shower Steward")
+//                        .addMessage("If Your Number Has Already Been Called You Can Still Use It")
+//                        .addMessage("Another Shower Is Possible")
+//                )
+//                .addBundle(
+//                    new MessageBundle("User", 2, "green")
+//                        .addMessage("Awesome bands on tonight")
+//                        .addMessage("Isn't this great?")
+//                        .addMessage("Some Other Stuff")
+//                        .addMessage("And We Have Things to Tell you")
+//                        .addMessage("I need some breakfast")
+//                );
+//
         zone.setMaxMessagesPerSource(0, 1);
         zone.setMaxMessagesPerSource(1, 2);
 
@@ -52,8 +52,8 @@ public class MessageUpdater extends Updater {
             if ( defCol!=null && !defCol.isEmpty() ) {
                 defCol = "{" + defCol + "}";
             }
-            for ( String message : bundle.getMessages() ) {
-                zone.addMessage(i, defCol + message);
+            for ( Map.Entry<String, String> entry : bundle.getMessages().entrySet() ) {
+                zone.addMessage(i, defCol + entry.getValue());
             }
             i++;
         }
@@ -70,9 +70,9 @@ public class MessageUpdater extends Updater {
 //        }
 
         MessageBundle.Wrapper wrapper = new MessageBundle.Wrapper();
-        wrapper
-                .addBundle(new MessageBundle("Admin", 1, "red").addMessage(""))
-                .addBundle(new MessageBundle("User", 3, "green"));
+//        wrapper
+//                .addBundle(new MessageBundle("Admin", 1, "red").addMessage(""))
+//                .addBundle(new MessageBundle("User", 3, "green"));
 
         ObjectMapper mapper = new ObjectMapper();
         try {

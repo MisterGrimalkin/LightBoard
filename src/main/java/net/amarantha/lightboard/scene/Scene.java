@@ -28,6 +28,7 @@ public abstract class Scene {
 
     public void start() {
         zones.forEach(LightBoardZone::start);
+        zones.forEach(LightBoardZone::render);
         updaters.forEach(Updater::start);
     }
 
@@ -40,6 +41,7 @@ public abstract class Scene {
     public void resume() {
         zones.forEach(LightBoardZone::resetScroll);
         zones.forEach(LightBoardZone::resume);
+        zones.forEach(LightBoardZone::render);
         updaters.forEach(Updater::resume);
     }
 

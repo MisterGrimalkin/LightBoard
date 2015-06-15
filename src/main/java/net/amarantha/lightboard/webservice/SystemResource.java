@@ -86,9 +86,7 @@ public class SystemResource {
     @Path("shutdown")
     @Produces(MediaType.TEXT_PLAIN)
     public Response shutdown() {
-//        WebService.stopWebService();
-//        Sync.stopSyncThread();
-        System.exit(0);
+        Sync.stopSyncThread();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

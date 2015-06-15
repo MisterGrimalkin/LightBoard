@@ -108,9 +108,18 @@ public class TextZone extends LightBoardZone {
         return overrideMessage==null?messageQueue.getCurrentMessage():overrideMessage;
     }
 
+    public TextZone clearMessages() {
+        messageQueue.clearMessages(0);
+        return this;
+    }
+
     public TextZone clearMessages(int id) {
         messageQueue.clearMessages(id);
         return this;
+    }
+
+    public TextZone addMessage(String message) {
+        return addMessage(0, wrap(message));
     }
 
     public TextZone addMessage(int id, String message) {
@@ -148,6 +157,10 @@ public class TextZone extends LightBoardZone {
 
     public boolean isOverride() {
         return override;
+    }
+
+    public void overrideMessage(String message) {
+        overrideMessage(wrap(message));
     }
 
     public void overrideMessage(MessageWrapper message) {
