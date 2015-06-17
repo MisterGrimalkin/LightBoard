@@ -42,6 +42,7 @@ public class ShowerTicketResource {
                 if ( !female.equals(lastFemale) ) {
                     femaleTextZone.overrideMessage("Female: {green}" + female);
                 }
+                femaleTextZone.advanceMessage();
                 femaleTextZone.render();
                 lastFemale = female;
             }
@@ -53,9 +54,18 @@ public class ShowerTicketResource {
                 if ( !male.equals(lastMale) ) {
                     maleTextZone.overrideMessage("Male: {green}" + male);
                 }
+                maleTextZone.advanceMessage();
                 maleTextZone.render();
                 lastMale = male;
             }
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    femaleTextZone.clearOverride();
+                    maleTextZone.clearOverride();
+                }
+            }, 5000);
 
             return Response.ok()
                     .header("Access-Control-Allow-Origin", "*")

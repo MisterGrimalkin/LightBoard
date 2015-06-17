@@ -1,5 +1,8 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.entity.HPosition;
+import net.amarantha.lightboard.entity.VPosition;
+import net.amarantha.lightboard.font.ShowerFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -16,14 +19,8 @@ import static net.amarantha.lightboard.entity.VPosition.MIDDLE;
 
 public class ShowerTicketsScene extends Scene {
 
-    private static final int CLOCK_WIDTH = 0;//21;
-    private static final int CLOCK_HEIGHT = 13;
-
-    private static final int LABEL_HEIGHT = 7;
+    private static final int LABEL_WIDTH = 54;
     private static final int MESSAGE_HEIGHT = 9;
-
-    private static final int TICKET_MARGIN_X = 4;
-    private static final int TICKET_MARGIN_Y = 2;
 
     public ShowerTicketsScene(LightBoardSurface surface) {
         super(surface, "Shower Tickets");
@@ -32,30 +29,29 @@ public class ShowerTicketsScene extends Scene {
     @Override
     public void build() {
 
-        // Clock
-//        TextZone clock = new ClockZone(getSurface());
-//        clock.setRegion(0, 0, CLOCK_WIDTH, CLOCK_HEIGHT);
-
         // Shower Tickets
         TextZone label = TextZone.fixed(getSurface());
         label
                 .setFont(new SmallFont())
-                .setRegion(CLOCK_WIDTH, 0, getCols() - CLOCK_WIDTH, LABEL_HEIGHT)
-                .autoRender(false)
+                .setRestPosition(HPosition.RIGHT, VPosition.MIDDLE)
+                .singleRender(true)
+                .setRegion(0, 0, LABEL_WIDTH, getRows() - MESSAGE_HEIGHT)
                 .setScrollTick(10000)
                 .setRestDuration(10000)
+
         ;
-        label.addMessage("{red}NEXT SHOWER TICKET NUMBERS");
+        label.addMessage("{red}NEXT SHOWER:");
 
         TextZone female = TextZone.fixed(getSurface());
         female
+                .setFont(new ShowerFont())
+                .singleRender(true)
                 .setRegion(
-                        CLOCK_WIDTH,
-                        LABEL_HEIGHT,
-                        (getCols() - CLOCK_WIDTH) / 2,
-                        getRows() - LABEL_HEIGHT - MESSAGE_HEIGHT
+                        LABEL_WIDTH,
+                        0,
+                        (getCols()-LABEL_WIDTH)/2,
+                        getRows() - MESSAGE_HEIGHT
                 )
-//                .autoRender(false)
                 .setScrollTick(1000)
                 .setRestDuration(1000)
         ;
@@ -63,13 +59,14 @@ public class ShowerTicketsScene extends Scene {
 
         TextZone male = TextZone.fixed(getSurface());
         male
+                .setFont(new ShowerFont())
+                .singleRender(true)
                 .setRegion(
-                        CLOCK_WIDTH + (getCols() - CLOCK_WIDTH) / 2,
-                        LABEL_HEIGHT,
-                        (getCols() - CLOCK_WIDTH) / 2,
-                        getRows() - LABEL_HEIGHT - MESSAGE_HEIGHT
+                        LABEL_WIDTH + ((getCols() - LABEL_WIDTH) / 2),
+                        0,
+                        (getCols() - LABEL_WIDTH) / 2,
+                        getRows() - MESSAGE_HEIGHT
                 )
-//                .autoRender(false)
                 .setScrollTick(1000)
                 .setRestDuration(1000)
         ;
@@ -88,7 +85,7 @@ public class ShowerTicketsScene extends Scene {
 
         MessageResource.setMessageZone(messageZone);
 
-        registerZones(label, female, male, messageZone);
+        registerZones(female, male, messageZone, label);
 
     }
 }

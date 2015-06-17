@@ -54,4 +54,31 @@ public class MessageWrapper {
         return restDuration;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MessageWrapper that = (MessageWrapper) o;
+
+        if (restDuration != that.restDuration) return false;
+        if (hPosition != that.hPosition) return false;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        if (scrollFrom != that.scrollFrom) return false;
+        if (scrollTo != that.scrollTo) return false;
+        if (vPosition != that.vPosition) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = message != null ? message.hashCode() : 0;
+        result = 31 * result + (scrollFrom != null ? scrollFrom.hashCode() : 0);
+        result = 31 * result + (scrollTo != null ? scrollTo.hashCode() : 0);
+        result = 31 * result + (hPosition != null ? hPosition.hashCode() : 0);
+        result = 31 * result + (vPosition != null ? vPosition.hashCode() : 0);
+        result = 31 * result + restDuration;
+        return result;
+    }
 }

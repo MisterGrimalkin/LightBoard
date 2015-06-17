@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,11 +24,13 @@ public class SystemResource {
 
     private static String name = null;
     private static String ip = null;
+    private static String serverIp = null;
+    private static Properties prop;
 
     public static void loadConfig() {
         try {
             String message = "LightBoard configuration: ";
-            Properties prop = new Properties();
+            prop = new Properties();
             InputStream is = new FileInputStream("lightboard.properties");
             prop.load(is);
             if ( prop.getProperty("name")!=null ) {
@@ -38,33 +41,46 @@ public class SystemResource {
                 ip = prop.getProperty("ip");
                 message += " serving on " + ip;
             }
+            if ( prop.getProperty("serverIp")!=null ) {
+                serverIp = prop.getProperty("serverIp");
+            }
             System.out.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String serverIp = null;
-
     public static void detectMessageServer() {
         if ( ip!=null ) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    System.out.println("Scanning for Ticket Server....");
-                    for (int i = 15; i < 256; i++) {
-                        try {
-                            Post p = Http.post("http://192.168.0." + i + ":8002/ticketserver/register", ip);
-                            if ( p.responseCode()==200 ) {
-                                serverIp = "http://192.168.0." + i;
-                                break;
-                            }
-                        } catch ( Exception e ) {}
-                    }
-                    System.out.println(serverIp!=null?"Registered with Ticket Server at " + serverIp : "Could not locate Ticket Server!");
+            if ( serverIp!=null ) {
+                Post p = Http.post(serverIp + ":8002/ticketserver/register", ip);
+                if (p.responseCode() != 200) {
+                    serverIp = null;
+                    detectMessageServer();
                 }
-            }, 0);
+            } else {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println("Scanning for Ticket Server....");
+                        for (int i = 1; i < 256; i++) {
+                            try {
+                                Post p = Http.post("http://192.168.0." + i + ":8002/ticketserver/register", ip);
+                                if (p.responseCode() == 200) {
+                                    serverIp = "http://192.168.0." + i;
+                                    FileOutputStream output = new FileOutputStream("lightboard.properties");
+                                    prop.setProperty("serverIp", serverIp);
+                                    prop.store(output, null);
+                                    break;
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+                        System.out.println(serverIp != null ? "Registered with Ticket Server at " + serverIp : "Could not locate Ticket Server!");
+                    }
+                }, 0);
+            }
         }
     }
 

@@ -87,14 +87,15 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
     @Override
     public void dump(boolean[][] data) {
-        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
-            colour++;
-            if ( colour> YELLOW_MODE) colour = RED_MODE;
-            t = System.currentTimeMillis();
-        }
+//        long time = System.currentTimeMillis();
+//        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
+//            colour++;
+//            if ( colour> YELLOW_MODE) colour = RED_MODE;
+//            t = System.currentTimeMillis();
+//        }
         try {
             for (int row = 0; row < rows/2; row++) {
-                sendSerialString(data[row], data[row + (data.length/2)]);
+                sendSerialString(data[row], data[row+rows/2]);
                 digitalWrite(output, true);
                 decodeRowAddress(row);
                 digitalWrite(store, true);
@@ -104,6 +105,7 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        System.out.println(System.currentTimeMillis()-time);
     }
 
     private void sendSerialString(boolean[] data1, boolean[] data2) throws InterruptedException {
@@ -128,48 +130,40 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
     @Override
     public void dump(double[][][] data) {
-        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
-            colour++;
-            if ( colour> YELLOW_MODE) colour = RED_MODE;
-            t = System.currentTimeMillis();
-        }
         try {
             for (int row = 0; row < rows/2; row++) {
-                sendSerialString(data[0][row], data[1][row], data[0][row+rows/2], data[1][row+rows/2]);
-                digitalWrite(output, true);
+                digitalWrite(output, false);
+                sendSerialString(data[0][row], data[1][row], data[0][row + rows / 2], data[1][row + rows / 2]);
                 decodeRowAddress(row);
+                digitalWrite(output, true);
                 digitalWrite(store, true);
                 digitalWrite(store, false);
-                digitalWrite(output, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private Boolean lastRed1 = null;
+    private Boolean lastGreen1 = null;
+    private Boolean lastRed2 = null;
+    private Boolean lastGreen2 = null;
+
     private void sendSerialString(double[] red1, double[] green1, double[] red2, double[] green2) throws InterruptedException {
         for (int col = 0; col < red1.length ; col++) {
             digitalWrite(clock, false);
             if ( colour==MULTI_MODE) {
-                if ( red1[col] >= 0.5 ) {
-                    digitalWrite(data1R, false);
-                } else {
-                    digitalWrite(data1R, true);
+                if ( lastRed1==null || lastRed1!=red1[col]<0.5 ) {
+                    digitalWrite(data1R, lastRed1=red1[col]<0.5 );
                 }
-                if ( green1[col] >= 0.5 ) {
-                    digitalWrite(data1G, false);
-                } else {
-                    digitalWrite(data1G, true);
+                if ( lastGreen1==null || lastGreen1!=green1[col]<0.5 ) {
+                    digitalWrite(data1G, lastGreen1=green1[col]<0.5 );
                 }
-                if ( red2[col] >= 0.5 ) {
-                    digitalWrite(data2R, false);
-                } else {
-                    digitalWrite(data2R, true);
+                if ( lastRed2==null || lastRed2!=red2[col]<0.5 ) {
+                    digitalWrite(data2R, lastRed2=red2[col]<0.5 );
                 }
-                if ( green2[col] >= 0.5 ) {
-                    digitalWrite(data2G, false);
-                } else {
-                    digitalWrite(data2G, true);
+                if ( lastGreen2==null || lastGreen2!=green2[col]<0.5 ) {
+                    digitalWrite(data2G, lastGreen2=green2[col]<0.5 );
                 }
             } else {
                 if ( red1[col] >= 0.5 || green1[col] >= 0.5) {

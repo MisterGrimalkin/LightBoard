@@ -2,6 +2,7 @@ package net.amarantha.lightboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.RGBLightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
@@ -37,6 +38,8 @@ public class Main extends Application {
             WebService.startWebService(SystemResource.getIp());
         }
 
+        boolean debugBoard = getParameters().getUnnamed().contains("debug");
+
         SystemResource.detectMessageServer();
 
         RGBLightBoard board;
@@ -58,7 +61,12 @@ public class Main extends Application {
         }
         board.init();
 
-        LightBoardSurface surface = new RGBLightBoardSurface(board);
+        RGBLightBoardSurface surface;
+        if ( debugBoard ) {
+            surface = new RGBLightBoardSurface(board, new TextBoard(ROWS, COLS));
+        } else {
+            surface = new RGBLightBoardSurface(board);
+        }
         surface.init();
 
         if ( getParameters().getUnnamed().contains("self-test") ) {
@@ -69,6 +77,7 @@ public class Main extends Application {
             addScene(0, new WebServiceMessageScene(surface));
             addScene(1, new ShowerTicketsScene(surface), 60000, true);
             addScene(2, new ImageScene(surface, "gp192x32.jpg"), null, true);
+//            addScene(2, new ImageScene(surface, "sb.jpg"), null, true);
 //            addScene(3, new TravelInformationScene(surface), 15000, true);
 //            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();

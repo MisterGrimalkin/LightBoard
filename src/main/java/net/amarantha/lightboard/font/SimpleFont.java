@@ -650,9 +650,9 @@ public class SimpleFont extends Font {
              {i,o},
              {i,o},
              {i,o},
-             {i,o},
              {o,o},
-             {i,o}};
+             {i,o},
+             {o,o}};
 
     private final static boolean[][] APOS =
             {{i},

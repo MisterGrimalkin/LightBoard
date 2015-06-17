@@ -52,24 +52,29 @@ public abstract class LightBoardZone {
     }
 
     public LightBoardZone start() {
-        Sync.addTask(new Sync.Task(scrollTick) {
-            @Override
-            public void runTask() {
-                tick();
-            }
-        });
+        if ( !singleRender ) {
+            Sync.addTask(new Sync.Task(scrollTick) {
+                @Override
+                public void runTask() {
+                    tick();
+                }
+            });
+        }
         onScrollComplete();
         resetScroll();
         return this;
     }
 
-    private boolean paused = true;
+    protected boolean paused = true;
+    protected boolean singleRender = false;
+    protected boolean rendered = false;
 
     public void pause() {
         paused = true;
     }
 
     public void resume() {
+        rendered = false;
         paused = false;
         tick();
     }
@@ -368,10 +373,15 @@ public abstract class LightBoardZone {
         return this;
     }
 
+    public LightBoardZone singleRender(boolean singleRender) {
+        this.singleRender = singleRender;
+        return this;
+    }
+
     private boolean autoRender = true;
     private boolean autoReset = true;
 
-    private boolean clear = true;
+    protected boolean clear = true;
     private boolean outline = false;
     private boolean invert = false;
 

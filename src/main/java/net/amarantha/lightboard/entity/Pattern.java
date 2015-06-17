@@ -15,6 +15,23 @@ public class Pattern {
         colourValues = new double[3][rows][cols];
     }
 
+    public Pattern(int cols, String data) {
+        int rows = data.length()/cols;
+        binaryValues = new boolean[rows][cols];
+        colourValues = new double[3][rows][cols];
+        int i = 0;
+        for ( int r=0; r<rows; r++ ) {
+            for (int c = 0; c < cols; c++) {
+                binaryValues[r][c] = data.charAt(i) == '#';
+                double value = binaryValues[r][c] ? 1.0 : 0.0;
+                colourValues[0][r][c] = value;
+                colourValues[1][r][c] = value;
+                colourValues[2][r][c] = value;
+                i++;
+            }
+        }
+    }
+
     public Pattern(boolean[][] binaryValues) {
         this.binaryValues = binaryValues;
         colourValues = new double[3][binaryValues.length][binaryValues[0].length];

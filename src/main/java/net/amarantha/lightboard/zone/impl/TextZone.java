@@ -1,9 +1,6 @@
 package net.amarantha.lightboard.zone.impl;
 
-import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.entity.HPosition;
-import net.amarantha.lightboard.entity.MessageWrapper;
-import net.amarantha.lightboard.entity.VPosition;
+import net.amarantha.lightboard.entity.*;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -81,10 +78,22 @@ public class TextZone extends LightBoardZone {
     // Zone Implementation //
     /////////////////////////
 
+    private Pattern pattern;
+    private MessageWrapper lastMessage;
+
     @Override
     public boolean render() {
-        MessageWrapper message = getCurrentMessage();
-        return drawPattern(0, 0, font.renderString(message.getMessage(), message.getHPosition()), true);
+        if ( !paused ) {
+            if ( singleRender && clear ) {
+                clear();
+            }
+            MessageWrapper message = getCurrentMessage();
+            if ( !message.equals(lastMessage) ) {
+                pattern = font.renderString(message.getMessage(), message.getHPosition());
+            }
+            return drawPattern(0, 0, pattern, true);
+        }
+        return true;
     }
 
     @Override
@@ -170,6 +179,8 @@ public class TextZone extends LightBoardZone {
         setRestPosition(message.getHPosition(), message.getVPosition());
         setRestDuration(message.getRestDuration());
         resetScroll();
+        rendered = false;
+        render();
         override = true;
     }
 
@@ -177,6 +188,8 @@ public class TextZone extends LightBoardZone {
         overrideMessage = null;
         override = false;
         setDefaults();
+        rendered = false;
+        render();
     }
 
 }
