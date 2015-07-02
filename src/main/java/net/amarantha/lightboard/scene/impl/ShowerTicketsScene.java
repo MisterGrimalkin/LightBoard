@@ -6,16 +6,9 @@ import net.amarantha.lightboard.font.ShowerFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.updater.MessageUpdater;
-import net.amarantha.lightboard.updater.ShowerTicketUpdater;
 import net.amarantha.lightboard.webservice.MessageResource;
 import net.amarantha.lightboard.webservice.ShowerTicketResource;
-import net.amarantha.lightboard.zone.impl.ClockZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
-
-import static net.amarantha.lightboard.entity.HPosition.LEFT;
-import static net.amarantha.lightboard.entity.HPosition.RIGHT;
-import static net.amarantha.lightboard.entity.VPosition.MIDDLE;
 
 public class ShowerTicketsScene extends Scene {
 

@@ -3,13 +3,10 @@ package net.amarantha.lightboard.updater;
 
 import net.amarantha.lightboard.entity.MessageBundle;
 import net.amarantha.lightboard.zone.impl.TextZone;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.javalite.http.Http;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 public class MessageUpdater extends Updater {
 

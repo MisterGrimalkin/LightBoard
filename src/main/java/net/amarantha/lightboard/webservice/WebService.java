@@ -1,7 +1,6 @@
 package net.amarantha.lightboard.webservice;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -11,7 +10,7 @@ public class WebService {
 
     private static HttpServer server;
 
-    public static HttpServer startWebService(String ip) {
+    public static HttpServer startWebService(String ip) {HttpServer
         server = null;
         if ( ip!=null ) {
             System.out.println("Starting Web Service....");

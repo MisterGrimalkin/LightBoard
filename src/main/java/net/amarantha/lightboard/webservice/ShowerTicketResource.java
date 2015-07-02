@@ -1,18 +1,11 @@
 package net.amarantha.lightboard.webservice;
 
 import net.amarantha.lightboard.zone.impl.TextZone;
-import net.sf.json.JSONObject;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 

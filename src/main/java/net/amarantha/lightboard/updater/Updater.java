@@ -1,6 +1,5 @@
 package net.amarantha.lightboard.updater;
 
-import net.amarantha.lightboard.util.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 import java.util.Timer;

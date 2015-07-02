@@ -1,7 +1,5 @@
 package net.amarantha.lightboard.scene;
 
-import net.amarantha.lightboard.util.Sync;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -120,15 +118,6 @@ public class SceneManager {
                 }
             }
         }, 0, 5000);
-//        Sync.addTask(new Sync.Task(1000L) {
-//            @Override
-//            public void runTask() {
-//                long now = System.currentTimeMillis();
-//                if (currentScene != null && currentScene.getSceneDuration() != null && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
-//                    advanceScene();
-//                }
-//            }
-//        });
     }
 
     private static boolean sleeping = false;

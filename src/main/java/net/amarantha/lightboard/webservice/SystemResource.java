@@ -53,33 +53,46 @@ public class SystemResource {
     public static void detectMessageServer() {
         if ( ip!=null ) {
             if ( serverIp!=null ) {
-                Post p = Http.post(serverIp + ":8002/ticketserver/register", ip);
-                if (p.responseCode() != 200) {
+                try {
+                    System.out.println("Getting Ticket Server IP from properties");
+                    Post p = Http.post(serverIp + ":8002/ticketserver/register", ip);
+                    if (p.responseCode() != 200) {
+                        serverIp = null;
+                        detectMessageServer();
+                    }
+                } catch ( Exception e ) {
                     serverIp = null;
-                    detectMessageServer();
                 }
-            } else {
-                Timer timer = new Timer();
+            }
+            if ( serverIp==null ) {
+                final Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
+                    private boolean scanning = false;
                     @Override
                     public void run() {
-                        System.out.println("Scanning for Ticket Server....");
-                        for (int i = 1; i < 256; i++) {
-                            try {
-                                Post p = Http.post("http://192.168.0." + i + ":8002/ticketserver/register", ip);
-                                if (p.responseCode() == 200) {
-                                    serverIp = "http://192.168.0." + i;
-                                    FileOutputStream output = new FileOutputStream("lightboard.properties");
-                                    prop.setProperty("serverIp", serverIp);
-                                    prop.store(output, null);
-                                    break;
-                                }
-                            } catch (Exception e) {
+                        if ( !scanning ) {
+                            System.out.println("Scanning for Ticket Server....");
+                            scanning = true;
+                            for (int i = 1; i < 21; i++) {
+                                try {
+                                    System.out.println("Scanning 192.168.0." + i);
+                                    Post p = Http.post("http://192.168.0." + i + ":8002/ticketserver/register", ip);
+                                    if (p.responseCode() == 200) {
+                                        serverIp = "http://192.168.0." + i;
+                                        FileOutputStream output = new FileOutputStream("lightboard.properties");
+                                        prop.setProperty("serverIp", serverIp);
+                                        prop.store(output, null);
+                                        timer.cancel();
+                                        scanning = false;
+                                        break;
+                                    }
+                                } catch (Exception e) { }
                             }
+                            System.out.println(serverIp != null ? "Registered with Ticket Server at " + serverIp : "Could not locate Ticket Server!");
+                            scanning = false;
                         }
-                        System.out.println(serverIp != null ? "Registered with Ticket Server at " + serverIp : "Could not locate Ticket Server!");
                     }
-                }, 0);
+                }, 0, 20000);
             }
         }
     }
@@ -98,17 +111,46 @@ public class SystemResource {
                 .build();
     }
 
+    @GET
+    @Path("ticket-server")
+    @Produces(MediaType.TEXT_PLAIN)
+    public static Response getServerIp() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(serverIp)
+                .build();
+    }
+
+    @POST
+    @Path("ticket-server")
+    @Produces(MediaType.TEXT_PLAIN)
+    public static Response refreshServerIp() {
+        serverIp = null;
+        detectMessageServer();
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("Resetting Ticket Server Connection")
+                .build();
+    }
+
+
     @POST
     @Path("shutdown")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response shutdown() {
-        Sync.stopSyncThread();
+    public static Response shutdown() {
+        try {
+            Post post = Http.post(serverIp + ":8002/ticketserver/deregister", ip);
+            System.out.println("Deregistered with server: " + post.responseCode());
+            Sync.stopSyncThread();
+        } catch ( Exception e ) {
+            System.out.println(e.getMessage());
+        }
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 System.exit(0);
             }
-        }, 5000);
+        }, 4000);
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("So long and thanks for all the fish")

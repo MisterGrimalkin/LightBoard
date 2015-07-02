@@ -2,7 +2,6 @@ package net.amarantha.lightboard.webservice;
 
 import net.amarantha.lightboard.entity.MessageBundle;
 import net.amarantha.lightboard.zone.impl.TextZone;
-import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
