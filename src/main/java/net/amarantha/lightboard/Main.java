@@ -8,6 +8,7 @@ import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.impl.ImageScene;
 import net.amarantha.lightboard.scene.impl.ShowerTicketsScene;
+import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.RGBLightBoardSurface;
 import net.amarantha.lightboard.webservice.BroadcastMessageResource;
@@ -38,7 +39,7 @@ public class Main extends Application {
 
         boolean debugBoard = getParameters().getUnnamed().contains("debug");
 
-        SystemResource.detectMessageServer();
+//        SystemResource.detectMessageServer();
 
         RGBLightBoard board;
         switch ( getBoardType() ) {
@@ -73,10 +74,10 @@ public class Main extends Application {
         } else {
 
             addScene(0, new WebServiceMessageScene(surface));
-            addScene(1, new ShowerTicketsScene(surface), 60000, true);
-            addScene(2, new ImageScene(surface, "gp192x32.jpg"), null, true);
+//            addScene(1, new ShowerTicketsScene(surface), 60000, true);
+            addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
 //            addScene(2, new ImageScene(surface, "sb.jpg"), null, true);
-//            addScene(3, new TravelInformationScene(surface), 15000, true);
+            addScene(2, new TravelInformationScene(surface), 120000, true);
 //            addScene(4, new MessageScrollerScene(surface), 10000, false);
             startScenes();
             cycleScenes();

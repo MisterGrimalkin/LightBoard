@@ -2,6 +2,7 @@ package net.amarantha.lightboard.zone.impl;
 
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.HPosition;
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.entity.VPosition;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SmallFont;
@@ -38,8 +39,15 @@ public class ClockZone extends TextZone {
         String time = "{green}"+sdf.format(new Date());
         String day = "{green}"+new SimpleDateFormat("EEE").format(new Date());
 
-        drawn |= drawPattern(2, 0, getFont().renderString(time), true);
-        drawn |= drawPattern(2, 7, getFont().renderString(day), true);
+        Pattern timePattern = getFont().renderString(time);
+        Pattern dayPattern = getFont().renderString(day);
+
+        int timeX = (region.width-timePattern.getCols())/2;
+        int dayX = (region.width-dayPattern.getCols())/2;
+
+
+        drawn |= drawPattern(timeX, 0, timePattern, true);
+        drawn |= drawPattern(dayX, 7, dayPattern, true);
 
         return drawn;
     }

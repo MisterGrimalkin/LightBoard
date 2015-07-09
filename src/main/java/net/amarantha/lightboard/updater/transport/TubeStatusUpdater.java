@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TubeStatusUpdater extends Updater {
 
@@ -33,42 +35,53 @@ public class TubeStatusUpdater extends Updater {
     @Override
     public void refresh() {
 
-        clearMessages();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
 
-        List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
-        if ( tubeStatuses.isEmpty() ) {
-            replaceMessage("{red}-TfL Returned No Data-");
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (TubeStatus ts : tubeStatuses) {
-                if (    allowedLines.isEmpty()
-                     || allowedLines.contains(ts.getLineName().toUpperCase().split(" ")[0])
-                     || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
-                ) {
-//                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
-                    String colour = ("Good Service".equals(ts.getStatusDescription()) ? "{green}" : "{red}" );
-                    sb.append("{yellow}").append(ts.getLineName()).append(":").append(colour).append(ts.getStatusDescription()).append("  ");
-                }
-            }
+                List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
 
-            String message = sb.toString();
-            if ( message.isEmpty() ) {
-                if ( allowedLines.isEmpty() ) {
-                    replaceMessage("{red}-Could Not Parse TfL Data-");
-                } else if ( allowedLines.contains("BAD") ) {
-                    replaceMessage("{green}Good Service on all TfL Lines");
+                clearMessages();
+
+                if ( tubeStatuses.isEmpty() ) {
+                    replaceMessage("{red}-TfL Returned No Data-");
                 } else {
-                    replaceMessage("{red}-Invalid Line Specified-");
-                }
-            } else {
-                if ( allowedLines.contains("BAD") ) {
-                    message += " {yellow}Good Service All Other Lines";
-                    replaceMessage(message);
+                    StringBuilder sb = new StringBuilder();
+                    for (TubeStatus ts : tubeStatuses) {
+                        if (    allowedLines.isEmpty()
+                             || allowedLines.contains(ts.getLineName().toUpperCase().split(" ")[0])
+                             || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
+                        ) {
+        //                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
+                            boolean isGood = "Good Service".equals(ts.getStatusDescription());
+                            String colour = (isGood ? "{green}" : "{red}" );
+                            String statusDetail = (isGood ? ts.getStatusDescription()
+                                    : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
+                                            ? ts.getStatusDescription()
+                                            : ts.getStatusDetail() );
+                            sb.append("{yellow}").append(ts.getLineName()).append(":").append(colour).append(statusDetail).append("  ");
+                        }
+                    }
+
+                    String message = sb.toString();
+                    if ( message.isEmpty() ) {
+                        if ( allowedLines.isEmpty() ) {
+                            replaceMessage("{red}-Could Not Parse TfL Data-");
+                        } else if ( allowedLines.contains("BAD") ) {
+                            replaceMessage("{green}Good Service on all TfL Lines");
+                        } else {
+                            replaceMessage("{red}-Invalid Line Specified-");
+                        }
+                    } else {
+                        if ( allowedLines.contains("BAD") ) {
+                            message += " {yellow}Good Service All Other Lines";
+                            replaceMessage(message);
+                        }
+                    }
+
                 }
             }
-
-        }
-
+        }, 0);
     }
 
     private Document queryWebService() {
@@ -98,6 +111,7 @@ public class TubeStatusUpdater extends Updater {
             for (int ls = 0; ls < lineStatuses.getLength(); ls++) {
 
                 Element lineStatus = (Element) lineStatuses.item(ls);
+                String detail = lineStatus.getAttribute("StatusDetails");
 
                 NodeList lines = lineStatus.getElementsByTagName("Line");
                 String name = ((Element) lines.item(0)).getAttribute("Name");
@@ -106,7 +120,7 @@ public class TubeStatusUpdater extends Updater {
                 String description = ((Element) statuses.item(0)).getAttribute("Description");
 
                 if (name != null && description != null) {
-                    result.add(new TubeStatus(name, description));
+                    result.add(new TubeStatus(name, description, detail));
                 }
 
             }

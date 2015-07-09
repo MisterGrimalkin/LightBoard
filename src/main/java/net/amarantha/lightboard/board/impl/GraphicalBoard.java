@@ -51,7 +51,7 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
     private int spacer;
 
     public GraphicalBoard(int rows, int cols, Stage stage) {
-        this(rows, cols, stage, "LightBoard Simulation", 2, 0);
+        this(rows, cols, stage, "LightBoard Simulation", 3, 0);
     }
 
     public GraphicalBoard(int rows, int cols, Stage stage, String title, int ledRadius, int spacer) {

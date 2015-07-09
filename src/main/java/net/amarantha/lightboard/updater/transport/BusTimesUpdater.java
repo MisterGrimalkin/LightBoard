@@ -35,32 +35,38 @@ public class BusTimesUpdater extends Updater {
     @Override
     public void refresh() {
 
-        clearMessages();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
 
-        String result = callWebService();
+                String result = callWebService();
 
-        List<Long> dueTimes = parseResult(result).get(busNumber);
+                List<Long> dueTimes = parseResult(result).get(busNumber);
 
-        String msg = "{yellow}" + busNumber + ">" + displayAs + ":{green}";
-        if ( dueTimes!=null ) {
-            Collections.sort(dueTimes);
+                clearMessages();
+
+                String msg = "{yellow}" + busNumber + ">" + displayAs + ":{green}";
+                if (dueTimes != null) {
+                    Collections.sort(dueTimes);
 //            msg += " -none-";
 //        } else {
-            for ( Long m : dueTimes ) {
-                msg += " " + (m==0 ? "due" : m + "min");
+                    for (Long m : dueTimes) {
+                        msg += " " + (m == 0 ? "due" : m + "min");
+                    }
+                    addMessage(msg);
+                }
+
+
             }
-            addMessage(msg);
-        }
-
-
+        }, 0);
     }
 
     private String callWebService() {
         String result = "";
         try {
-            Get get = Http.get(TFL_BUS_URL+"?StopCode1="+stopCode);
+            Get get = Http.get(TFL_BUS_URL + "?StopCode1=" + stopCode);
             result = get.text();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             replaceMessage("Error Querying TFL! " + e.getMessage());
         }
         return result;
@@ -70,11 +76,11 @@ public class BusTimesUpdater extends Updater {
     private Map<String, List<Long>> parseResult(String result) {
         Map<String, List<Long>> messages = new HashMap<>();
         String[] lines = result.split("\n");
-        for ( int l=1; l<lines.length; l++ ) {
+        for (int l = 1; l < lines.length; l++) {
             String[] cols = lines[l].split(",");
-            String bus = cols[2].substring(1,cols[2].length()-1);
+            String bus = cols[2].substring(1, cols[2].length() - 1);
             List<Long> dueTimes = messages.get(bus);
-            if ( dueTimes==null ) {
+            if (dueTimes == null) {
                 dueTimes = new ArrayList<>();
                 messages.put(bus, dueTimes);
             }
@@ -82,14 +88,14 @@ public class BusTimesUpdater extends Updater {
             Long timecode = null;
             try {
                 timecode = Long.parseLong(timecodeStr);
-            } catch ( NumberFormatException e ) {
+            } catch (NumberFormatException e) {
                 System.err.println("Bad time " + timecodeStr);
             }
-            if ( timecode!=null && dueTimes.size()<resultsToDisplay ) {
-                Date due = new Date(timecode-System.currentTimeMillis());
+            if (timecode != null && dueTimes.size() < resultsToDisplay) {
+                Date due = new Date(timecode - System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat("m");
                 Long time = Long.parseLong(sdf.format(due)) + offset;
-                if ( time >= 0 ) {
+                if (time >= 0) {
                     dueTimes.add(time);
                 }
             }
