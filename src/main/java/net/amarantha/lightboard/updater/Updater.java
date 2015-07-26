@@ -5,6 +5,8 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.lang.Thread.MIN_PRIORITY;
+
 public abstract class Updater {
 
     protected TextZone zone;
@@ -62,7 +64,11 @@ public abstract class Updater {
 
     private void doRefresh() {
         if ( !paused ) {
-            refresh();
+            Thread update = new Thread(() -> {
+                refresh();
+            });
+            update.setPriority(MIN_PRIORITY);
+            update.start();
         }
     }
 

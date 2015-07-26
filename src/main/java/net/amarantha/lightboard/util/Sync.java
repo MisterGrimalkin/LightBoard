@@ -2,12 +2,16 @@ package net.amarantha.lightboard.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static java.lang.Thread.NORM_PRIORITY;
 
 public class Sync {
 
     private static Thread syncThread;
 
-    private static Task priorityTask;
+//    private static Task priorityTask;
 
     private static Map<Integer, Task> tasks = new HashMap<>();
 
@@ -22,20 +26,13 @@ public class Sync {
             System.out.println("Sync Thread Running");
             while (run) {
                 for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
-                    if ( priorityTask!=null ) {
-                        priorityTask.checkAndRun();
-                    }
                     entry.getValue().checkAndRun();
                 }
             }
             System.out.println("Sync Thread Stopped");
         }};
-        syncThread.setPriority(Thread.MAX_PRIORITY);
+        syncThread.setPriority(NORM_PRIORITY);
         syncThread.start();
-    }
-
-    public static void setPriorityTask(Task priorityTask) {
-        Sync.priorityTask = priorityTask;
     }
 
     private static int nextTask = 0;

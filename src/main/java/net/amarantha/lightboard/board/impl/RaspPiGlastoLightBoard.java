@@ -35,9 +35,27 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
     private int addr2 = 23;
     private int addr3 = 24;
 
+    private double[][][] currentFrame;
+    private double[][][] nextFrame;
+
     public RaspPiGlastoLightBoard(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
+        pushTestPattern();
+    }
+
+    private void pushTestPattern() {
+        currentFrame = new double[3][rows][cols];
+        nextFrame = currentFrame;
+        for ( int r=0; r<rows; r++ ) {
+            for ( int c=0; c<cols; c++ ) {
+                if ( c%4==0 || r%4==0 ) {
+                    currentFrame[0][r][c] = 1.0;
+                    currentFrame[1][r][c] = 1.0;
+                    currentFrame[2][r][c] = 1.0;
+                }
+            }
+        }
     }
 
     @Override
@@ -66,6 +84,18 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
         digitalWrite(data2R, true);
         digitalWrite(data2G, true);
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    push();
+//                    System.out.println("Pushed!");
+                }
+            }
+        });
+        t.setPriority(Thread.MAX_PRIORITY);
+        t.start();
+
         System.out.println("Board Ready");
     }
 
@@ -87,25 +117,19 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
     @Override
     public void dump(boolean[][] data) {
-//        long time = System.currentTimeMillis();
-//        if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
-//            colour++;
-//            if ( colour> YELLOW_MODE) colour = RED_MODE;
-//            t = System.currentTimeMillis();
+        throw new UnsupportedOperationException("This board no longer supports binary dumps");
+//        try {
+//            for (int row = 0; row < rows/2; row++) {
+//                sendSerialString(data[row], data[row+rows/2]);
+//                digitalWrite(output, true);
+//                decodeRowAddress(row);
+//                digitalWrite(store, true);
+//                digitalWrite(store, false);
+//                digitalWrite(output, false);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-        try {
-            for (int row = 0; row < rows/2; row++) {
-                sendSerialString(data[row], data[row+rows/2]);
-                digitalWrite(output, true);
-                decodeRowAddress(row);
-                digitalWrite(store, true);
-                digitalWrite(store, false);
-                digitalWrite(output, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        System.out.println(System.currentTimeMillis()-time);
     }
 
     private void sendSerialString(boolean[] data1, boolean[] data2) throws InterruptedException {
@@ -130,14 +154,32 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
     @Override
     public void dump(double[][][] data) {
+//        refreshing = true;
+        nextFrame = new double[3][rows][cols];
+        for ( int r=0; r<rows; r++ ) {
+            for ( int c=0; c<cols; c++ ) {
+                nextFrame[0][r][c] = data[0][r][c];
+                nextFrame[1][r][c] = data[1][r][c];
+                nextFrame[2][r][c] = data[2][r][c];
+            }
+        }
+        refreshing = false;
+    }
+
+    private boolean refreshing = false;
+
+    public void push() {
+        if (!refreshing) {
+            currentFrame = nextFrame;
+        }
         try {
             for (int row = 0; row < rows/2; row++) {
-                digitalWrite(output, false);
-                sendSerialString(data[0][row], data[1][row], data[0][row + rows / 2], data[1][row + rows / 2]);
-                decodeRowAddress(row);
+                sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
                 digitalWrite(output, true);
-                digitalWrite(store, true);
+                decodeRowAddress(row);
                 digitalWrite(store, false);
+                digitalWrite(store, true);
+                digitalWrite(output, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,7 +273,7 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
 
     @Override
     public Long getRefreshInterval() {
-        return null;
+        return 10L;
     }
 
     @Override

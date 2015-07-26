@@ -25,6 +25,7 @@ public class RGBLightBoardSurface extends LightBoardSurface {
     public LightBoardSurface init() {
         System.out.println("Starting ColourLightBoard Surface....");
         for (final RGBLightBoard board : boards) {
+            System.out.println(board.getRefreshInterval());
             Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
                 @Override
                 public void runTask() {

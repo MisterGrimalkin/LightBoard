@@ -80,7 +80,7 @@ public class SmallFont extends Font {
     }
 
     private final static boolean[][] A =
-            {{i,i,i},
+            {{o,i,o},
             { i,o,i},
             { i,i,i},
             { i,o,i},
@@ -89,16 +89,16 @@ public class SmallFont extends Font {
     private final static boolean[][] B =
             {{i,i,o},
             { i,o,i},
-            { i,i,i},
+            { i,i,o},
             { i,o,i},
             { i,i,o}};
 
     private final static boolean[][] C =
-            {{i,i,i},
+            {{o,i,i},
             { i,o,o},
             { i,o,o},
             { i,o,o},
-            { i,i,i}};
+            { o,i,i}};
 
     private final static boolean[][] D =
             {{i,i,o},
@@ -122,11 +122,11 @@ public class SmallFont extends Font {
             { i,o,o}};
 
     private final static boolean[][] G =
-            {{i,i,i},
+            {{o,i,i},
             { i,o,o},
             { i,o,o},
             { i,o,i},
-            { i,i,i}};
+            { o,i,i}};
 
     private final static boolean[][] H =
             {{i,o,i},
@@ -146,8 +146,8 @@ public class SmallFont extends Font {
             {{o,i,i},
             { o,o,i},
             { o,o,i},
-            { o,o,i},
-            { i,i,i}};
+            { i,o,i},
+            { o,i,o}};
 
     private final static boolean[][] K =
             {{i,o,i},
@@ -178,39 +178,39 @@ public class SmallFont extends Font {
             { i,o,o,i}};
 
     private final static boolean[][] O =
-            {{i,i,i},
+            {{o,i,o},
             { i,o,i},
             { i,o,i},
             { i,o,i},
-            { i,i,i}};
+            { o,i,o}};
 
     private final static boolean[][] P =
-            {{i,i,i},
+            {{i,i,o},
             { i,o,i},
-            { i,i,i},
+            { i,i,o},
             { i,o,o},
             { i,o,o}};
 
     private final static boolean[][] Q =
-            {{i,i,i},
+            {{o,i,o},
             { i,o,i},
             { i,o,i},
             { i,i,i},
             { o,i,i}};
 
     private final static boolean[][] R =
-            {{i,i,i},
+            {{i,i,o},
             { i,o,i},
             { i,i,o},
             { i,o,i},
             { i,o,i}};
 
     private final static boolean[][] S =
-            {{i,i,i},
+            {{o,i,i},
             { i,o,o},
-            { i,i,i},
+            { o,i,o},
             { o,o,i},
-            { i,i,i}};
+            { i,i,o}};
 
     private final static boolean[][] T =
             {{i,i,i},

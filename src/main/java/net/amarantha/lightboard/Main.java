@@ -3,6 +3,7 @@ package net.amarantha.lightboard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import net.amarantha.lightboard.board.RGBLightBoard;
+import net.amarantha.lightboard.board.impl.CRaspPiLightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
@@ -48,6 +49,10 @@ public class Main extends Application {
                 ColourResource.addBoard(raspberryPiLightBoard);
                 board = raspberryPiLightBoard;
                 break;
+            case C:
+                CRaspPiLightBoard cLightBoard = new CRaspPiLightBoard();
+                board = cLightBoard;
+                break;
             case GRAPHICAL:
                 GraphicalBoard graphicalBoard = new GraphicalBoard(ROWS, COLS, primaryStage);
                 ColourResource.addBoard(graphicalBoard);
@@ -79,6 +84,7 @@ public class Main extends Application {
 //            addScene(2, new ImageScene(surface, "sb.jpg"), null, true);
             addScene(2, new TravelInformationScene(surface), 120000, true);
 //            addScene(4, new MessageScrollerScene(surface), 10000, false);
+
             startScenes();
             cycleScenes();
             loadScene(2);
@@ -90,7 +96,7 @@ public class Main extends Application {
 
     }
 
-    public enum BoardType { TEXT, GRAPHICAL, RASPBERRY_PI, UTILITY }
+    public enum BoardType { TEXT, GRAPHICAL, RASPBERRY_PI, C, UTILITY }
 
     public static void main(String[] args) {
         launch(args);
@@ -102,6 +108,8 @@ public class Main extends Application {
             return BoardType.GRAPHICAL;
         } else if ("utility".equals(boardType)) {
             return BoardType.UTILITY;
+        } else if ( "c".equals(boardType) ) {
+            return BoardType.C;
         } else if ("text".equals(boardType)) {
             return BoardType.TEXT;
         } else {

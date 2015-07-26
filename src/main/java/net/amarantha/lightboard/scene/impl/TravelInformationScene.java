@@ -41,7 +41,7 @@ public class TravelInformationScene extends Scene {
         TextZone tubeStatusSummaryZone = TextZone.fixed(getSurface());
         tubeStatusSummaryZone
                 .setFont(new SmallFont())
-            .setScrollTick(25)
+            .setScrollTick(1000)
             .setRestDuration(1000)
             .setRegion(0, getRows()-STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
 
