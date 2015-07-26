@@ -23,9 +23,12 @@ public class TubeStatusUpdater extends Updater {
 
     private List<String> allowedLines;
 
-    public TubeStatusUpdater(TextZone zone, String... lines) {
+    private TextZone markerZone;
+
+    public TubeStatusUpdater(TextZone zone, TextZone markerZone, String... lines) {
         super(zone);
         allowedLines = new ArrayList<>();
+        this.markerZone = markerZone;
         for ( String line : lines ) {
             allowedLines.add(line.toUpperCase());
         }
@@ -46,25 +49,37 @@ public class TubeStatusUpdater extends Updater {
                 if ( tubeStatuses.isEmpty() ) {
                     replaceMessage("{red}-TfL Returned No Data-");
                 } else {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder summarySb = new StringBuilder();
+                    summarySb.append("{yellow}|");
+                    int badCount = 0;
                     for (TubeStatus ts : tubeStatuses) {
-                        if (    allowedLines.isEmpty()
-                             || allowedLines.contains(ts.getLineName().toUpperCase().split(" ")[0])
-                             || (allowedLines.contains("BAD") && !ts.getStatusDescription().equals("Good Service"))
-                        ) {
-        //                    addMessage(ts.getLineName() + ":" + ts.getStatusDescription());
-                            boolean isGood = "Good Service".equals(ts.getStatusDescription());
-                            String colour = (isGood ? "{green}" : "{red}" );
-                            String statusDetail = (isGood ? ts.getStatusDescription()
-                                    : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
-                                            ? ts.getStatusDescription()
-                                            : ts.getStatusDetail() );
-                            sb.append("{yellow}").append(ts.getLineName()).append(":").append(colour).append(statusDetail).append("  ");
+
+                        String shortName = getShortName(ts.getLineName());
+                        boolean isGood = "Good Service".equals(ts.getStatusDescription());
+                        boolean isMinor = "Minor Delays".equals(ts.getStatusDescription());
+                        String colour = (isGood ? "{green}" : "{red}" );
+                        String statusDetail = (isGood ? ts.getStatusDescription()
+                                : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
+                                        ? ts.getStatusDescription()
+                                        : ts.getStatusDetail() );
+                        statusDetail.replaceAll("\n","");
+
+                        if ( !isGood ) {
+                            addMessage("{yellow}" + ts.getLineName() + ":" + colour + statusDetail);
+                            badCount++;
                         }
+
+                        if ( shortName!=null ) {
+                            summarySb.append(isGood ? "{green}" : isMinor ? "{yellow}" : "{red}").append(shortName).append("{yellow}|");
+                        }
+
+                    }
+                    if ( badCount==0 ) {
+                        addMessage("{green}Good Service on all Tfl lines");
                     }
 
-                    String message = sb.toString();
-                    if ( message.isEmpty() ) {
+                    String summaryMessage = summarySb.toString().trim();
+                    if ( summaryMessage.isEmpty() ) {
                         if ( allowedLines.isEmpty() ) {
                             replaceMessage("{red}-Could Not Parse TfL Data-");
                         } else if ( allowedLines.contains("BAD") ) {
@@ -74,8 +89,7 @@ public class TubeStatusUpdater extends Updater {
                         }
                     } else {
                         if ( allowedLines.contains("BAD") ) {
-                            message += " {yellow}Good Service All Other Lines";
-                            replaceMessage(message);
+                            markerZone.addMessage(summaryMessage);
                         }
                     }
 
@@ -126,6 +140,49 @@ public class TubeStatusUpdater extends Updater {
             }
         }
         return result;
+    }
+
+    private String getShortName(String tubeLineName) {
+        if ( "Bakerloo".equalsIgnoreCase(tubeLineName) ) {
+            return "BAK";
+        }
+        if ( "Central".equalsIgnoreCase(tubeLineName) ) {
+            return "CEN";
+        }
+        if ( "Circle".equalsIgnoreCase(tubeLineName) ) {
+            return "CIR";
+        }
+        if ( "District".equalsIgnoreCase(tubeLineName) ) {
+            return "DIS";
+        }
+        if ( "Hammersmith and City".equalsIgnoreCase(tubeLineName) ) {
+            return "HAM";
+        }
+        if ( "Jubilee".equalsIgnoreCase(tubeLineName) ) {
+            return "JUB";
+        }
+        if ( "Metropolitan".equalsIgnoreCase(tubeLineName) ) {
+            return "MET";
+        }
+        if ( "Northern".equalsIgnoreCase(tubeLineName) ) {
+            return "NOR";
+        }
+        if ( "Piccadilly".equalsIgnoreCase(tubeLineName) ) {
+            return "PIC";
+        }
+        if ( "Victoria".equalsIgnoreCase(tubeLineName) ) {
+            return "VIC";
+        }
+        if ( "Waterloo and City".equalsIgnoreCase(tubeLineName) ) {
+            return "WAT";
+        }
+        if ( "DLR".equalsIgnoreCase(tubeLineName) ) {
+            return "DLR";
+        }
+        if ( "Overground".equalsIgnoreCase(tubeLineName) ) {
+            return "OVR";
+        }
+        return null;
     }
 
 }

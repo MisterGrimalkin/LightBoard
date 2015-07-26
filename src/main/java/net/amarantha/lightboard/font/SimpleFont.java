@@ -23,6 +23,7 @@ public class SimpleFont extends Font {
         registerPattern('-', MINUS);
         registerPattern('=', EQUALS);
         registerPattern('+', PLUS);
+        registerPattern('&', PLUS);
         registerPattern('(', OPEN_PAREN);
         registerPattern(')', CLOSE_PAREN);
 

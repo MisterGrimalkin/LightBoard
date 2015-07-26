@@ -74,6 +74,9 @@ public class SmallFont extends Font {
 
         registerPattern(':', COLON);
         registerPattern(' ', SPACE);
+        registerPattern('&', PLUS);
+        registerPattern('*', ASTERISK);
+        registerPattern('|', PIPE);
     }
 
     private final static boolean[][] A =
@@ -342,4 +345,25 @@ public class SmallFont extends Font {
             { o,o,o},
             { o,o,o}};
 
+    private final static boolean[][] PLUS =
+            {{o,o,o},
+            { o,i,o},
+            { i,i,i},
+            { o,i,o},
+            { o,o,o}};
+
+    private final static boolean[][] ASTERISK =
+            {{o,o,i,o,o},
+            { o,i,o,i,o},
+            { i,o,i,o,i},
+            { o,i,o,i,o},
+            { o,o,i,o,o}};
+
+
+    private final static boolean[][] PIPE =
+            {{o},
+            { o},
+            { i},
+            { o},
+            { o}};
 }

@@ -36,8 +36,8 @@ public class ClockZone extends TextZone {
             sdf = new SimpleDateFormat("HH mm");
         }
         colon = !colon;
-        String time = "{green}"+sdf.format(new Date());
-        String day = "{green}"+new SimpleDateFormat("EEE").format(new Date());
+        String time = "{yellow}"+sdf.format(new Date());
+        String day = "{yellow}"+new SimpleDateFormat("EEE").format(new Date());
 
         Pattern timePattern = getFont().renderString(time);
         Pattern dayPattern = getFont().renderString(day);

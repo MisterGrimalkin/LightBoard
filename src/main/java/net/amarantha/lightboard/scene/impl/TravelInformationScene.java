@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.Updater;
@@ -12,32 +13,42 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 public class TravelInformationScene extends Scene {
 
     private static final int CLOCK_WIDTH = 23;
+    private static final int STATUS_HEIGHT = 7;
 
     public TravelInformationScene(LightBoardSurface surface) {
         super(surface, "Travel Information");
     }
 
+
     @Override
     public void build() {
-
-        // Tube Status
-        TextZone tubeStatusZone = TextZone.scrollLeft(getSurface());
-        tubeStatusZone
-            .setScrollTick(25)
-            .setRestDuration(1000)
-            .setRegion(0, getRows()/2, getCols()-CLOCK_WIDTH, getRows()/2);
 
         // Bus Arrivals
         TextZone busArrivalsZone = TextZone.scrollUp(getSurface());
         busArrivalsZone
-            .setScrollTick(60)
-            .setRestDuration(1500)
-            .setRegion(0, 0, getCols()-CLOCK_WIDTH, getRows() / 2);
+                .setScrollTick(60)
+                .setRestDuration(1500)
+                .setRegion(0, 0, getCols()-CLOCK_WIDTH, (getRows()-STATUS_HEIGHT)/2);
+
+        // Tube Status Detail
+        TextZone tubeStatusZone = TextZone.scrollLeft(getSurface());
+        tubeStatusZone
+                .setScrollTick(25)
+                .setRestDuration(1000)
+                .setRegion(0, (getRows()-STATUS_HEIGHT)/2, getCols()-CLOCK_WIDTH, (getRows()-STATUS_HEIGHT)/2);
+
+        // Tube Status Summary
+        TextZone tubeStatusSummaryZone = TextZone.fixed(getSurface());
+        tubeStatusSummaryZone
+                .setFont(new SmallFont())
+            .setScrollTick(25)
+            .setRestDuration(1000)
+            .setRegion(0, getRows()-STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
 
         // Bundle Travel Updater
         int numberOfBuses = 3;
         Updater travelUpdater = UpdaterBundle.bundle(
-                new TubeStatusUpdater(tubeStatusZone, "bad"),
+                new TubeStatusUpdater(tubeStatusZone, tubeStatusSummaryZone, "bad"),
                 new BusTimesUpdater(busArrivalsZone, 53785, "W7", "Mus Hill", numberOfBuses),
                 new BusTimesUpdater(busArrivalsZone, 56782, "W7", "Fins Pk", numberOfBuses),
                 new BusTimesUpdater(busArrivalsZone, 76713, "W5", "Harringay", numberOfBuses, -3),
@@ -51,10 +62,10 @@ public class TravelInformationScene extends Scene {
 
         // Clock
         TextZone clockZone = new ClockZone(getSurface());
-        clockZone.setRegion(getCols() - CLOCK_WIDTH, 0, CLOCK_WIDTH, getRows());
+        clockZone.setRegion(getCols() - CLOCK_WIDTH, 0, CLOCK_WIDTH, getRows()-STATUS_HEIGHT);
 
         // Setup Scene
-        registerZones(clockZone, tubeStatusZone, busArrivalsZone);
+        registerZones(clockZone, tubeStatusZone, tubeStatusSummaryZone, busArrivalsZone);
         registerUpdaters(travelUpdater);
 
     }
