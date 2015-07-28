@@ -64,11 +64,11 @@ public abstract class Updater {
 
     private void doRefresh() {
         if ( !paused ) {
-            Thread update = new Thread(() -> {
+//            Thread update = new Thread(() -> {
                 refresh();
-            });
-            update.setPriority(MIN_PRIORITY);
-            update.start();
+//            });
+//            update.setPriority(MIN_PRIORITY);
+//            update.start();
         }
     }
 

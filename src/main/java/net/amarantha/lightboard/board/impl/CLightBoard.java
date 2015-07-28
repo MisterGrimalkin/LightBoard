@@ -7,8 +7,9 @@ public class CLightBoard {
     native void dump(double[][][] data);
 
     static {
-        System.out.println(System.getProperty("java.library.path"));
+//        System.out.println(System.getProperty("java.library.path"));
         System.loadLibrary("lightboard");
+//        System.load("/home/pi/lib/liblightboard.so");
     }
 
 }

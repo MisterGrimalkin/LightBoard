@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <wiringPi.h>
+#include <jni.h>
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
@@ -131,13 +132,13 @@ int main (void) {
 
 }
 
-//JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_init
-//(JNIEnv * env, jobject obj) {
-//    init();
-//}
-//
-//JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_dump
-//(JNIEnv * env, jobject obj, jobjectArray arr) {
-//    printf("dump");
-//}
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_init
+(JNIEnv * env, jobject obj) {
+    init();
+}
+
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_dump
+(JNIEnv * env, jobject obj, jobjectArray arr) {
+    printf("dump");
+}
 

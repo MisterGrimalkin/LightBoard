@@ -23,12 +23,12 @@ public class TubeStatusUpdater extends Updater {
 
     private List<String> allowedLines;
 
-    private TextZone markerZone;
+    private TextZone summaryZone;
 
-    public TubeStatusUpdater(TextZone zone, TextZone markerZone, String... lines) {
+    public TubeStatusUpdater(TextZone zone, TextZone summaryZone, String... lines) {
         super(zone);
         allowedLines = new ArrayList<>();
-        this.markerZone = markerZone;
+        this.summaryZone = summaryZone;
         for ( String line : lines ) {
             allowedLines.add(line.toUpperCase());
         }
@@ -47,7 +47,8 @@ public class TubeStatusUpdater extends Updater {
                 clearMessages();
 
                 if ( tubeStatuses.isEmpty() ) {
-                    replaceMessage("{red}-TfL Returned No Data-");
+                    replaceMessage("{red}TfL returned no data");
+                    summaryZone.clearMessages();
                 } else {
                     StringBuilder summarySb = new StringBuilder();
                     summarySb.append("{yellow}|");
@@ -55,14 +56,21 @@ public class TubeStatusUpdater extends Updater {
                     for (TubeStatus ts : tubeStatuses) {
 
                         String shortName = getShortName(ts.getLineName());
-                        boolean isGood = "Good Service".equals(ts.getStatusDescription());
-                        boolean isMinor = "Minor Delays".equals(ts.getStatusDescription());
-                        String colour = (isGood ? "{green}" : "{red}" );
+                        boolean isGood = "Good Service".equalsIgnoreCase(ts.getStatusDescription());
+                        boolean isMinor = "Minor Delays".equalsIgnoreCase(ts.getStatusDescription());
+                        String colour = (isGood ? "{green}" : isMinor ? "{yellow}" : "{red}" );
                         String statusDetail = (isGood ? ts.getStatusDescription()
                                 : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
                                         ? ts.getStatusDescription()
                                         : ts.getStatusDetail() );
-                        statusDetail.replaceAll("\n","");
+
+                        String[] lines = statusDetail.split("\n");
+                        if ( lines.length>1 ) {
+                            statusDetail = "";
+                            for ( int i=0; i<lines.length; i++ ) {
+                                statusDetail += lines[i] + " ";
+                            }
+                        }
 
                         if ( !isGood ) {
                             addMessage("{yellow}" + ts.getLineName() + ":" + colour + statusDetail);
@@ -70,28 +78,18 @@ public class TubeStatusUpdater extends Updater {
                         }
 
                         if ( shortName!=null ) {
-                            summarySb.append(isGood ? "{green}" : isMinor ? "{yellow}" : "{red}").append(shortName).append("{yellow}|");
+                            summarySb.append(colour).append(shortName).append("{yellow}|");
                         }
 
                     }
+
                     if ( badCount==0 ) {
                         addMessage("{green}Good Service on all Tfl lines");
                     }
 
                     String summaryMessage = summarySb.toString().trim();
-                    if ( summaryMessage.isEmpty() ) {
-                        if ( allowedLines.isEmpty() ) {
-                            replaceMessage("{red}-Could Not Parse TfL Data-");
-                        } else if ( allowedLines.contains("BAD") ) {
-                            replaceMessage("{green}Good Service on all TfL Lines");
-                        } else {
-                            replaceMessage("{red}-Invalid Line Specified-");
-                        }
-                    } else {
-                        if ( allowedLines.contains("BAD") ) {
-                            markerZone.addMessage(summaryMessage);
-                        }
-                    }
+                    summaryZone.clearMessages();
+                    summaryZone.addMessage(summaryMessage);
 
                 }
             }
