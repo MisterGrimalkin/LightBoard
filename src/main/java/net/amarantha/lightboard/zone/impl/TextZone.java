@@ -83,7 +83,7 @@ public class TextZone extends LightBoardZone {
 
     @Override
     public boolean render() {
-        if ( !paused ) {
+//        if ( !paused ) {
             if ( singleRender && clear ) {
                 clear();
             }
@@ -92,8 +92,8 @@ public class TextZone extends LightBoardZone {
                 pattern = font.renderString(message.getMessage(), message.getHPosition());
             }
             return drawPattern(0, 0, pattern, true);
-        }
-        return true;
+//        }
+//        return true;
     }
 
     @Override
@@ -112,6 +112,10 @@ public class TextZone extends LightBoardZone {
     //////////////
 
     private MessageQueue messageQueue = new MessageQueue();
+
+    public void resetMessageSources() {
+        messageQueue.resetSourceIndex();
+    }
 
     public MessageWrapper getCurrentMessage() {
         return overrideMessage==null?messageQueue.getCurrentMessage():overrideMessage;

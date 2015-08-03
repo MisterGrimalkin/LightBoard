@@ -65,7 +65,13 @@ public abstract class Updater {
     private void doRefresh() {
         if ( !paused ) {
 //            Thread update = new Thread(() -> {
-                refresh();
+
+                try {
+                    refresh();
+                } catch ( Exception e ) {
+                    System.out.println("ERROR!\n"+e.getMessage());
+                    e.printStackTrace();
+                }
 //            });
 //            update.setPriority(MIN_PRIORITY);
 //            update.start();

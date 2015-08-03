@@ -72,6 +72,11 @@ public class MessageQueue {
 
     }
 
+    public void resetSourceIndex() {
+        sourceIndex = 0;
+        messagesForThisSource = 0;
+    }
+
     private void advanceSourceIndex() {
         if ( ++sourceIndex>=sources.size() ) {
             sourceIndex = 0;

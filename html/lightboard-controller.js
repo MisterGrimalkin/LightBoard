@@ -194,6 +194,11 @@ function createChangeColourFunction(name) {
 // Control Functions //
 ///////////////////////
 
+function postMessage() {
+    var msg = element("messageText").value;
+    post(baseUrl, "lightboard/message", null, errorAlert("Could not post message"), msg);
+}
+
 function wake() {
     post(baseUrl, "lightboard/system/wake", null, errorAlert("Could not wake LightBoard"));
 }

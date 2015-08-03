@@ -80,7 +80,7 @@ public abstract class LightBoardZone {
     }
 
     public void tick() {
-        if ( !paused ) {
+//        if ( !paused ) {
             if (resting) {
                 if (currentTimeMillis() - lastTick > restDuration) {
                     resting = false;
@@ -93,10 +93,10 @@ public abstract class LightBoardZone {
                 }
                 lastTick = currentTimeMillis();
             }
-        }
+//        }
     }
 
-    private Long scrollTick = null;
+    protected Long scrollTick = null;
     private long lastTick;
     protected boolean resting;
 
@@ -205,8 +205,8 @@ public abstract class LightBoardZone {
                 deltaY = 0;
                 break;
             case NO_SCROLL:
-                if ( autoReset ) {
                     onScrollComplete();
+                if ( autoReset ) {
                     resetScroll();
                 }
                 break;
@@ -219,15 +219,18 @@ public abstract class LightBoardZone {
         if ( isInRestPosition() ) {
             resting = true;
         }
-        if ( !contentVisible() && autoReset ) {
-            onScrollComplete();
-            resetScroll();
+        if ( !contentVisible() ) { //&& autoReset ) {
+                onScrollComplete();
+            if ( autoReset ) {
+                resetScroll();
+            }
         }
 
     }
 
     public void resetScroll() {
         initScroll(Scrolling.IN);
+        resting = false;
     }
 
     public void onScrollComplete() {
@@ -242,7 +245,13 @@ public abstract class LightBoardZone {
     }
 
     private boolean isInRestPosition() {
-        return     getContentWidth()<=region.width
+        return
+                ( getContentWidth()<=region.width
+                        ||
+                        ( getScrollFrom()==Edge.BOTTOM_EDGE
+                            && getScrollTo()==Edge.TOP_EDGE
+                        )
+                )
                 && getContentHeight()<=region.height
                 && contentLeft == restX
                 && contentTop == restY;
@@ -401,6 +410,10 @@ public abstract class LightBoardZone {
 
     public void addScrollCompleteHandler(ScrollCompleteHandler handler) {
         scrollCompleteHandlers.add(handler);
+    }
+
+    public void removeAllHandlers() {
+        scrollCompleteHandlers.clear();
     }
 
 

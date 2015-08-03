@@ -40,8 +40,6 @@ public class Main extends Application {
 
         boolean debugBoard = getParameters().getUnnamed().contains("debug");
 
-//        SystemResource.detectMessageServer();
-
         RGBLightBoard board;
         switch ( getBoardType() ) {
             case RASPBERRY_PI:
@@ -78,18 +76,16 @@ public class Main extends Application {
             surface.selfTest();
         } else {
 
-            addScene(0, new WebServiceMessageScene(surface));
-//            addScene(1, new ShowerTicketsScene(surface), 60000, true);
-            addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
-//            addScene(2, new ImageScene(surface, "sb.jpg"), null, true);
+//            addScene(0, new WebServiceMessageScene(surface));
+//            addScene(1, new ImageScene(surface, "gp192x32.jpg"), null, true);
             addScene(2, new TravelInformationScene(surface), 120000, true);
-//            addScene(4, new MessageScrollerScene(surface), 10000, false);
 
             startScenes();
             cycleScenes();
             loadScene(2);
 
             BroadcastMessageResource.bindScene(0);
+            
         }
 
         startSyncThread();

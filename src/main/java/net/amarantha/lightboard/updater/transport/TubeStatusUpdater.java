@@ -21,17 +21,11 @@ public class TubeStatusUpdater extends Updater {
 
     private final static String TFL_TS_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
 
-    private List<String> allowedLines;
-
     private TextZone summaryZone;
 
-    public TubeStatusUpdater(TextZone zone, TextZone summaryZone, String... lines) {
+    public TubeStatusUpdater(TextZone zone, TextZone summaryZone) {
         super(zone);
-        allowedLines = new ArrayList<>();
         this.summaryZone = summaryZone;
-        for ( String line : lines ) {
-            allowedLines.add(line.toUpperCase());
-        }
         System.out.println("Tube Status Updater Ready....");
     }
 
@@ -84,7 +78,8 @@ public class TubeStatusUpdater extends Updater {
                     }
 
                     if ( badCount==0 ) {
-                        addMessage("{green}Good Service on all Tfl lines");
+                        addMessage("   ");
+//                        addMessage("{green}Good Service on all TfL lines");
                     }
 
                     String summaryMessage = summarySb.toString().trim();

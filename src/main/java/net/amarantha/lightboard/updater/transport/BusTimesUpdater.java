@@ -2,75 +2,235 @@ package net.amarantha.lightboard.updater.transport;
 
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.impl.TextZone;
-import org.javalite.http.Get;
 import org.javalite.http.Http;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class BusTimesUpdater extends Updater {
 
     private final static String TFL_BUS_URL = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1";
 
-    private final int stopCode;
-    private final String busNumber;
-    private final String displayAs;
-    private final int resultsToDisplay;
-    private final int offset;
+    private Set<BusDeparture> buses = new HashSet<>();
 
-    public BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay) {
-        this(scroller, stopCode, busNumber, displayAs, resultsToDisplay, 0);
+    private TextZone busNumberZone;
+    private TextZone leftDestinationZone;
+    private TextZone leftTimesZone;
+    private TextZone rightDestinationZone;
+    private TextZone rightTimesZone;
+
+    public BusTimesUpdater(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+        super(null);
+        this.busNumberZone = busNumberZone;
+        this.leftDestinationZone = leftDestinationZone;
+        this.leftTimesZone = leftTimesZone;
+        this.rightDestinationZone = rightDestinationZone;
+        this.rightTimesZone = rightTimesZone;
+        loadBusStops();
     }
 
-    public BusTimesUpdater(TextZone scroller, int stopCode, String busNumber, String displayAs, int resultsToDisplay, int offset) {
-        super(scroller);
-        this.stopCode = stopCode;
-        this.busNumber = busNumber;
-        this.displayAs = displayAs;
-        this.resultsToDisplay = resultsToDisplay;
-        this.offset = offset;
-        System.out.println("Bus Times Updater for " + stopCode + ":" + busNumber + " Ready....");
+    public void loadBusStops() {
+
+        buses.add(new BusDeparture(53785, "W7", "Muswell Hill"));
+        buses.add(new BusDeparture(56782, "W7", "Finsbury Park"));
+        buses.add(new BusDeparture(76713, "W5", "Harringay", -3));
+        buses.add(new BusDeparture(76985, "W5", "Archway", 3));
+        buses.add(new BusDeparture(76713, "41", "Tottenham Hale"));
+        buses.add(new BusDeparture(56403, "41", "Archway"));
+        buses.add(new BusDeparture(56403, "91", "Trafalgar Square"));
+        buses.add(new BusDeparture(56403, "N91", "Trafalgar Square"));
+
+    }
+
+    private int numberOfActiveBuses(Map<BusDeparture, List<Long>> map) {
+        int result = 0;
+        for ( Entry<BusDeparture, List<Long>> timeEntry : map.entrySet() ) {
+            if ( !timeEntry.getValue().isEmpty() ) {
+                result ++;
+            }
+        }
+        return result;
     }
 
     @Override
     public void refresh() {
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
+        busNumberZone.resetScroll();
+        leftDestinationZone.resetScroll();
+        leftTimesZone.resetScroll();
+        rightDestinationZone.resetScroll();
+        rightTimesZone.resetScroll();
 
-                String result = callWebService();
+        busNumberZone.clearMessages();
+        leftDestinationZone.clearMessages();
+        leftTimesZone.clearMessages();
+        rightDestinationZone.clearMessages();
+        rightTimesZone.clearMessages();
 
-                List<Long> dueTimes = parseResult(result).get(busNumber);
+//        busNumberZone.advanceMessage();
+//        leftDestinationZone.advanceMessage();
+//        leftTimesZone.advanceMessage();
+//        rightDestinationZone.advanceMessage();
+//        rightTimesZone.advanceMessage();
 
-                clearMessages();
+        Thread thread = new Thread(() -> {
 
-                String msg = "{yellow}" + busNumber + ">" + displayAs + ":{green}";
-                if (dueTimes != null) {
-                    Collections.sort(dueTimes);
-//            msg += " -none-";
-//        } else {
-                    for (Long m : dueTimes) {
-                        msg += " " + (m == 0 ? "due" : m + "min");
-                    }
-                    addMessage(msg);
-                }
+            busNumberZone.resetScroll();
+            leftDestinationZone.resetScroll();
+            leftTimesZone.resetScroll();
+            rightDestinationZone.resetScroll();
+            rightTimesZone.resetScroll();
 
+            busNumberZone.clearMessages();
+            leftDestinationZone.clearMessages();
+            leftTimesZone.clearMessages();
+            rightDestinationZone.clearMessages();
+            rightTimesZone.clearMessages();
 
+            BusData data = new BusData();
+            for ( BusDeparture bus : buses) {
+                data.addResult(bus, getDepartureTimesFor(bus));
             }
-        }, 0);
+
+            int sourceId = 0;
+
+            for ( Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet() ) {
+
+                busNumberZone.clearMessages(sourceId);
+                leftDestinationZone.clearMessages(sourceId);
+                leftTimesZone.clearMessages(sourceId);
+                rightDestinationZone.clearMessages(sourceId);
+                rightTimesZone.clearMessages(sourceId);
+
+                int activeBuses = numberOfActiveBuses(eBus.getValue());
+
+                if ( activeBuses > 0 ) {
+
+                    String busNumber = "{yellow}" + eBus.getKey();
+                    busNumberZone.addMessage(sourceId, busNumber);
+
+                    if ( activeBuses > 2 ) {
+                        leftDestinationZone.addMessage(sourceId, "{red}Too");
+                        leftTimesZone.addMessage(sourceId, "{red}Many");
+                        rightDestinationZone.addMessage(sourceId, "{red}Buses");
+                        rightTimesZone.addMessage(sourceId, "{red}Returned!");
+                    } else {
+
+                        int direction = 1;
+
+                        for (Entry<BusDeparture, List<Long>> timeEntry : eBus.getValue().entrySet()) {
+
+                            String destination = "{yellow}" + timeEntry.getKey().getDestination();
+
+                            List<Long> busTimes = timeEntry.getValue();
+                            Collections.sort(busTimes);
+                            StringBuilder sb = new StringBuilder();
+                            int count = 0;
+                            for (Long bt : busTimes) {
+                                Long busTime = bt+timeEntry.getKey().getOffset();
+                                if ( count<3 && busTime >= 0 ) {
+                                    if (busTime == 0) {
+                                        sb.append("{red}due ");
+                                    } else {
+                                        if ( busTime < 5 ) {
+                                            sb.append("{red}");
+                                        } else {
+                                            sb.append("{green}");
+                                        }
+                                        sb.append(busTime).append("m ");
+                                    }
+                                }
+                                count++;
+                            }
+                            String timesMessage = sb.toString();
+
+                            if ( direction==1 ) {
+                                leftDestinationZone.addMessage(sourceId, destination);
+                                leftTimesZone.addMessage(sourceId, timesMessage);
+                            } else if ( direction==2 ) {
+                                rightDestinationZone.addMessage(sourceId, destination);
+                                rightTimesZone.addMessage(sourceId, timesMessage);
+                            }
+                            direction++;
+
+                            if ( activeBuses==1 ) {
+                                rightDestinationZone.addMessage(sourceId, "{yellow}-");
+                                rightTimesZone.addMessage(sourceId, "{yellow}-");
+                            }
+
+                        }
+
+                    }
+                }
+                sourceId++;
+            }
+
+            busNumberZone.resetMessageSources();
+            leftDestinationZone.resetMessageSources();
+            leftTimesZone.resetMessageSources();
+            rightDestinationZone.resetMessageSources();
+            rightTimesZone.resetMessageSources();
+
+
+        });
+
+        thread.start();
+
+
     }
 
-    private String callWebService() {
-        String result = "";
+    private static final int BUS_NUMBER = 2;
+    private static final int BUS_TIME = 3;
+
+    private List<Long> getDepartureTimesFor(BusDeparture departure) {
+
+        List<Long> result = new ArrayList<>();
+
         try {
-            Get get = Http.get(TFL_BUS_URL + "?StopCode1=" + stopCode);
-            result = get.text();
+
+            String httpResult = Http.get(TFL_BUS_URL + "?StopCode1=" + departure.getStopCode()).text();
+
+            List<String[]> lineArrays = breakIntoLineArrays(httpResult);
+
+            for ( String[] line : lineArrays ) {
+                if ( line[BUS_NUMBER].equals(departure.getBusNo()) ) {
+
+                    result.add(minutesIntoFuture(line[BUS_TIME]));
+
+                }
+            }
+
         } catch (Exception e) {
-            replaceMessage("Error Querying TFL! " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private Long minutesIntoFuture(String timecodeStr) {
+        Long time = 0L;
+        try {
+            Long timecode = Long.parseLong(timecodeStr);
+            Date due = new Date(timecode - System.currentTimeMillis());
+            SimpleDateFormat sdf = new SimpleDateFormat("m");
+            time = Long.parseLong(sdf.format(due));
+        } catch ( NumberFormatException e ) {
+            System.out.println(timecodeStr + " fucked!");
+        }
+        return time;
+    }
+
+    private List<String[]> breakIntoLineArrays(String httpResult) {
+        List<String[]> result = new LinkedList<>();
+        String[] lines = httpResult.split("\n");
+        for (int l = 1; l < lines.length; l++) {
+            String line = lines[l];
+            String trimmed = line.replaceAll("\\[","").replaceAll("]", "").replace("\"","").replaceAll("\r", "");
+            String[] cols = trimmed.split(",");
+            result.add(cols);
         }
         return result;
-
     }
 
     private Map<String, List<Long>> parseResult(String result) {
@@ -91,10 +251,11 @@ public class BusTimesUpdater extends Updater {
             } catch (NumberFormatException e) {
                 System.err.println("Bad time " + timecodeStr);
             }
-            if (timecode != null && dueTimes.size() < resultsToDisplay) {
+            if (timecode != null && dueTimes.size() < 3) {
+
                 Date due = new Date(timecode - System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat("m");
-                Long time = Long.parseLong(sdf.format(due)) + offset;
+                Long time = Long.parseLong(sdf.format(due)) + 0;
                 if (time >= 0) {
                     dueTimes.add(time);
                 }

@@ -6,19 +6,19 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OldMessageUpdater extends Updater {
+public class PostMessageUpdater extends Updater {
 
     private List<TextZone> zones = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
-    public OldMessageUpdater(TextZone... zs) {
+    public PostMessageUpdater(TextZone... zs) {
         super(zs[0]);
         for ( int i=0; i<zs.length; i++ ) {
             this.zones.add(zs[i]);
         }
     }
 
-    public OldMessageUpdater addMessages(String... msg) {
+    public PostMessageUpdater addMessages(String... msg) {
         for ( int i=0; i<msg.length; i++ ) {
             messages.add(msg[i]);
         }

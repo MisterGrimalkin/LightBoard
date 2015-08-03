@@ -47,11 +47,11 @@ function get(url, path, onsuccess, onfailure) {
     http("GET", url, path, onsuccess, onfailure);
 }
 
-function post(url, path, onsuccess, onfailure) {
-    http("POST", url, path, onsuccess, onfailure);
+function post(url, path, onsuccess, onfailure, content) {
+    http("POST", url, path, onsuccess, onfailure, content);
 }
 
-function http(method, url, path, onsuccess, onfailure) {
+function http(method, url, path, onsuccess, onfailure, content) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() {
         if ( req.readyState==4 ) {
@@ -67,7 +67,11 @@ function http(method, url, path, onsuccess, onfailure) {
         }
     }
     req.open(method, "http://"+url+":"+port+"/"+path, true);
-    req.send();
+    if ( content!==null && content!==undefined ) {
+        req.send(content);
+    } else {
+        req.send();
+    }
 }
 
 function errorAlert(message) {
