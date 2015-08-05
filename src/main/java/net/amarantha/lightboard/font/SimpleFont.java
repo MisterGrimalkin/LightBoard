@@ -17,6 +17,8 @@ public class SimpleFont extends Font {
         registerPattern(':', COLON);
         registerPattern(';', SEMICOLON);
         registerPattern('?', QUESTION);
+        registerPattern('/', FORWARD_SLASH);
+        registerPattern('\\', BACK_SLASH);
 
         registerPattern('<', LEFT_ARROW);
         registerPattern('>', RIGHT_ARROW);
@@ -674,6 +676,26 @@ public class SimpleFont extends Font {
             { o,o,o,o,o},
             { o,o,i,o,o},
             { o,o,o,o,o}};
+
+    private final static boolean[][] FORWARD_SLASH =
+            {{o,o,o,i},
+            { o,o,o,i},
+            { o,o,i,o},
+            { o,o,i,o},
+            { o,i,o,o},
+            { o,i,o,o},
+            { i,o,o,o},
+            { i,o,o,o}};
+
+    private final static boolean[][] BACK_SLASH =
+            {{i,o,o,o},
+            { i,o,o,o},
+            { o,i,o,o},
+            { o,i,o,o},
+            { o,o,i,o},
+            { o,o,i,o},
+            { o,o,o,i},
+            { o,o,o,i}};
 
     private final static boolean[][] DIAMOND =
             {{o,o,o,o,o},

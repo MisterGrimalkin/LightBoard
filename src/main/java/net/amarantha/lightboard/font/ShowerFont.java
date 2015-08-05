@@ -4,9 +4,6 @@ import net.amarantha.lightboard.entity.Pattern;
 
 public class ShowerFont extends Font {
 
-    private static final boolean o = false;
-    private static final boolean i = true;
-
     public ShowerFont() {
         registerPattern('0', ZERO);
         registerPattern('1', ONE);
