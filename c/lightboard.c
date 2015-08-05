@@ -137,8 +137,8 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_init
     init();
 }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_dump
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_update
 (JNIEnv * env, jobject obj, jobjectArray arr) {
-    printf("dump");
+    printf("update");
 }
 

@@ -1,9 +1,9 @@
 package net.amarantha.lightboard.zone.impl;
 
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.entity.HPosition;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.entity.VPosition;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -17,7 +17,7 @@ public class ClockZone extends TextZone {
         super(surface, Edge.NO_SCROLL, Edge.NO_SCROLL, 500, new SmallFont());
         setScrollTick(500);
         setRestDuration(0);
-        setRestPosition(HPosition.CENTRE, VPosition.MIDDLE);
+        setRestPosition(AlignH.CENTRE, AlignV.MIDDLE);
     }
 
     public ClockZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration, Font font) {

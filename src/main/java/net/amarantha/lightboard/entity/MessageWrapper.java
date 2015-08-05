@@ -1,32 +1,28 @@
 package net.amarantha.lightboard.entity;
 
+import static net.amarantha.lightboard.entity.AlignH.CENTRE;
+import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 import static net.amarantha.lightboard.entity.Edge.NO_SCROLL;
-import static net.amarantha.lightboard.entity.HPosition.CENTRE;
-import static net.amarantha.lightboard.entity.VPosition.MIDDLE;
 
 public class MessageWrapper {
 
     private String message;
-
     private Edge scrollFrom;
     private Edge scrollTo;
-
-    private HPosition hPosition;
-    private VPosition vPosition;
-
+    private AlignH alignH;
+    private AlignV alignV;
     int restDuration;
-
 
     public MessageWrapper(String message) {
         this(message, NO_SCROLL, NO_SCROLL, CENTRE, MIDDLE, 3000);
     }
 
-    public MessageWrapper(String message, Edge scrollFrom, Edge scrollTo, HPosition hPosition, VPosition vPosition, int restDuration) {
+    public MessageWrapper(String message, Edge scrollFrom, Edge scrollTo, AlignH alignH, AlignV alignV, int restDuration) {
         this.message = message;
         this.scrollFrom = scrollFrom;
         this.scrollTo = scrollTo;
-        this.hPosition = hPosition;
-        this.vPosition = vPosition;
+        this.alignH = alignH;
+        this.alignV = alignV;
         this.restDuration = restDuration;
     }
 
@@ -42,12 +38,12 @@ public class MessageWrapper {
         return scrollTo;
     }
 
-    public HPosition getHPosition() {
-        return hPosition;
+    public AlignH setAlignH() {
+        return alignH;
     }
 
-    public VPosition getVPosition() {
-        return vPosition;
+    public AlignV setAlignV() {
+        return alignV;
     }
 
     public int getRestDuration() {
@@ -62,11 +58,11 @@ public class MessageWrapper {
         MessageWrapper that = (MessageWrapper) o;
 
         if (restDuration != that.restDuration) return false;
-        if (hPosition != that.hPosition) return false;
+        if (alignH != that.alignH) return false;
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
         if (scrollFrom != that.scrollFrom) return false;
         if (scrollTo != that.scrollTo) return false;
-        if (vPosition != that.vPosition) return false;
+        if (alignV != that.alignV) return false;
 
         return true;
     }
@@ -76,9 +72,10 @@ public class MessageWrapper {
         int result = message != null ? message.hashCode() : 0;
         result = 31 * result + (scrollFrom != null ? scrollFrom.hashCode() : 0);
         result = 31 * result + (scrollTo != null ? scrollTo.hashCode() : 0);
-        result = 31 * result + (hPosition != null ? hPosition.hashCode() : 0);
-        result = 31 * result + (vPosition != null ? vPosition.hashCode() : 0);
+        result = 31 * result + (alignH != null ? alignH.hashCode() : 0);
+        result = 31 * result + (alignV != null ? alignV.hashCode() : 0);
         result = 31 * result + restDuration;
         return result;
     }
+
 }

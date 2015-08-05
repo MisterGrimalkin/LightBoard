@@ -6,8 +6,8 @@ import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
 import net.amarantha.lightboard.updater.schedule.OpeningTimesUpdater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
-import static net.amarantha.lightboard.entity.HPosition.LEFT;
-import static net.amarantha.lightboard.entity.VPosition.MIDDLE;
+import static net.amarantha.lightboard.entity.AlignH.LEFT;
+import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 
 public class ShopOpeningTimesScene extends Scene {
 

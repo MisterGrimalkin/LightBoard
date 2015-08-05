@@ -119,10 +119,12 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
         currentFrame = nextFrame;
         try {
             for (int row = 0; row < rows/2; row++) {
-                sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
+                double[][] redFrame = currentFrame[0];
+                double[][] greenFrame = currentFrame[1];
+                sendSerialString(redFrame[row], greenFrame[row], redFrame[row+rows/2], greenFrame[row+rows/2]);
                 digitalWrite(output, true);
-                decodeRowAddress(row);
                 digitalWrite(store, false);
+                decodeRowAddress(row);
                 digitalWrite(store, true);
                 digitalWrite(output, false);
             }
@@ -137,7 +139,7 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     private Boolean lastGreen2 = null;
 
     private void sendSerialString(double[] red1, double[] green1, double[] red2, double[] green2) throws InterruptedException {
-        for (int col = 0; col < red1.length ; col++) {
+        for (int col = 0; col < cols ; col++) {
             digitalWrite(clock, false);
             if ( colour==MULTI_MODE) {
                 if ( lastRed1==null || lastRed1!=red1[col]<0.5 ) {
@@ -194,20 +196,16 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
         boolean address2 = BigInteger.valueOf(row).testBit(2);
         boolean address3 = BigInteger.valueOf(row).testBit(3);
         if (lastAddress0 ==null || address0!= lastAddress0) {
-            lastAddress0 = address0;
-            digitalWrite(addr0, address0);
+            digitalWrite(addr0, lastAddress0 = address0);
         }
         if (lastAddress1 ==null || address1!= lastAddress1) {
-            digitalWrite(addr1, address1);
-            lastAddress1 = address1;
+            digitalWrite(addr1, lastAddress1 = address1);
         }
         if (lastAddress2 ==null || address2!= lastAddress2) {
-            digitalWrite(addr2, address2);
-            lastAddress2 = address2;
+            digitalWrite(addr2, lastAddress2 = address2);
         }
         if (lastAddress3 ==null || address3!= lastAddress3) {
-            digitalWrite(addr3, address3);
-            lastAddress3 = address3;
+            digitalWrite(addr3, lastAddress3 = address3);
         }
     }
 

@@ -2,15 +2,12 @@ package net.amarantha.lightboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import net.amarantha.lightboard.board.RGBLightBoard;
-import net.amarantha.lightboard.board.impl.CRaspPiLightBoard;
+import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.board.impl.CLightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
-import net.amarantha.lightboard.scene.impl.ImageScene;
-import net.amarantha.lightboard.scene.impl.ShowerTicketsScene;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.RGBLightBoardSurface;
 import net.amarantha.lightboard.webservice.BroadcastMessageResource;
 import net.amarantha.lightboard.webservice.ColourResource;
@@ -40,7 +37,7 @@ public class Main extends Application {
 
         boolean debugBoard = getParameters().getUnnamed().contains("debug");
 
-        RGBLightBoard board;
+        LightBoard board;
         switch ( getBoardType() ) {
             case RASPBERRY_PI:
                 RaspPiGlastoLightBoard raspberryPiLightBoard = new RaspPiGlastoLightBoard(ROWS, COLS);
@@ -48,7 +45,7 @@ public class Main extends Application {
                 board = raspberryPiLightBoard;
                 break;
             case C:
-                CRaspPiLightBoard cLightBoard = new CRaspPiLightBoard();
+                CLightBoard cLightBoard = new CLightBoard();
                 board = cLightBoard;
                 break;
             case GRAPHICAL:

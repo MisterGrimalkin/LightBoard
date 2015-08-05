@@ -1,9 +1,9 @@
 package net.amarantha.lightboard.util;
 
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.entity.HPosition;
 import net.amarantha.lightboard.entity.MessageWrapper;
-import net.amarantha.lightboard.entity.VPosition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,8 +93,8 @@ public class MessageQueue {
         return addMessage(key, new MessageWrapper(message));
     }
 
-    public MessageQueue addMessage(Integer key, String message, Edge scrollIn, Edge scrollOut, HPosition hPosition, VPosition vPosition, int centrePause) {
-        return addMessage(key, new MessageWrapper(message, scrollIn, scrollOut, hPosition, vPosition, centrePause));
+    public MessageQueue addMessage(Integer key, String message, Edge scrollIn, Edge scrollOut, AlignH alignH, AlignV alignV, int centrePause) {
+        return addMessage(key, new MessageWrapper(message, scrollIn, scrollOut, alignH, alignV, centrePause));
     }
 
     public MessageQueue addMessage(int key, MessageWrapper wrapper) {

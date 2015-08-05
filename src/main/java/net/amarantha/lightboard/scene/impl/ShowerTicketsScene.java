@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.scene.impl;
 
-import net.amarantha.lightboard.entity.HPosition;
-import net.amarantha.lightboard.entity.VPosition;
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.font.ShowerFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
@@ -26,7 +26,7 @@ public class ShowerTicketsScene extends Scene {
         TextZone label = TextZone.fixed(getSurface());
         label
                 .setFont(new SmallFont())
-                .setRestPosition(HPosition.RIGHT, VPosition.MIDDLE)
+                .setRestPosition(AlignH.RIGHT, AlignV.MIDDLE)
                 .singleRender(true)
                 .setRegion(0, 0, LABEL_WIDTH, getRows() - MESSAGE_HEIGHT)
                 .setScrollTick(10000)

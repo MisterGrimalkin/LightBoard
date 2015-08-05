@@ -38,7 +38,7 @@ public class PostMessageUpdater extends Updater {
             TextZone zone = zones.get(i);
             if ( i<messages.size() ) {
                 zone.overrideMessage(zone.wrap(messages.get(i)));
-//                zone.overrideMessage(new MessageWrapper(messages.get(i), MessageQueue.Edge.TOP_EDGE, MessageQueue.Edge.BOTTOM_EDGE, MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE, 6000));
+//                zone.overrideMessage(new MessageWrapper(messages.get(i), MessageQueue.Edge.TOP, MessageQueue.Edge.BOTTOM, MessageQueue.HPosition.CENTRE, MessageQueue.VPosition.MIDDLE, 6000));
             }
         }
     }

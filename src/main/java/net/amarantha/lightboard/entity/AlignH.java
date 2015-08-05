@@ -1,5 +1,5 @@
 package net.amarantha.lightboard.entity;
 
-public enum HPosition {
+public enum AlignH {
     LEFT, CENTRE, RIGHT
 }

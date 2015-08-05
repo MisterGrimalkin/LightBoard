@@ -1,9 +1,9 @@
 package net.amarantha.lightboard.zone;
 
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.entity.HPosition;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.entity.VPosition;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.RGBLightBoardSurface;
 import net.amarantha.lightboard.surface.Region;
@@ -153,25 +153,25 @@ public abstract class LightBoardZone {
 
     private void prepareScrollIn() {
         switch (scrollFrom) {
-            case TOP_EDGE:
+            case TOP:
                 contentLeft = restX;
                 contentTop = -getContentHeight();
                 deltaX = 0;
                 deltaY = DELTA;
                 break;
-            case LEFT_EDGE:
+            case LEFT:
                 contentLeft = -getContentWidth();
                 contentTop = restY;
                 deltaX = DELTA;
                 deltaY = 0;
                 break;
-            case BOTTOM_EDGE:
+            case BOTTOM:
                 contentLeft = restX;
                 contentTop = region.height;
                 deltaX = 0;
                 deltaY = -DELTA;
                 break;
-            case RIGHT_EDGE:
+            case RIGHT:
                 contentLeft = region.width;
                 contentTop = restY;
                 deltaX = -DELTA;
@@ -188,19 +188,19 @@ public abstract class LightBoardZone {
 
     private void prepareScrollOut() {
         switch (scrollTo) {
-            case TOP_EDGE:
+            case TOP:
                 deltaX = 0;
                 deltaY = -DELTA;
                 break;
-            case LEFT_EDGE:
+            case LEFT:
                 deltaX = -DELTA;
                 deltaY = 0;
                 break;
-            case BOTTOM_EDGE:
+            case BOTTOM:
                 deltaX = 0;
                 deltaY = DELTA;
                 break;
-            case RIGHT_EDGE:
+            case RIGHT:
                 deltaX = DELTA;
                 deltaY = 0;
                 break;
@@ -248,8 +248,8 @@ public abstract class LightBoardZone {
         return
                 ( getContentWidth()<=region.width
                         ||
-                        ( getScrollFrom()==Edge.BOTTOM_EDGE
-                            && getScrollTo()==Edge.TOP_EDGE
+                        ( getScrollFrom()==Edge.BOTTOM
+                            && getScrollTo()==Edge.TOP
                         )
                 )
                 && getContentHeight()<=region.height
@@ -371,7 +371,7 @@ public abstract class LightBoardZone {
         return this;
     }
 
-    public LightBoardZone setRestPosition(HPosition x, VPosition y) {
+    public LightBoardZone setRestPosition(AlignH x, AlignV y) {
         restPositionH = x;
         restPositionV = y;
         return this;
@@ -398,8 +398,8 @@ public abstract class LightBoardZone {
 
     private Edge scrollFrom = Edge.NO_SCROLL;
     private Edge scrollTo = Edge.NO_SCROLL;
-    private HPosition restPositionH = HPosition.CENTRE;
-    private VPosition restPositionV = VPosition.MIDDLE;
+    private AlignH restPositionH = AlignH.CENTRE;
+    private AlignV restPositionV = AlignV.MIDDLE;
     private int restDuration = 3000;
 
     private List<ScrollCompleteHandler> scrollCompleteHandlers = new ArrayList<>();
@@ -429,11 +429,11 @@ public abstract class LightBoardZone {
         return scrollTo;
     }
 
-    public HPosition getRestPositionH() {
+    public AlignH getRestPositionH() {
         return restPositionH;
     }
 
-    public VPosition getRestPositionV() {
+    public AlignV getRestPositionV() {
         return restPositionV;
     }
 

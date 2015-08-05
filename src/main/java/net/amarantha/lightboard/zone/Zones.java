@@ -1,8 +1,8 @@
 package net.amarantha.lightboard.zone;
 
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.entity.HPosition;
-import net.amarantha.lightboard.entity.VPosition;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
@@ -12,17 +12,17 @@ public class Zones {
 
     public static CompositeZone startFourSpinner(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
 
-        TextZone z1 = new TextZone(surface, Edge.LEFT_EDGE, Edge.BOTTOM_EDGE, 0);
-        z1.setRestPosition(HPosition.RIGHT, VPosition.TOP).setRestDuration(0).clear(false);
+        TextZone z1 = new TextZone(surface, Edge.LEFT, Edge.BOTTOM, 0);
+        z1.setRestPosition(AlignH.RIGHT, AlignV.TOP).setRestDuration(0).clear(false);
 
-        TextZone z2 = new TextZone(surface, Edge.TOP_EDGE, Edge.LEFT_EDGE, 0);
-        z2.setRestPosition(HPosition.RIGHT, VPosition.BOTTOM).setRestDuration(0).clear(false);
+        TextZone z2 = new TextZone(surface, Edge.TOP, Edge.LEFT, 0);
+        z2.setRestPosition(AlignH.RIGHT, AlignV.BOTTOM).setRestDuration(0).clear(false);
 
-        TextZone z3 = new TextZone(surface, Edge.BOTTOM_EDGE, Edge.RIGHT_EDGE, 0);
-        z3.setRestPosition(HPosition.LEFT, VPosition.TOP).setRestDuration(0).clear(false);
+        TextZone z3 = new TextZone(surface, Edge.BOTTOM, Edge.RIGHT, 0);
+        z3.setRestPosition(AlignH.LEFT, AlignV.TOP).setRestDuration(0).clear(false);
 
-        TextZone z4 = new TextZone(surface, Edge.RIGHT_EDGE, Edge.TOP_EDGE, 0);
-        z4.setRestPosition(HPosition.LEFT, VPosition.BOTTOM).setRestDuration(0).clear(false);
+        TextZone z4 = new TextZone(surface, Edge.RIGHT, Edge.TOP, 0);
+        z4.setRestPosition(AlignH.LEFT, AlignV.BOTTOM).setRestDuration(0).clear(false);
 
         for ( int i=3; i<messages.length; i+=4 ) {
             z1.addMessage(0, messages[i-3]);

@@ -47,10 +47,10 @@ public class LightBoardSurface {
     public LightBoardSurface init() {
         System.out.println("Starting LightBoard Surface....");
         for ( final LightBoard board : boards ) {
-            Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
+            Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
                 @Override
                 public void runTask() {
-                    board.dump(ledStatus);
+//                    board.update(ledStatus);
                 }
             });
         }

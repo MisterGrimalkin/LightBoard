@@ -1,6 +1,6 @@
 package net.amarantha.lightboard.surface;
 
-import net.amarantha.lightboard.board.RGBLightBoard;
+import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.util.Sync;
 
@@ -8,9 +8,9 @@ public class RGBLightBoardSurface extends LightBoardSurface {
 
     private final double[][][] ledPolyValue;
 
-    private final RGBLightBoard[] boards;
+    private final LightBoard[] boards;
 
-    public RGBLightBoardSurface(RGBLightBoard... boards) {
+    public RGBLightBoardSurface(LightBoard... boards) {
         super(boards);
         this.boards = boards;
         ledPolyValue = new double[3][getRows()][getCols()];
@@ -24,12 +24,12 @@ public class RGBLightBoardSurface extends LightBoardSurface {
     @Override
     public LightBoardSurface init() {
         System.out.println("Starting ColourLightBoard Surface....");
-        for (final RGBLightBoard board : boards) {
-            System.out.println(board.getRefreshInterval());
-            Sync.addTask(new Sync.Task(board.getRefreshInterval()) {
+        for (final LightBoard board : boards) {
+            System.out.println(board.getUpdateInterval());
+            Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
                 @Override
                 public void runTask() {
-                    board.dump(ledPolyValue);
+                    board.update(ledPolyValue);
                 }
             });
         }

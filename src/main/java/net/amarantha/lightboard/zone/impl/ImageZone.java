@@ -23,13 +23,13 @@ public class ImageZone extends LightBoardZone {
 
     public static ImageZone scrollUp(LightBoardSurface s) {
         ImageZone zone = new ImageZone(s);
-        zone.scroll(Edge.BOTTOM_EDGE, Edge.TOP_EDGE);
+        zone.scroll(Edge.BOTTOM, Edge.TOP);
         return zone;
     }
 
     public static ImageZone scrollLeft(LightBoardSurface s) {
         ImageZone zone = new ImageZone(s);
-        zone.scroll(Edge.RIGHT_EDGE, Edge.LEFT_EDGE);
+        zone.scroll(Edge.RIGHT, Edge.LEFT);
         return zone;
     }
 
@@ -39,7 +39,7 @@ public class ImageZone extends LightBoardZone {
 
     public ImageZone(LightBoardSurface surface) {
         super(surface);
-        scroll(Edge.BOTTOM_EDGE, Edge.TOP_EDGE);
+        scroll(Edge.BOTTOM, Edge.TOP);
         clear(false);
         setRestDuration(2000);
     }

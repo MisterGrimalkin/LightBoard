@@ -1,13 +1,13 @@
 package net.amarantha.lightboard.font;
 
+import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.Colour;
-import net.amarantha.lightboard.entity.HPosition;
 import net.amarantha.lightboard.entity.Pattern;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.amarantha.lightboard.entity.HPosition.*;
+import static net.amarantha.lightboard.entity.AlignH.*;
 
 public abstract class Font {
 
@@ -103,7 +103,7 @@ public abstract class Font {
         return renderString(str, LEFT);
     }
 
-    public final Pattern renderString(String str, HPosition align) {
+    public final Pattern renderString(String str, AlignH align) {
         if ( str==null || str.isEmpty() ) {
             return new Pattern(1,1);
         }

@@ -2,8 +2,6 @@ package net.amarantha.lightboard.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.lang.Thread.NORM_PRIORITY;
 

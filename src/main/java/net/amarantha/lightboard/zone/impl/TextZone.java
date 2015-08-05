@@ -13,8 +13,8 @@ public class TextZone extends LightBoardZone {
 
     private Edge defaultScrollFrom;
     private Edge defaultScrollTo;
-    private HPosition defaultRestH;
-    private VPosition defaultRestV;
+    private AlignH defaultRestH;
+    private AlignV defaultRestV;
     private int defaultRestDuration;
 
     public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration) {
@@ -25,8 +25,8 @@ public class TextZone extends LightBoardZone {
         super(surface);
         defaultScrollFrom = scrollFrom;
         defaultScrollTo = scrollTo;
-        defaultRestH = HPosition.CENTRE;
-        defaultRestV = VPosition.MIDDLE;
+        defaultRestH = AlignH.CENTRE;
+        defaultRestV = AlignV.MIDDLE;
         defaultRestDuration = restDuration;
         setDefaults();
         this.font = font;
@@ -58,19 +58,19 @@ public class TextZone extends LightBoardZone {
     }
 
     public static TextZone scrollLeft(LightBoardSurface s) {
-        return new TextZone(s, Edge.RIGHT_EDGE, Edge.LEFT_EDGE, 3000, new SimpleFont());
+        return new TextZone(s, Edge.RIGHT, Edge.LEFT, 3000, new SimpleFont());
     }
 
     public static TextZone scrollRight(LightBoardSurface s) {
-        return new TextZone(s, Edge.LEFT_EDGE, Edge.RIGHT_EDGE, 3000, new SimpleFont());
+        return new TextZone(s, Edge.LEFT, Edge.RIGHT, 3000, new SimpleFont());
     }
 
     public static TextZone scrollUp(LightBoardSurface s) {
-        return new TextZone(s, Edge.BOTTOM_EDGE, Edge.TOP_EDGE, 3000, new SimpleFont());
+        return new TextZone(s, Edge.BOTTOM, Edge.TOP, 3000, new SimpleFont());
     }
 
     public static TextZone scrollDown(LightBoardSurface s) {
-        return new TextZone(s, Edge.TOP_EDGE, Edge.BOTTOM_EDGE, 3000, new SimpleFont());
+        return new TextZone(s, Edge.TOP, Edge.BOTTOM, 3000, new SimpleFont());
     }
 
 
@@ -89,7 +89,7 @@ public class TextZone extends LightBoardZone {
             }
             MessageWrapper message = getCurrentMessage();
             if ( !message.equals(lastMessage) ) {
-                pattern = font.renderString(message.getMessage(), message.getHPosition());
+                pattern = font.renderString(message.getMessage(), message.setAlignH());
             }
             return drawPattern(0, 0, pattern, true);
 //        }
@@ -180,7 +180,7 @@ public class TextZone extends LightBoardZone {
         overrideMessage = message;
         resting = false;
         scroll(message.getScrollFrom(), message.getScrollTo());
-        setRestPosition(message.getHPosition(), message.getVPosition());
+        setRestPosition(message.setAlignH(), message.setAlignV());
         setRestDuration(message.getRestDuration());
         resetScroll();
         rendered = false;

@@ -3,8 +3,6 @@ package net.amarantha.lightboard.scene.impl;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.updater.Updater;
-import net.amarantha.lightboard.updater.UpdaterBundle;
 import net.amarantha.lightboard.updater.transport.BusTimesUpdater;
 import net.amarantha.lightboard.updater.transport.TubeStatusUpdater;
 import net.amarantha.lightboard.updater.weather.WeatherUpdater;

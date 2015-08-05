@@ -1,5 +1,5 @@
 package net.amarantha.lightboard.entity;
 
-public enum VPosition {
+public enum AlignV {
     TOP, MIDDLE, BOTTOM
 }

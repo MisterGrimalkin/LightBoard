@@ -18,7 +18,7 @@ public class LongDateScene extends Scene {
     @Override
     public void build() {
 
-        TextZone dateZone = new TextZone(getSurface(), Edge.BOTTOM_EDGE, Edge.TOP_EDGE, 3000);
+        TextZone dateZone = new TextZone(getSurface(), Edge.BOTTOM, Edge.TOP, 3000);
         dateZone.setRegion(0, 0, getCols(), getRows())
                 .setScrollTick(30)
                 .addScrollCompleteHandler(SceneManager::advanceScene);
