@@ -5,7 +5,7 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import net.amarantha.lightboard.board.ColourSwitcher;
-import net.amarantha.lightboard.board.RGBLightBoard;
+import net.amarantha.lightboard.board.LightBoard;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static net.amarantha.lightboard.entity.Colour.*;
 /**
  * Second implementation using RaspPi - this one for the Greenpeace field at Glastonbury 2015
  */
-public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
+public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
 
     private final int rows;
     private final int cols;
@@ -84,13 +84,9 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
         digitalWrite(data2R, true);
         digitalWrite(data2G, true);
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true) {
-                    push();
-//                    System.out.println("Pushed!");
-                }
+        Thread t = new Thread(() -> {
+            while(true) {
+                push();
             }
         });
         t.setPriority(Thread.MAX_PRIORITY);
@@ -104,57 +100,11 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
     private static final int GREEN_MODE = 2;
     private static final int YELLOW_MODE = 3;
 
-    private boolean cycleColours = false;
     private int colour = MULTI_MODE;
 
-    private long t = 0;
-    private long colourChangePeriod = 30000;
-
-
-    /////////////////
-    // Binary Data //
-    /////////////////
 
     @Override
-    public void dump(boolean[][] data) {
-        throw new UnsupportedOperationException("This board no longer supports binary dumps");
-//        try {
-//            for (int row = 0; row < rows/2; row++) {
-//                sendSerialString(data[row], data[row+rows/2]);
-//                digitalWrite(output, true);
-//                decodeRowAddress(row);
-//                digitalWrite(store, true);
-//                digitalWrite(store, false);
-//                digitalWrite(output, false);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    private void sendSerialString(boolean[] data1, boolean[] data2) throws InterruptedException {
-        for (int col = 0; col < data1.length ; col++) {
-            digitalWrite(clock, false);
-            if (colour != GREEN_MODE) {
-                digitalWrite(data1R, !data1[col]);      // on this board the serial data is inverted
-                digitalWrite(data2R, !data2[col]);
-            }
-            if (colour != RED_MODE) {
-                digitalWrite(data1G, !data1[col]);
-                digitalWrite(data2G, !data2[col]);
-            }
-            digitalWrite(clock, true);
-        }
-    }
-
-
-    /////////////////
-    // Colour Data //
-    /////////////////
-
-    @Override
-    public void dump(double[][][] data) {
-//        refreshing = true;
+    public void update(double[][][] data) {
         nextFrame = new double[3][rows][cols];
         for ( int r=0; r<rows; r++ ) {
             for ( int c=0; c<cols; c++ ) {
@@ -163,15 +113,10 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
                 nextFrame[2][r][c] = data[2][r][c];
             }
         }
-        refreshing = false;
     }
 
-    private boolean refreshing = false;
-
     public void push() {
-        if (!refreshing) {
-            currentFrame = nextFrame;
-        }
+        currentFrame = nextFrame;
         try {
             for (int row = 0; row < rows/2; row++) {
                 sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
@@ -272,7 +217,7 @@ public class RaspPiGlastoLightBoard implements RGBLightBoard, ColourSwitcher {
     private Boolean lastAddress3 = null;
 
     @Override
-    public Long getRefreshInterval() {
+    public Long getUpdateInterval() {
         return 10L;
     }
 

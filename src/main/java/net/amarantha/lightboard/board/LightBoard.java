@@ -11,17 +11,17 @@ public interface LightBoard {
     void init();
 
     /**
-     * Push the supplied data to the physical display
-     * @param data Current LightBoardSurface state - indexed: [row][col]
+     * Push the supplied RGB data to the physical display
+     * @param data Current LightBoardSurface state - indexed: [colour(0=R,1=G,2=B)][row][col]
      */
-    void dump(boolean[][] data);
+    void update(double[][][] data);
 
     /**
-     * Indicates how often the LightBoard should receive data via dump(...)
+     * Indicates how often the LightBoard should receive data via update(...)
      * Return <code>null</code> to update the board as often as possible
      * @return
      */
-    Long getRefreshInterval();
+    Long getUpdateInterval();
 
     /**
      * Height of the physical board in pixels

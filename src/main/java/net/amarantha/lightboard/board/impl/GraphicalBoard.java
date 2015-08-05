@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.board.RGBLightBoard;
 import net.amarantha.lightboard.util.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
@@ -22,7 +21,7 @@ import static net.amarantha.lightboard.entity.Colour.*;
 /**
  * UI Simulation of a colour LightBoard
  */
-public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
+public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
     private final static Long LED_REFRESH_TIME = 60L;
 
@@ -109,6 +108,11 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
 
     }
 
+
+    ///////////
+    // Mouse //
+    ///////////
+
     private void addMouseHandlers(final Pane pane) {
 
         // Drag window by holding button down anywhere inside it
@@ -125,7 +129,7 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
             dragOffsetY = null;
         });
 
-        // CTRL+SHIFT+MOUSE-CLICK => dump board state to console
+        // CTRL+SHIFT+MOUSE-CLICK => update board state to console
         pane.setOnMouseClicked((e) -> {
             if (e.isControlDown() && e.isShiftDown()) {
                 dumpToDebug = !dumpToDebug;
@@ -157,15 +161,14 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
     private Double dragOffsetY = null;
 
 
-    ///////////////////////
-    // Colour LightBoard //
-    ///////////////////////
+    ////////////////
+    // LightBoard //
+    ////////////////
 
     @Override
-    public void dump(double[][][] data) {
-        if (allowPoly && dumpToDebug && debugBoard != null) {
-            RGBLightBoard pBoard = (RGBLightBoard) debugBoard;
-            pBoard.dump(data);
+    public void update(double[][][] data) {
+        if (dumpToDebug && debugBoard != null) {
+            debugBoard.update(data);
             dumpToDebug = false;
         }
         for (int r = 0; r < data[0].length; r++) {
@@ -198,43 +201,12 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
     private boolean colourOverride = false;
 
 
-    ///////////////////////
-    // Binary LightBoard //
-    ///////////////////////
-
-    @Override
-    public synchronized void dump(boolean[][] data) {
-        if (dumpToDebug && debugBoard != null) {
-            debugBoard.dump(data);
-            dumpToDebug = false;
-        }
-        for (int r = 0; r < data.length; r++) {
-            dumpBinaryRow(r, data[r]);
-        }
-    }
-
-    private void dumpBinaryRow(int rowNumber, boolean... rowData) {
-        Circle[] rowLights = leds[rowNumber];
-        for (int c = 0; c < rowLights.length; c++) {
-            double red = rowData[c] ? redMax : redMin;
-            double green = rowData[c] ? greenMax : greenMin;
-            double blue = rowData[c] ? blueMax : blueMin;
-            if (rowLights[c] != null) {
-                Color color = Color.color(red, green, blue);
-                if (!rowLights[c].getFill().equals(color)) {
-                    rowLights[c].setFill(color);
-                }
-            }
-        }
-    }
-
-
     /////////////////////////
     // Board Specification //
     /////////////////////////
 
     @Override
-    public Long getRefreshInterval() {
+    public Long getUpdateInterval() {
         return LED_REFRESH_TIME;
     }
 
@@ -257,21 +229,9 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
     }
 
 
-    ///////////////
-    // Debugging //
-    ///////////////
-
-    private boolean dumpToDebug = false;
-    private LightBoard debugBoard;
-    private boolean allowPoly = false;
-
-    public GraphicalBoard debugTo(LightBoard debugBoard) {
-        this.debugBoard = debugBoard;
-        if (debugBoard instanceof RGBLightBoard) {
-            allowPoly = true;
-        }
-        return this;
-    }
+    /////////////////////
+    // Colour Override //
+    /////////////////////
 
     @Override
     public List<String> getSupportedColours() {
@@ -327,6 +287,19 @@ public class GraphicalBoard implements RGBLightBoard, ColourSwitcher {
             blueMin = 0.05;
             blueMax = 1.0;
         }
+    }
+
+
+    ///////////////
+    // Debugging //
+    ///////////////
+
+    private boolean dumpToDebug = false;
+    private LightBoard debugBoard;
+
+    public GraphicalBoard debugTo(LightBoard debugBoard) {
+        this.debugBoard = debugBoard;
+        return this;
     }
 
 }

@@ -80,7 +80,17 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
     private long colourChangePeriod = 30000;
 
     @Override
-    public void dump(boolean[][] data) {
+    public void update(double[][][] data) {
+        boolean[][] boolData = new boolean[rows][cols];
+        for ( int r=0; r<rows; r++ ) {
+            for ( int c=0; c<cols; c++ ) {
+                boolData[r][c] = data[0][r][c] >= 0.5 || data[1][r][c] >= 0.5 || data[2][r][c] >= 0.5;
+            }
+        }
+        update(boolData);
+    }
+
+    public void update(boolean[][] data) {
         if ( cycleColours && System.currentTimeMillis()-t > colourChangePeriod) {
             colour++;
             if ( colour> YELLOW_MODE) colour = RED_MODE;
@@ -175,7 +185,7 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
     private Boolean lastAddress3 = null;
 
     @Override
-    public Long getRefreshInterval() {
+    public Long getUpdateInterval() {
         return null;
     }
 

@@ -1,11 +1,11 @@
 package net.amarantha.lightboard.board.impl;
 
-import net.amarantha.lightboard.board.RGBLightBoard;
+import net.amarantha.lightboard.board.LightBoard;
 
 /**
  * Simple implementation of a colour LightBoard that dumps board state to the console
  */
-public class TextBoard implements RGBLightBoard {
+public class TextBoard implements LightBoard {
 
     private final int rows;
     private final int cols;
@@ -21,19 +21,7 @@ public class TextBoard implements RGBLightBoard {
     }
 
     @Override
-    public void dump(boolean[][] data) {
-        for ( int r=0; r<rows; r++ ) {
-            System.out.print((r<10?"0":"")+r+":");
-            for ( int c=0; c<cols; c++ ) {
-                System.out.print(data[r][c] ? "#" : "-");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    @Override
-    public void dump(double[][][] data) {
+    public void update(double[][][] data) {
         StringBuilder sb = new StringBuilder();
         for ( int r=0; r<rows; r++ ) {
             sb.append((r < 10 ? "0" : "") + r + ":");
@@ -50,7 +38,7 @@ public class TextBoard implements RGBLightBoard {
     }
 
     @Override
-    public Long getRefreshInterval() {
+    public Long getUpdateInterval() {
         return 250L;
     }
 

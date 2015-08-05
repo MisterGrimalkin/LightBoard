@@ -1,15 +1,32 @@
 package net.amarantha.lightboard.board.impl;
 
-public class CLightBoard {
+import net.amarantha.lightboard.board.LightBoard;
 
-    native void init();
-
-    native void dump(double[][][] data);
+public class CLightBoard implements LightBoard {
 
     static {
-//        System.out.println(System.getProperty("java.library.path"));
         System.loadLibrary("lightboard");
-//        System.load("/home/pi/lib/liblightboard.so");
+    }
+
+    @Override
+    public native void init();
+
+    @Override
+    public native void update(double[][][] data);
+
+    @Override
+    public Long getUpdateInterval() {
+        return 10L;
+    }
+
+    @Override
+    public int getRows() {
+        return 32;
+    }
+
+    @Override
+    public int getCols() {
+        return 192;
     }
 
 }
