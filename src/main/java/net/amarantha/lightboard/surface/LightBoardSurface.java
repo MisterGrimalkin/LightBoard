@@ -4,33 +4,26 @@ import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.util.Sync;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-/**
- * The surface holds the state and writes to the board
- */
 public class LightBoardSurface {
 
     private int rows;
     private int cols;
 
-    protected Region boardRegion;
-
-    private boolean[][] ledStatus;
+    private double[][][] ledPolyValue;
 
     private final LightBoard[] boards;
 
+    protected Region boardRegion;
+
     public LightBoardSurface(LightBoard... boards) {
-
         this.boards = boards;
-
         if ( boards.length>0 ) {
 
             LightBoard firstBoard = boards[0];
             rows = firstBoard.getRows();
             cols = firstBoard.getCols();
-            ledStatus = new boolean[rows][cols];
+
+            ledPolyValue = new double[3][rows][cols];
 
             boardRegion = safeRegion(0, 0, cols, rows);
 
@@ -44,13 +37,18 @@ public class LightBoardSurface {
         }
     }
 
+
+    ///////////////////
+    // Light Control //
+    ///////////////////
+
     public LightBoardSurface init() {
-        System.out.println("Starting LightBoard Surface....");
-        for ( final LightBoard board : boards ) {
+        System.out.println("Starting LightBoardSurface....");
+        for (final LightBoard board : boards) {
             Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
                 @Override
                 public void runTask() {
-//                    board.update(ledStatus);
+                    board.update(ledPolyValue);
                 }
             });
         }
@@ -58,35 +56,37 @@ public class LightBoardSurface {
         return this;
     }
 
-
-    ///////////////////
-    // Light Control //
-    ///////////////////
-
     public boolean isOn(int x, int y) {
-        return pointInRegion(x, y, boardRegion) && ledStatus[y][x];
+        return pointInRegion(x, y, boardRegion)
+                && (
+                           ledPolyValue[0][y][x] >= 0.5
+                        || ledPolyValue[1][y][x] >= 0.5
+                        || ledPolyValue[2][y][x] >= 0.5
+                )
+        ;
     }
 
     public boolean drawPoint(int x, int y) {
-        return drawPoint(x, y, boardRegion);
-    }
-
-    public boolean drawPoint(int x, int y, Region r) {
-        if ( pointInRegion(x, y, r) ) {
-            ledStatus[y][x] = true;
-            return true;
-        } else {
-            return false;
-        }
+        return drawPoint(x, y, 1.0, 1.0, 1.0, boardRegion);
     }
 
     public boolean clearPoint(int x, int y) {
-        return clearPoint(x, y, boardRegion);
+        return drawPoint(x, y, 0.0, 0.0, 0.0, boardRegion);
+    }
+
+    public boolean drawPoint(int x, int y, Region r) {
+        return drawPoint(x, y, 1.0, 1.0, 1.0, r);
     }
 
     public boolean clearPoint(int x, int y, Region r) {
+        return drawPoint(x, y, 0.0, 0.0, 0.0, r);
+    }
+
+    public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
         if ( pointInRegion(x, y, r) ) {
-            ledStatus[y][x] = false;
+            ledPolyValue[0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
+            ledPolyValue[1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
+            ledPolyValue[2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
             return true;
         } else {
             return false;
@@ -100,16 +100,17 @@ public class LightBoardSurface {
         return drawPattern(xPos, yPos, pattern, false, r);
     }
 
+
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
         boolean changed = false;
-        boolean[][] chr = pattern.getBinaryValues();
-        if ( chr.length>0 && chr[0].length> 0 ) {
-            for (int x = 0; x < chr[0].length; x++) {
-                for (int y = 0; y < chr.length; y++) {
-                    if (chr[y][x]) {
-                        changed |= drawPoint(x + xPos, y + yPos, r);
-                    } else if ( clearBackground ) {
-                        changed |= clearPoint(x + xPos, y + yPos, r);
+        double[][][] chr = pattern.getColourValues();
+        if ( chr.length>=3 && chr[0].length>0 && chr[0][0].length> 0 ) {
+            for (int x = 0; x < getCols(); x++) {
+                for (int y = 0; y < getRows(); y++) {
+                    if ( x-xPos >= 0 && x-xPos < chr[0][0].length && y-yPos >= 0 && y-yPos < chr[0].length ) {
+                        int imgCol = x-xPos;
+                        int imgRow = y-yPos;
+                        changed |= drawPoint(x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
                     }
                 }
             }
@@ -229,81 +230,5 @@ public class LightBoardSurface {
     // Self Test //
     ///////////////
 
-    double testX = 0;
-    double testY = 0;
-    int testDeltaX = 1;
-    int testDeltaY = 1;
-    int testBounces = 0;
-    boolean testInvert = false;
-
-    private boolean[][] testPattern =
-                    {{true,false,true},
-                    {false,true,false},
-                    {true,false,true}};
-
-    public void selfTest() {
-        selfTest(20, 0.5);
-    }
-
-    public void selfTest(int tick, final double speed) {
-
-        final Pattern testPat = new Pattern(testPattern);
-
-        new Timer(true).schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                clearSurface();
-
-                int floorX = (int) Math.floor(testX);
-                int floorY = (int) Math.floor(testY);
-
-                fillRegion(safeRegion(0, floorY, getCols(), 1));
-                fillRegion(safeRegion(floorX, 0, 1, getRows()));
-
-                outlineRegion(safeRegion(floorX + 2, floorY + 2, 3, 3));
-                fillRegion(safeRegion(floorX - 4, floorY - 4, 3, 3));
-                clearPoint(floorX - 3, floorY - 3);
-
-                drawPattern(floorX - 4, floorY + 2, testPat);
-                drawPattern(floorX + 2, floorY - 4, testPat);
-
-                drawPoint(floorX - 4, floorY - 5);
-                drawPoint(floorX - 4, floorY + 5);
-                drawPoint(floorX + 4, floorY - 5);
-                drawPoint(floorX + 4, floorY + 5);
-                drawPoint(floorX - 5, floorY - 4);
-                drawPoint(floorX - 5, floorY + 4);
-                drawPoint(floorX + 5, floorY - 4);
-                drawPoint(floorX + 5, floorY + 4);
-
-                if (testInvert) {
-                    invertRegion(boardRegion);
-                }
-
-                if (floorX < 0 || floorX >= getCols()) {
-                    testX = floorX - testDeltaX;
-                    testDeltaX = -testDeltaX;
-                    testBounces++;
-                }
-
-                if (floorY < 0 || floorY >= getRows()) {
-                    testY = floorY - testDeltaY;
-                    testDeltaY = -testDeltaY;
-                    testBounces++;
-                }
-
-                if (testBounces > 9) {
-                    testInvert = !testInvert;
-                    testBounces = 0;
-                }
-
-                testX = testX + (testDeltaX * speed);
-                testY = testY + (testDeltaY * speed);
-
-            }
-        },100,tick);
-
-    }
 
 }

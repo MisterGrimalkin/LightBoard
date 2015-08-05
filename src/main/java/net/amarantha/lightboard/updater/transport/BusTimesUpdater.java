@@ -68,12 +68,6 @@ public class BusTimesUpdater extends Updater {
         rightDestinationZone.clearMessages();
         rightTimesZone.clearMessages();
 
-//        busNumberZone.advanceMessage();
-//        leftDestinationZone.advanceMessage();
-//        leftTimesZone.advanceMessage();
-//        rightDestinationZone.advanceMessage();
-//        rightTimesZone.advanceMessage();
-
         Thread thread = new Thread(() -> {
 
             busNumberZone.resetScroll();
@@ -97,6 +91,12 @@ public class BusTimesUpdater extends Updater {
 
             for ( Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet() ) {
 
+                busNumberZone.setMaxMessagesPerSource(sourceId, 1);
+                leftDestinationZone.setMaxMessagesPerSource(sourceId, 1);
+                leftTimesZone.setMaxMessagesPerSource(sourceId, 1);
+                rightDestinationZone.setMaxMessagesPerSource(sourceId, 1);
+                rightTimesZone.setMaxMessagesPerSource(sourceId, 1);
+
                 busNumberZone.clearMessages(sourceId);
                 leftDestinationZone.clearMessages(sourceId);
                 leftTimesZone.clearMessages(sourceId);
@@ -116,6 +116,7 @@ public class BusTimesUpdater extends Updater {
                         rightDestinationZone.addMessage(sourceId, "{red}Buses");
                         rightTimesZone.addMessage(sourceId, "{red}Returned!");
                     } else {
+
 
                         int direction = 1;
 

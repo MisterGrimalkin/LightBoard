@@ -7,8 +7,11 @@ import net.amarantha.lightboard.board.impl.CLightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.board.impl.RaspPiGlastoLightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
+import net.amarantha.lightboard.scene.impl.ImageScene;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.surface.RGBLightBoardSurface;
+import net.amarantha.lightboard.surface.CompositeSurface;
+import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.surface.SelfTest;
 import net.amarantha.lightboard.webservice.BroadcastMessageResource;
 import net.amarantha.lightboard.webservice.ColourResource;
 import net.amarantha.lightboard.webservice.SystemResource;
@@ -60,17 +63,17 @@ public class Main extends Application {
         }
         board.init();
 
-        RGBLightBoardSurface surface;
+        LightBoardSurface surface;
         if ( debugBoard ) {
-            surface = new RGBLightBoardSurface(board, new TextBoard(ROWS, COLS));
+            surface = new LightBoardSurface(board, new TextBoard(ROWS, COLS));
         } else {
-            surface = new RGBLightBoardSurface(board);
+            surface = new LightBoardSurface(board);
         }
         surface.init();
 
-        if ( getParameters().getUnnamed().contains("self-test") ) {
+        if ( getParameters().getUnnamed().contains("selftest") ) {
             System.out.println("Self Test...");
-            surface.selfTest();
+            new SelfTest(surface).run();
         } else {
 
 //            addScene(0, new WebServiceMessageScene(surface));

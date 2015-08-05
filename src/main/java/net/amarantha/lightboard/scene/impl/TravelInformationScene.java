@@ -1,5 +1,8 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
+import net.amarantha.lightboard.font.ShowerFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -12,9 +15,8 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 
 public class TravelInformationScene extends Scene {
 
-    private static final int BUS_NUMBER_WIDTH = 20;
-    private static final int CLOCK_WIDTH = 23;
-
+    private static final int BUS_NUMBER_WIDTH = 24;
+    private static final int CLOCK_WIDTH = 20;
 
     private static final int BUSES_HEIGHT = 18;
     private static final int TUBE_HEIGHT = 8;
@@ -31,32 +33,34 @@ public class TravelInformationScene extends Scene {
         int busFrameWidth = (getCols()-CLOCK_WIDTH-BUS_NUMBER_WIDTH)/2;
 
         // Bus Arrivals
-        TextZone busNumber = TextZone.scrollUp(getSurface());
-        busNumber.setScrollTick(60).setRestDuration(3500)
+        TextZone busNumber = TextZone.scrollRight(getSurface());
+        busNumber.setFont(new ShowerFont()).setScrollTick(60).setRestDuration(3200)
+                .setRestPosition(AlignH.CENTRE, AlignV.MIDDLE)
+                .masterDelta(2)
                 .setRegion(
-                        0, BUSES_HEIGHT/4,
-                        BUS_NUMBER_WIDTH, BUSES_HEIGHT/2);
+                        0, 0,
+                        BUS_NUMBER_WIDTH, BUSES_HEIGHT - 2);
 
         TextZone busDestinationLeft = TextZone.scrollUp(getSurface());
-        busDestinationLeft.setScrollTick(60).setRestDuration(3500)
+        busDestinationLeft.setScrollTick(60).setRestDuration(3400)
                 .setRegion(
                         BUS_NUMBER_WIDTH, 0,
                         busFrameWidth, BUSES_HEIGHT/2);
 
         TextZone busTimesLeft = TextZone.scrollDown(getSurface());
-        busTimesLeft.setScrollTick(60).setRestDuration(3500)
+        busTimesLeft.setScrollTick(60).setRestDuration(3400)
                 .setRegion(
                         BUS_NUMBER_WIDTH, BUSES_HEIGHT/2,
                         busFrameWidth, BUSES_HEIGHT/2);
 
         TextZone busDestinationRight = TextZone.scrollUp(getSurface());
-        busDestinationRight.setScrollTick(60).setRestDuration(3500)
+        busDestinationRight.setScrollTick(60).setRestDuration(3600)
                 .setRegion(
                         BUS_NUMBER_WIDTH + busFrameWidth, 0,
                         busFrameWidth, BUSES_HEIGHT/2);
 
         TextZone busTimesRight = TextZone.scrollDown(getSurface());
-        busTimesRight.setScrollTick(60).setRestDuration(3500)
+        busTimesRight.setScrollTick(60).setRestDuration(3600)
                 .setRegion(
                         BUS_NUMBER_WIDTH + busFrameWidth, BUSES_HEIGHT/2,
                         busFrameWidth, BUSES_HEIGHT/2);

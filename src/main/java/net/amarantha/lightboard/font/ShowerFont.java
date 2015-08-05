@@ -15,8 +15,14 @@ public class ShowerFont extends Font {
         registerPattern('7', SEVEN);
         registerPattern('8', EIGHT);
         registerPattern('9', NINE);
+
+        registerPattern('C', C);
+        registerPattern('N', N);
+        registerPattern('W', W);
+
         registerPattern('F', FEMALE);
         registerPattern('M', MALE);
+
         registerPattern(' ', SPACE);
         registerPattern('*', DIAMOND);
     }
@@ -200,6 +206,60 @@ public class ShowerFont extends Font {
                 "##----##" +
                 "-######-" +
                 "--####--" );
+
+    private final static Pattern C =
+            new Pattern(8,
+                "--------" +
+                "--######" +
+                "-#######" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "##------" +
+                "###-----" +
+                "########" +
+                "--######" );
+
+    private final static Pattern N =
+            new Pattern(8,
+                "--------" +
+                "##----##" +
+                "##----##" +
+                "##----##" +
+                "###---##" +
+                "####--##" +
+                "####--##" +
+                "##-##-##" +
+                "##-##-##" +
+                "##--####" +
+                "##---###" +
+                "##----##" +
+                "##----##" +
+                "##----##" +
+                "##----##" );
+
+    private final static Pattern W =
+            new Pattern(10,
+                "----------" +
+                "##------##" +
+                "##------##" +
+                "##------##" +
+                "##------##" +
+                "##------##" +
+                "##------##" +
+                "##--##--##" +
+                "##--##--##" +
+                "##--##--##" +
+                "##--##--##" +
+                "##--##--##" +
+                "##--##--##" +
+                "##########" +
+                "-###--##--" );
 
     private final static Pattern FEMALE =
             new Pattern(10,

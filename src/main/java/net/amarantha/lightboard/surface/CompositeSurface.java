@@ -1,8 +1,14 @@
 package net.amarantha.lightboard.surface;
 
+import net.amarantha.lightboard.entity.Pattern;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is an attempt to bind several surfaces together into one.
+ * It doesn't quite work yet.
+ */
 public class CompositeSurface extends LightBoardSurface {
 
     private final int rows;
@@ -31,6 +37,16 @@ public class CompositeSurface extends LightBoardSurface {
     }
 
     @Override
+    public boolean drawPoint(int x, int y) {
+        return drawPoint(x, y, boardRegion);
+    }
+
+    @Override
+    public boolean clearPoint(int x, int y) {
+        return clearPoint(x, y, boardRegion);
+    }
+
+    @Override
     public boolean drawPoint(int x, int y, Region r) {
         if ( pointInRegion(x, y, r) ) {
             InnerSurface s = getInnerSurface(x, y);
@@ -52,6 +68,7 @@ public class CompositeSurface extends LightBoardSurface {
         return false;
     }
 
+
     @Override
     public boolean clearSurface() {
         boolean drawn = false;
@@ -59,6 +76,54 @@ public class CompositeSurface extends LightBoardSurface {
             drawn |= s.surface.clearSurface();
         }
         return drawn;
+    }
+
+    @Override
+    public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
+        if ( pointInRegion(x, y, r) ) {
+            InnerSurface s = getInnerSurface(x, y);
+            if (s != null) {
+                s.surface.drawPoint(s.relativeX(x), s.relativeY(y), red, green, blue, r);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean drawPattern(int xPos, int yPos, Pattern pattern) {
+        return drawPattern(xPos, yPos, pattern, true, boardRegion);
+    }
+
+    @Override
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, Region r) {
+        return drawPattern(xPos, yPos, pattern, true, r);
+    }
+
+    @Override
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
+        if ( pointInRegion(xPos, yPos, r) ) {
+            InnerSurface s = getInnerSurface(xPos, yPos);
+            if (s != null) {
+                s.surface.drawPattern(s.relativeX(xPos), s.relativeY(yPos), pattern, clearBackground, r);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean clearPattern(int xPos, int yPos, boolean[][] chr) {
+        return clearPattern(xPos, yPos, chr, boardRegion);
+    }
+
+    @Override
+    public boolean clearPattern(int xPos, int yPos, boolean[][] chr, Region r) {
+        if ( pointInRegion(xPos, yPos, r) ) {
+            InnerSurface s = getInnerSurface(xPos, yPos);
+            if (s != null) {
+                s.surface.clearPattern(s.relativeX(xPos), s.relativeY(yPos), chr, r);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -78,6 +143,11 @@ public class CompositeSurface extends LightBoardSurface {
     public int getCols() {
         return cols;
     }
+
+
+    ///////////////////
+    // Inner Surface //
+    ///////////////////
 
     private InnerSurface getInnerSurface(int x, int y) {
         for ( InnerSurface s : innerSurfaces ) {
@@ -115,6 +185,5 @@ public class CompositeSurface extends LightBoardSurface {
             return new Region(r.left-surfaceX, r.top-surfaceY, r.width, r.height);
         }
     }
-
 
 }

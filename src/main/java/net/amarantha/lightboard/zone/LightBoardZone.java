@@ -5,7 +5,6 @@ import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.surface.RGBLightBoardSurface;
 import net.amarantha.lightboard.surface.Region;
 import net.amarantha.lightboard.util.Sync;
 
@@ -23,7 +22,7 @@ public abstract class LightBoardZone {
     protected LightBoardZone(LightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
-        if ( surface instanceof RGBLightBoardSurface) {
+        if ( surface instanceof LightBoardSurface) {
             boardType = BoardType.COLOUR;
         } else {
             boardType = BoardType.BINARY;
@@ -113,12 +112,15 @@ public abstract class LightBoardZone {
     private int restX = 0;
     private int restY = 0;
 
-    private final static int DELTA = 1;
+    private int masterDelta = 1;
 
     private int deltaX = 0;
     private int deltaY = 0;
 
+    private Scrolling currentScrollMode;
+
     private void initScroll(Scrolling scrolling) {
+        currentScrollMode = scrolling;
         switch ( scrolling ) {
             case OUT:
                 prepareScrollOut();
@@ -157,24 +159,24 @@ public abstract class LightBoardZone {
                 contentLeft = restX;
                 contentTop = -getContentHeight();
                 deltaX = 0;
-                deltaY = DELTA;
+                deltaY = masterDelta;
                 break;
             case LEFT:
                 contentLeft = -getContentWidth();
                 contentTop = restY;
-                deltaX = DELTA;
+                deltaX = masterDelta;
                 deltaY = 0;
                 break;
             case BOTTOM:
                 contentLeft = restX;
                 contentTop = region.height;
                 deltaX = 0;
-                deltaY = -DELTA;
+                deltaY = -masterDelta;
                 break;
             case RIGHT:
                 contentLeft = region.width;
                 contentTop = restY;
-                deltaX = -DELTA;
+                deltaX = -masterDelta;
                 deltaY = 0;
                 break;
             case NO_SCROLL:
@@ -190,18 +192,18 @@ public abstract class LightBoardZone {
         switch (scrollTo) {
             case TOP:
                 deltaX = 0;
-                deltaY = -DELTA;
+                deltaY = -masterDelta;
                 break;
             case LEFT:
-                deltaX = -DELTA;
+                deltaX = -masterDelta;
                 deltaY = 0;
                 break;
             case BOTTOM:
                 deltaX = 0;
-                deltaY = DELTA;
+                deltaY = masterDelta;
                 break;
             case RIGHT:
-                deltaX = DELTA;
+                deltaX = masterDelta;
                 deltaY = 0;
                 break;
             case NO_SCROLL:
@@ -253,8 +255,9 @@ public abstract class LightBoardZone {
                         )
                 )
                 && getContentHeight()<=region.height
-                && contentLeft == restX
-                && contentTop == restY;
+                && Math.abs(contentLeft - restX) < masterDelta
+                && Math.abs(contentTop-restY) < masterDelta
+                && currentScrollMode.equals(Scrolling.IN);
     }
 
     protected void doRender() {
@@ -332,6 +335,11 @@ public abstract class LightBoardZone {
 
     public LightBoardZone region(Region region) {
         this.region = region;
+        return this;
+    }
+
+    public LightBoardZone masterDelta(int d) {
+        masterDelta = d;
         return this;
     }
 
