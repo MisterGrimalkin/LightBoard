@@ -17,6 +17,7 @@ public class Main extends Application {
         boolean simulationMode = Arrays.asList(args).contains("simulation");
 
         if ( simulationMode ) {
+            // Launch application via JavaFX
             launch(args);
         } else {
             Guice.createInjector(new ApplicationModule())
@@ -29,8 +30,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Guice.createInjector(
-            override(
-                new ApplicationModule()).with(new SimulationModule(primaryStage))
+            override(new ApplicationModule())
+                    .with(new SimulationModule(primaryStage))
             )
             .getInstance(LightBoardApplication.class)
                 .startApplication();

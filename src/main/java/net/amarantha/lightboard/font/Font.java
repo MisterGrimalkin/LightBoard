@@ -12,6 +12,8 @@ import static net.amarantha.lightboard.entity.AlignH.*;
 public class Font {
 
     public final static char NL = '\n';
+    public final static char OPEN_TAG = '{';
+    public final static char CLOSE_TAG = '}';
 
     private Map<Character, Pattern> chars = new HashMap<>();
 
@@ -50,11 +52,11 @@ public class Font {
         for ( int i=0; i<str.length(); i++ ) {
             char c = str.charAt(i);
             if ( inTag ) {
-                if ( c=='}' ) {
+                if ( c==CLOSE_TAG ) {
                     inTag = false;
                 }
             } else {
-                if ( c=='{' ) {
+                if ( c==OPEN_TAG ) {
                     inTag = true;
                 } else {
                     if (i == str.length() - 1) {
@@ -79,11 +81,11 @@ public class Font {
         for ( int i=0; i<str.length(); i++ ) {
             char c = str.charAt(i);
             if ( inTag ) {
-                if ( c=='}' ) {
+                if ( c==CLOSE_TAG ) {
                     inTag = false;
                 }
             } else {
-                if ( c=='{' ) {
+                if ( c==OPEN_TAG ) {
                     inTag = true;
                 } else {
                     rowHeight = Math.max(rowHeight, getHeight(c));
@@ -119,7 +121,7 @@ public class Font {
             for ( int c=0; c<str.length(); c++ ) {
                 char chr = str.charAt(c);
                 if ( inTag ) {
-                    if ( chr=='}' ) {
+                    if ( chr==CLOSE_TAG ) {
                         if ( "red".equals(tag) ) {
                             result.setPenColour(new Colour(1.0,0.0,0.0));
                         } else if ( "green".equals(tag) ) {
@@ -133,7 +135,7 @@ public class Font {
                         tag += chr;
                     }
                 } else {
-                    if ( chr=='{' ) {
+                    if ( chr==OPEN_TAG ) {
                         inTag = true;
                         penMode = true;
                     } else {

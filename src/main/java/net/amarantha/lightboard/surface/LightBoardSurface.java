@@ -13,7 +13,7 @@ public class LightBoardSurface {
     private int rows;
     private int cols;
 
-    private double[][][] ledPolyValue;
+    private double[][][] ledState;
 
     private final LightBoard board;
 
@@ -26,7 +26,7 @@ public class LightBoardSurface {
         rows = board.getRows();
         cols = board.getCols();
 
-        ledPolyValue = new double[3][rows][cols];
+        ledState = new double[3][rows][cols];
 
         boardRegion = safeRegion(0, 0, cols, rows);
 
@@ -43,7 +43,7 @@ public class LightBoardSurface {
         Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
             @Override
             public void runTask() {
-                board.update(ledPolyValue);
+                board.update(ledState);
             }
         });
         System.out.println("Surface Active");
@@ -53,9 +53,9 @@ public class LightBoardSurface {
     public boolean isOn(int x, int y) {
         return pointInRegion(x, y, boardRegion)
                 && (
-                           ledPolyValue[0][y][x] >= 0.5
-                        || ledPolyValue[1][y][x] >= 0.5
-                        || ledPolyValue[2][y][x] >= 0.5
+                           ledState[0][y][x] >= 0.5
+                        || ledState[1][y][x] >= 0.5
+                        || ledState[2][y][x] >= 0.5
                 )
         ;
     }
@@ -78,9 +78,9 @@ public class LightBoardSurface {
 
     public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
         if ( pointInRegion(x, y, r) ) {
-            ledPolyValue[0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
-            ledPolyValue[1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
-            ledPolyValue[2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
+            ledState[0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
+            ledState[1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
+            ledState[2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
             return true;
         } else {
             return false;
