@@ -1,23 +1,26 @@
 package net.amarantha.lightboard.scene;
 
+import com.google.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@Singleton
 public class SceneManager {
 
-    private static Integer scenePointer = null;
-    private static Integer currentSceneId = 0;
-    private static Scene currentScene = null;
+    private Integer scenePointer = null;
+    private Integer currentSceneId = 0;
+    private Scene currentScene = null;
 
-    private static Map<Integer, Integer> scenePointers = new HashMap<>();
-    private static Map<Integer, Scene> scenes = new HashMap<>();
+    private Map<Integer, Integer> scenePointers = new HashMap<>();
+    private Map<Integer, Scene> scenes = new HashMap<>();
 
-    public static void addScene(int id, Scene scene) {
+    public void addScene(int id, Scene scene) {
         addScene(id, scene, null, false);
     }
-    public static void addScene(int id, Scene scene, Integer duration, boolean includeInCycle) {
+    public void addScene(int id, Scene scene, Integer duration, boolean includeInCycle) {
         scenePointers.put(scenePointers.size(), id);
         scenes.put(id, scene);
         scene.setSceneDuration(duration);
@@ -25,19 +28,19 @@ public class SceneManager {
         scene.build();
     }
 
-    public static Integer getCurrentSceneId() {
+    public Integer getCurrentSceneId() {
         return currentSceneId;
     }
 
-    public static Map<Integer, Scene> getScenes() {
+    public Map<Integer, Scene> getScenes() {
         return scenes;
     }
 
-    public static void reloadScene() {
+    public void reloadScene() {
         loadScene(scenePointers.get(scenePointer));
     }
 
-    public static void advanceScene() {
+    public void advanceScene() {
         if ( cycleMode ) {
             if (scenes.isEmpty()) {
                 throw new IllegalStateException("Must specify at least one scene");
@@ -54,11 +57,11 @@ public class SceneManager {
             }
         }
     }
-    public static boolean loadScene(Integer id) {
+    public boolean loadScene(Integer id) {
         return loadScene(id, false);
     }
 
-    public static boolean loadScene(Integer id, boolean skipIfNotInCycle) {
+    public boolean loadScene(Integer id, boolean skipIfNotInCycle) {
         currentSceneId = id;
         Scene newScene = scenes.get(id);
         if ( newScene!=null ) {
@@ -84,9 +87,9 @@ public class SceneManager {
         return false;
     }
 
-    private static long sceneLoaded;
+    private long sceneLoaded;
 
-    public static void startScenes() {
+    public void startScenes() {
         for ( Scene scene : scenes.values() ) {
             scene.start();
             scene.pause();
@@ -94,18 +97,18 @@ public class SceneManager {
         advanceScene();
     }
 
-    private static boolean cycleMode = false;
+    private boolean cycleMode = false;
 
-    public static boolean getCycleMode() {
+    public boolean getCycleMode() {
         return cycleMode;
     }
 
-    public static void setCycleMode(boolean mode) {
+    public void setCycleMode(boolean mode) {
         cycleMode = mode;
     }
 
 
-    public static void cycleScenes() {
+    public void cycleScenes() {
         cycleMode = true;
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -120,14 +123,14 @@ public class SceneManager {
         }, 0, 5000);
     }
 
-    private static boolean sleeping = false;
+    private boolean sleeping = false;
 
-    public static void sleep() {
+    public void sleep() {
         currentScene.pause();
         sleeping = true;
     }
 
-    public static void wake() {
+    public void wake() {
         currentScene.resume();
         sleeping = false;
     }

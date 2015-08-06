@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.scene.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -9,8 +10,10 @@ public class ImageScene extends Scene {
 
     private String filename;
 
+    @Inject SceneManager sceneManager;
+
     public ImageScene(LightBoardSurface surface, String image) {
-        super(surface, "Image Banner");
+        super("Image Banner");
         this.filename = image;
         setSceneDuration(null);
     }
@@ -22,7 +25,7 @@ public class ImageScene extends Scene {
         zone.setScrollTick(50);
         zone.setRestDuration(2500);
         zone.loadImage(filename);
-        zone.addScrollCompleteHandler(SceneManager::advanceScene);
+        zone.addScrollCompleteHandler(sceneManager::advanceScene);
 
         registerZones(zone);
 

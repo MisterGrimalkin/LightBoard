@@ -13,6 +13,8 @@ import net.amarantha.lightboard.zone.impl.ClockZone;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
+import javax.inject.Inject;
+
 public class TravelInformationScene extends Scene {
 
     private static final int BUS_NUMBER_WIDTH = 24;
@@ -22,8 +24,9 @@ public class TravelInformationScene extends Scene {
     private static final int TUBE_HEIGHT = 8;
     private static final int STATUS_HEIGHT = 5;
 
+    @Inject
     public TravelInformationScene(LightBoardSurface surface) {
-        super(surface, "Travel Information");
+        super("Travel Information");
     }
 
 

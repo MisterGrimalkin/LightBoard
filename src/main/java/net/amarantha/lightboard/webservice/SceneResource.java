@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.webservice;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.sf.json.JSONArray;
@@ -13,10 +14,17 @@ import java.util.Map;
 @Path("scene")
 public class SceneResource {
 
+    private static SceneManager sceneManager;
+
+    @Inject
+    public SceneResource(SceneManager sceneManager) {
+        SceneResource.sceneManager = sceneManager;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenes() {
-        Map<Integer, Scene> scenes = SceneManager.getScenes();
+        Map<Integer, Scene> scenes = sceneManager.getScenes();
         JSONObject json = new JSONObject();
         JSONArray ja = new JSONArray();
         for (Map.Entry<Integer, Scene> scene : scenes.entrySet() ) {
@@ -28,7 +36,7 @@ public class SceneResource {
                 ja.add(jsonScene);
             }
         }
-        json.put("cycleMode", SceneManager.getCycleMode());
+        json.put("cycleMode", sceneManager.getCycleMode());
         json.put("scenes", ja);
         String result = json.toString();
         return  Response.ok()
@@ -43,7 +51,7 @@ public class SceneResource {
     public Response getCurrentScene() {
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(SceneManager.getCurrentSceneId())
+                .entity(sceneManager.getCurrentSceneId())
                 .build();
     }
 
@@ -51,7 +59,7 @@ public class SceneResource {
     @Path("load")
     @Produces(MediaType.TEXT_PLAIN)
     public Response loadScene(@QueryParam("id") int id) {
-        if ( SceneManager.loadScene(id) ) {
+        if ( sceneManager.loadScene(id) ) {
             return Response.ok()
                     .header("Access-Control-Allow-Origin", "*")
                     .entity("Scene " + id + " Loaded")
@@ -68,7 +76,7 @@ public class SceneResource {
     @Path("cycle")
     @Produces(MediaType.TEXT_PLAIN)
     public Response cycleScene(@QueryParam("id") int id, @QueryParam("cycle") boolean cycle) {
-        SceneManager.getScenes().get(id).setIncludeInCycle(cycle);
+        sceneManager.getScenes().get(id).setIncludeInCycle(cycle);
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Scene " + id + " cycle mode updated to " + cycle)
@@ -79,7 +87,7 @@ public class SceneResource {
     @Path("advance")
     @Produces(MediaType.TEXT_PLAIN)
     public Response advanceScene() {
-        SceneManager.advanceScene();
+        sceneManager.advanceScene();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Scene Advanced")
@@ -90,7 +98,7 @@ public class SceneResource {
     @Path("cycle-on")
     @Produces(MediaType.TEXT_PLAIN)
     public Response cycleOn() {
-        SceneManager.setCycleMode(true);
+        sceneManager.setCycleMode(true);
         return  Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Cycle Mode Enabled")
@@ -101,7 +109,7 @@ public class SceneResource {
     @Path("cycle-off")
     @Produces(MediaType.TEXT_PLAIN)
     public Response cycleOff() {
-        SceneManager.setCycleMode(false);
+        sceneManager.setCycleMode(false);
         return  Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Cycle Mode Disable")

@@ -15,6 +15,20 @@
     <orderEntry type="library" name="pi4j-core" level="project" />
     <orderEntry type="library" name="pi4j-core-0.0.5" level="project" />
     <orderEntry type="library" name="fx" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.googlecode.guicebehave:guice-behave:0.7">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/guice-behave-0.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.javalite:javalite-common:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: jaxen:jaxen:1.1.4" level="project" />

@@ -4,13 +4,15 @@ import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Scene {
 
-    private LightBoardSurface surface;
+    @Inject private LightBoardSurface surface;
+
     private List<LightBoardZone> zones = new ArrayList<>();
     private List<Updater> updaters = new ArrayList<>();
 
@@ -19,8 +21,7 @@ public abstract class Scene {
 
     private String name;
 
-    public Scene(LightBoardSurface surface, String name) {
-        this.surface = surface;
+    public Scene(String name) {
         this.name = name;
     }
 

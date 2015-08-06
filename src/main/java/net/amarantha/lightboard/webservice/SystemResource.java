@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.webservice;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.util.Sync;
 import org.javalite.http.Http;
@@ -21,6 +22,13 @@ import java.util.TimerTask;
 
 @Path("system")
 public class SystemResource {
+
+    private static SceneManager sceneManager;
+
+    @Inject
+    public SystemResource(SceneManager sceneManager) {
+        SystemResource.sceneManager = sceneManager;
+    }
 
     private static String name = null;
     private static String ip = null;
@@ -161,7 +169,7 @@ public class SystemResource {
     @Path("sleep")
     @Produces(MediaType.TEXT_PLAIN)
     public Response sleep() {
-        SceneManager.sleep();
+        sceneManager.sleep();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Board has gone to sleep")
@@ -172,7 +180,7 @@ public class SystemResource {
     @Path("wake")
     @Produces(MediaType.TEXT_PLAIN)
     public Response wake() {
-        SceneManager.wake();
+        sceneManager.wake();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Board has woken up")

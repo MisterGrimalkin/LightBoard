@@ -7,10 +7,14 @@ import net.amarantha.lightboard.updater.schedule.PostMessageUpdater;
 import net.amarantha.lightboard.webservice.BroadcastMessageResource;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
+import javax.inject.Inject;
+
 public class WebServiceMessageScene extends Scene {
 
+    @Inject private SceneManager sceneManager;
+
     public WebServiceMessageScene(LightBoardSurface surface) {
-        super(surface, "Web Messages");
+        super("Web Messages");
     }
 
     private TextZone zone;
@@ -22,7 +26,7 @@ public class WebServiceMessageScene extends Scene {
         zone
             .setScrollTick(60)
             .addScrollCompleteHandler(() -> {
-                SceneManager.reloadScene();
+                sceneManager.reloadScene();
                 zone.clearOverride();
             });
         zone.addMessage(0, "");

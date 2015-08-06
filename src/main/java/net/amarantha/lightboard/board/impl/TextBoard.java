@@ -1,6 +1,11 @@
 package net.amarantha.lightboard.board.impl;
 
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.module.Cols;
+import net.amarantha.lightboard.module.Rows;
+
+import javax.inject.Inject;
+import java.io.PrintStream;
 
 /**
  * Simple implementation of a colour LightBoard that dumps board state to the console
@@ -9,10 +14,13 @@ public class TextBoard implements LightBoard {
 
     private final int rows;
     private final int cols;
+    private final PrintStream out;
 
-    public TextBoard(int rows, int cols) {
+    @Inject
+    public TextBoard(@Rows int rows, @Cols int cols, PrintStream out) {
         this.rows = rows;
         this.cols = cols;
+        this.out = out;
     }
 
     @Override
@@ -34,7 +42,7 @@ public class TextBoard implements LightBoard {
             sb.append("\n");
         }
         sb.append("\n");
-        System.out.println(sb.toString());
+        out.println(sb.toString());
     }
 
     @Override

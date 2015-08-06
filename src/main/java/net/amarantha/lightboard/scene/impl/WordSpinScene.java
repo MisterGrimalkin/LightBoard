@@ -13,7 +13,7 @@ public class WordSpinScene extends Scene {
     private final static String[] messages = { "Raspberry", "Pi", "Light", "Board" };
 
     public WordSpinScene(LightBoardSurface surface) {
-        super(surface, "Word Spin");
+        super("Word Spin");
     }
 
     @Override

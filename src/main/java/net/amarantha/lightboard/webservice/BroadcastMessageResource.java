@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.webservice;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.updater.schedule.PostMessageUpdater;
 
@@ -11,6 +12,12 @@ import javax.ws.rs.core.Response;
 
 @Path("message")
 public class BroadcastMessageResource {
+
+    @Inject private static SceneManager sceneManager;
+
+    public BroadcastMessageResource(SceneManager sceneManager) {
+        BroadcastMessageResource.sceneManager = sceneManager;
+    }
 
     private static PostMessageUpdater updater;
 
@@ -30,7 +37,7 @@ public class BroadcastMessageResource {
             updater.postMessage(message);
         }
         if ( scene!=null ) {
-            SceneManager.loadScene(scene);
+            sceneManager.loadScene(scene);
         }
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")

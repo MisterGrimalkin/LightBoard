@@ -12,7 +12,7 @@ import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 public class ShopOpeningTimesScene extends Scene {
 
     public ShopOpeningTimesScene(LightBoardSurface surface) {
-        super(surface, "Shop Hours");
+        super("Shop Hours");
         setSceneDuration(2000);
     }
 

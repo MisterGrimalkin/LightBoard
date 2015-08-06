@@ -17,6 +17,7 @@ public class CompositeSurface extends LightBoardSurface {
     private List<InnerSurface> innerSurfaces = new ArrayList<>();
 
     public CompositeSurface(int rows, int cols) {
+        super(null);
         this.rows = rows;
         this.cols = cols;
         boardRegion = safeRegion(0,0,cols,rows);

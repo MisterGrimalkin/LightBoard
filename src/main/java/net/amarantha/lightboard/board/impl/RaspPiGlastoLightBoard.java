@@ -6,7 +6,10 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.module.Cols;
+import net.amarantha.lightboard.module.Rows;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,8 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     private double[][][] currentFrame;
     private double[][][] nextFrame;
 
-    public RaspPiGlastoLightBoard(int rows, int cols) {
+    @Inject
+    public RaspPiGlastoLightBoard(@Rows int rows, @Cols int cols) {
         this.rows = rows;
         this.cols = cols;
         pushTestPattern();

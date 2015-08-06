@@ -56,25 +56,25 @@ public class BusTimesUpdater extends Updater {
     @Override
     public void refresh() {
 
-        busNumberZone.resetScroll();
-        leftDestinationZone.resetScroll();
-        leftTimesZone.resetScroll();
-        rightDestinationZone.resetScroll();
-        rightTimesZone.resetScroll();
-
-        busNumberZone.clearMessages();
-        leftDestinationZone.clearMessages();
-        leftTimesZone.clearMessages();
-        rightDestinationZone.clearMessages();
-        rightTimesZone.clearMessages();
+//        busNumberZone.resetScroll();
+//        leftDestinationZone.resetScroll();
+//        leftTimesZone.resetScroll();
+//        rightDestinationZone.resetScroll();
+//        rightTimesZone.resetScroll();
+//
+//        busNumberZone.clearMessages();
+//        leftDestinationZone.clearMessages();
+//        leftTimesZone.clearMessages();
+//        rightDestinationZone.clearMessages();
+//        rightTimesZone.clearMessages();
 
         Thread thread = new Thread(() -> {
 
-            busNumberZone.resetScroll();
-            leftDestinationZone.resetScroll();
-            leftTimesZone.resetScroll();
-            rightDestinationZone.resetScroll();
-            rightTimesZone.resetScroll();
+//            busNumberZone.resetScroll();
+//            leftDestinationZone.resetScroll();
+//            leftTimesZone.resetScroll();
+//            rightDestinationZone.resetScroll();
+//            rightTimesZone.resetScroll();
 
             busNumberZone.clearMessages();
             leftDestinationZone.clearMessages();
@@ -167,11 +167,11 @@ public class BusTimesUpdater extends Updater {
                 sourceId++;
             }
 
-            busNumberZone.resetMessageSources();
-            leftDestinationZone.resetMessageSources();
-            leftTimesZone.resetMessageSources();
-            rightDestinationZone.resetMessageSources();
-            rightTimesZone.resetMessageSources();
+//            busNumberZone.resetMessageSources();
+//            leftDestinationZone.resetMessageSources();
+//            leftTimesZone.resetMessageSources();
+//            rightDestinationZone.resetMessageSources();
+//            rightTimesZone.resetMessageSources();
 
 
         });

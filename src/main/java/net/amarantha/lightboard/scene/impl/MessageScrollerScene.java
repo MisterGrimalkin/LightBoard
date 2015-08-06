@@ -6,10 +6,14 @@ import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.MessageUpdater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
+import javax.inject.Inject;
+
 public class MessageScrollerScene extends Scene {
 
+    @Inject private SceneManager sceneManager;
+
     public MessageScrollerScene(LightBoardSurface surface) {
-        super(surface, "Message Scroller");
+        super("Message Scroller");
     }
 
     @Override
@@ -21,7 +25,7 @@ public class MessageScrollerScene extends Scene {
         zone.addScrollCompleteHandler(() -> {
             zone.advanceMessage();
             zone.resetScroll();
-            SceneManager.advanceScene();
+            sceneManager.advanceScene();
         });
 
         MessageUpdater updater = new MessageUpdater(zone);

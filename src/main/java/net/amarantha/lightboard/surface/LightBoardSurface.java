@@ -4,6 +4,10 @@ import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.util.Sync;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class LightBoardSurface {
 
     private int rows;
@@ -11,30 +15,21 @@ public class LightBoardSurface {
 
     private double[][][] ledPolyValue;
 
-    private final LightBoard[] boards;
+    private final LightBoard board;
 
     protected Region boardRegion;
 
-    public LightBoardSurface(LightBoard... boards) {
-        this.boards = boards;
-        if ( boards.length>0 ) {
+    @Inject
+    public LightBoardSurface(LightBoard board) {
+        this.board = board;
 
-            LightBoard firstBoard = boards[0];
-            rows = firstBoard.getRows();
-            cols = firstBoard.getCols();
+        rows = board.getRows();
+        cols = board.getCols();
 
-            ledPolyValue = new double[3][rows][cols];
+        ledPolyValue = new double[3][rows][cols];
 
-            boardRegion = safeRegion(0, 0, cols, rows);
+        boardRegion = safeRegion(0, 0, cols, rows);
 
-            for (int i = 0; i < boards.length; i++) {
-                LightBoard board = boards[i];
-                if (board.getRows() != rows || board.getCols() != cols) {
-                    throw new IllegalStateException("All LightBoards must have the same dimensions");
-                }
-            }
-
-        }
     }
 
 
@@ -43,15 +38,14 @@ public class LightBoardSurface {
     ///////////////////
 
     public LightBoardSurface init() {
+        board.init();
         System.out.println("Starting LightBoardSurface....");
-        for (final LightBoard board : boards) {
-            Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
-                @Override
-                public void runTask() {
-                    board.update(ledPolyValue);
-                }
-            });
-        }
+        Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
+            @Override
+            public void runTask() {
+                board.update(ledPolyValue);
+            }
+        });
         System.out.println("Surface Active");
         return this;
     }

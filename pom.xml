@@ -15,6 +15,29 @@
 
     <dependencies>
 
+        <!-- Guice -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <!-- Guice Behave -->
+        <dependency>
+            <groupId>com.googlecode.guicebehave</groupId>
+            <artifactId>guice-behave</artifactId>
+            <version>0.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/guice-behave-0.7.jar</systemPath>
+        </dependency>
+
+        <!--- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
         <!-- Sync HTTP Calls -->
         <dependency>
             <groupId>org.javalite</groupId>

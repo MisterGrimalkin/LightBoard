@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.board.impl;
 
+import com.google.inject.Inject;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
@@ -10,6 +11,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.module.Cols;
+import net.amarantha.lightboard.module.Debug;
+import net.amarantha.lightboard.module.Rows;
 import net.amarantha.lightboard.util.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
@@ -49,7 +53,8 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     private int d;
     private int spacer;
 
-    public GraphicalBoard(int rows, int cols, Stage stage) {
+    @Inject
+    public GraphicalBoard(@Rows int rows, @Cols int cols, Stage stage) {
         this(rows, cols, stage, "LightBoard Simulation", 3, 0);
     }
 
@@ -60,7 +65,6 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
         this.title = title;
         this.ledRadius = ledRadius;
         this.spacer = spacer;
-        debugTo(new TextBoard(rows, cols));
     }
 
     @Override
@@ -167,7 +171,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
     @Override
     public void update(double[][][] data) {
-        if (dumpToDebug && debugBoard != null) {
+        if ( dumpToDebug ) {
             debugBoard.update(data);
             dumpToDebug = false;
         }
@@ -295,11 +299,6 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     ///////////////
 
     private boolean dumpToDebug = false;
-    private LightBoard debugBoard;
-
-    public GraphicalBoard debugTo(LightBoard debugBoard) {
-        this.debugBoard = debugBoard;
-        return this;
-    }
+    @Inject @Debug private LightBoard debugBoard;
 
 }

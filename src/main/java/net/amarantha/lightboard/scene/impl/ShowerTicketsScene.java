@@ -16,7 +16,7 @@ public class ShowerTicketsScene extends Scene {
     private static final int MESSAGE_HEIGHT = 9;
 
     public ShowerTicketsScene(LightBoardSurface surface) {
-        super(surface, "Shower Tickets");
+        super("Shower Tickets");
     }
 
     @Override
