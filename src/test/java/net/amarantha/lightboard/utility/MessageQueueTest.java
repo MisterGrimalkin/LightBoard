@@ -1,4 +1,4 @@
-package net.amarantha.lightboard.util;
+package net.amarantha.lightboard.utility;
 
 import org.junit.Assert;
 import org.junit.Test;

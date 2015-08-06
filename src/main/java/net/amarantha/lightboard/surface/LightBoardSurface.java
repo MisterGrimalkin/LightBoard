@@ -2,7 +2,7 @@ package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

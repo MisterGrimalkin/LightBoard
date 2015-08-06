@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static net.amarantha.lightboard.entity.AlignH.*;
 
-public abstract class Font {
+public class Font {
 
     public final static char NL = '\n';
 

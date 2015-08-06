@@ -1,8 +1,21 @@
 package net.amarantha.lightboard.board.impl;
 
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.module.Cols;
+import net.amarantha.lightboard.module.Rows;
+
+import javax.inject.Inject;
 
 public class CLightBoard implements LightBoard {
+
+    private int rows;
+    private int cols;
+
+    @Inject
+    public CLightBoard(@Rows int rows, @Cols int cols) {
+        this.rows = rows;
+        this.cols = cols;
+    }
 
     static {
         System.loadLibrary("lightboard");
@@ -21,12 +34,12 @@ public class CLightBoard implements LightBoard {
 
     @Override
     public int getRows() {
-        return 32;
+        return rows;
     }
 
     @Override
     public int getCols() {
-        return 192;
+        return cols;
     }
 
 }

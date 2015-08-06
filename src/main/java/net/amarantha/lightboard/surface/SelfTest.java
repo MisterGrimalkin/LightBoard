@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 
 public class SelfTest {
 

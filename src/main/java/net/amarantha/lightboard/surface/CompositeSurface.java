@@ -7,8 +7,10 @@ import java.util.List;
 
 /**
  * This is an attempt to bind several surfaces together into one.
- * It doesn't quite work yet.
+ *
+ * @deprecated Because it doesn't work (yet).
  */
+@Deprecated
 public class CompositeSurface extends LightBoardSurface {
 
     private final int rows;

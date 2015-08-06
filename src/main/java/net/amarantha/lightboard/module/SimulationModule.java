@@ -11,6 +11,7 @@ public class SimulationModule extends AbstractModule {
 
     public SimulationModule(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        System.out.println("-- SIMULATION MODE --");
     }
 
     @Override

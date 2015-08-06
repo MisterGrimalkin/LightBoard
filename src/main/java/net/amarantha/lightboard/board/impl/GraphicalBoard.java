@@ -14,7 +14,7 @@ import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.module.Cols;
 import net.amarantha.lightboard.module.Debug;
 import net.amarantha.lightboard.module.Rows;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
 import java.util.ArrayList;

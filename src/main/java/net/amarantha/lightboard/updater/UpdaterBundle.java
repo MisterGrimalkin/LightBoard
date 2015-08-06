@@ -1,6 +1,6 @@
 package net.amarantha.lightboard.updater;
 
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 
 import java.util.ArrayList;
 import java.util.Collections;

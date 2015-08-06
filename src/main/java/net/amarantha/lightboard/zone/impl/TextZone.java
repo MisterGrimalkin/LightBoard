@@ -4,7 +4,7 @@ import net.amarantha.lightboard.entity.*;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.util.MessageQueue;
+import net.amarantha.lightboard.utility.MessageQueue;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
 public class TextZone extends LightBoardZone {

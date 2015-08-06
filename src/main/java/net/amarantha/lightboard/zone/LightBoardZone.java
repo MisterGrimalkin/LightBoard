@@ -6,7 +6,7 @@ import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.Region;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +15,11 @@ import static java.lang.System.currentTimeMillis;
 
 public abstract class LightBoardZone {
 
-    private final BoardType boardType;
-
     protected final LightBoardSurface surface;
 
     protected LightBoardZone(LightBoardSurface surface) {
         this.surface = surface;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
-        if ( surface instanceof LightBoardSurface) {
-            boardType = BoardType.COLOUR;
-        } else {
-            boardType = BoardType.BINARY;
-        }
     }
 
 
@@ -452,11 +445,5 @@ public abstract class LightBoardZone {
     public Region getRegion() {
         return region;
     }
-
-    public BoardType getBoardType() {
-        return boardType;
-    }
-
-    protected enum BoardType { BINARY, COLOUR }
 
 }

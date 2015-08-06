@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 
 public class LightBoardApplication {
 

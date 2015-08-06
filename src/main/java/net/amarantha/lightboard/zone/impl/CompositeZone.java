@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.zone.impl;
 
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
 import java.util.ArrayList;

@@ -259,7 +259,7 @@ public class ShowerFont extends Font {
                 "##--##--##" +
                 "##--##--##" +
                 "##########" +
-                "-###--##--" );
+                "-###--###-" );
 
     private final static Pattern FEMALE =
             new Pattern(10,

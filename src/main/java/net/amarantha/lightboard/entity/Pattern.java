@@ -1,5 +1,7 @@
 package net.amarantha.lightboard.entity;
 
+import java.util.Arrays;
+
 /**
  * A pattern of dots represented as both binary (boolean) and colour data
  */
@@ -113,4 +115,16 @@ public class Pattern {
         return colourValues;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for ( int r=0; r<binaryValues.length; r++ ) {
+            sb.append("\n");
+            for ( int c=0; c<binaryValues[0].length; c++ ) {
+                sb.append(binaryValues[r][c] ? "#" : "-" );
+            }
+        }
+
+        return sb.toString();
+    }
 }

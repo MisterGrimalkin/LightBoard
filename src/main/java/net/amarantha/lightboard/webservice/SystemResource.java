@@ -2,7 +2,7 @@ package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
-import net.amarantha.lightboard.util.Sync;
+import net.amarantha.lightboard.utility.Sync;
 import org.javalite.http.Http;
 import org.javalite.http.Post;
 
