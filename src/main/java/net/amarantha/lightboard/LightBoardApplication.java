@@ -10,9 +10,8 @@ public class LightBoardApplication {
 
     @Inject private LightBoardSurface surface;
 
-    @Inject private TravelInformationScene travelInformationScene;
-
     @Inject private SceneManager sceneManager;
+    @Inject private TravelInformationScene travelInformationScene;
 
     public void startApplication() {
 

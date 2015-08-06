@@ -127,8 +127,8 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
                 double[][] greenFrame = currentFrame[1];
                 sendSerialString(redFrame[row], greenFrame[row], redFrame[row+rows/2], greenFrame[row+rows/2]);
                 digitalWrite(output, true);
-                digitalWrite(store, false);
                 decodeRowAddress(row);
+                digitalWrite(store, false);
                 digitalWrite(store, true);
                 digitalWrite(output, false);
             }

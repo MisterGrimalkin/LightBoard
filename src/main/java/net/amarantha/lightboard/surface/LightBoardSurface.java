@@ -219,10 +219,4 @@ public class LightBoardSurface {
         return cols;
     }
 
-
-    ///////////////
-    // Self Test //
-    ///////////////
-
-
 }
