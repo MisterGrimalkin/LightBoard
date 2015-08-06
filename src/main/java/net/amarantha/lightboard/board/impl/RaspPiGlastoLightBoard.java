@@ -106,7 +106,6 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
 
     private int colour = MULTI_MODE;
 
-
     @Override
     public void update(double[][][] data) {
         nextFrame = new double[3][rows][cols];
