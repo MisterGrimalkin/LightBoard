@@ -1,6 +1,9 @@
 package net.amarantha.lightboard.webservice;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.ColourSwitcher;
+import net.amarantha.lightboard.board.LightBoard;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -13,47 +16,52 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Singleton
 @Path("colour")
-public class ColourResource {
+public class ColourResource extends Resource {
 
-    private static List<ColourSwitcher> boards = new ArrayList<>();
+    private static ColourSwitcher board;
 
-    public static <T extends ColourSwitcher> void addBoard(T board) {
-        boards.add(board);
+    public ColourResource() {}
+
+    @Inject
+    public ColourResource(LightBoard lightBoard) {
+        if ( lightBoard instanceof ColourSwitcher ) {
+            board = (ColourSwitcher)lightBoard;
+        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getColours() {
-        JSONObject jsonWrapper = new JSONObject();
-        JSONArray ja = new JSONArray();
-        Set<String> colourNames = new HashSet<>();
-        for ( ColourSwitcher board : boards ) {
-            colourNames.addAll(board.getSupportedColours().stream().collect(Collectors.toList()));
+        if ( board!=null ) {
+            JSONObject json = new JSONObject();
+            JSONArray ja = new JSONArray();
+
+
+            Set<String> colourNames = new HashSet<>();
+            colourNames.addAll(board.getSupportedColours());
+
+            for (String name : colourNames) {
+                JSONObject jsonColour = new JSONObject();
+                jsonColour.put("name", name);
+                ja.add(jsonColour);
+            }
+            json.put("colours", ja);
+
+            return ok(json.toString());
         }
-        for ( String name : colourNames ) {
-            JSONObject jsonColour = new JSONObject();
-            jsonColour.put("name", name);
-            ja.add(jsonColour);
-        }
-        jsonWrapper.put("colours", ja);
-        String result = jsonWrapper.toString();
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity(result)
-                .build();
+        return error("Colour Override Not Supported");
     }
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     public Response colour(@QueryParam("name") final String name) {
-        for (ColourSwitcher colourSwitcher : boards ) {
-            colourSwitcher.setColour(name);
+        if ( board!=null ) {
+            board.setColour(name);
+            return ok("Colour Changed");
         }
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity("Colour Changed")
-                .build();
+        return error("Colour Override Not Supported");
     }
 
 }

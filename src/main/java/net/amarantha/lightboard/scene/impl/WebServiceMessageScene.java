@@ -13,6 +13,7 @@ public class WebServiceMessageScene extends Scene {
 
     @Inject private SceneManager sceneManager;
 
+    @Inject
     public WebServiceMessageScene(LightBoardSurface surface) {
         super("Web Messages");
     }
@@ -33,6 +34,7 @@ public class WebServiceMessageScene extends Scene {
 
         PostMessageUpdater updater = new PostMessageUpdater(zone);
         BroadcastMessageResource.bindUpdater(updater);
+        BroadcastMessageResource.bindScene(0);
 
         registerZones(zone);
         registerUpdaters(updater);

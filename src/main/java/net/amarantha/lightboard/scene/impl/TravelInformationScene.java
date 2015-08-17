@@ -86,8 +86,8 @@ public class TravelInformationScene extends Scene {
         // Bundle Travel Updater
         TubeStatusUpdater tubeStatus =  new TubeStatusUpdater(tubeDetailZone, tubeSummaryZone);
         BusTimesUpdater busTimes = new BusTimesUpdater(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
-        tubeStatus.setDataRefresh(45000);
-        busTimes.setDataRefresh(60000);
+        tubeStatus.setDataRefresh(60000);
+        busTimes.setDataRefresh(15000);
 
         CompositeZone cZone = new CompositeZone(getSurface(), busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
         cZone.setScrollTick(100);//.setRestDuration(4000);

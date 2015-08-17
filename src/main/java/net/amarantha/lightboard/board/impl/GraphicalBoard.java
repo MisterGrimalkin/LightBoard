@@ -17,6 +17,7 @@ import net.amarantha.lightboard.module.Rows;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     private int ledRadius;
     private int d;
     private int spacer;
+
+    @Inject private WebService webService;
 
     @Inject
     public GraphicalBoard(@Rows int rows, @Cols int cols, Stage stage) {
@@ -103,7 +106,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
         // Shut down application when window is closed
         stage.setOnCloseRequest(event -> {
-            WebService.stopWebService();
+            webService.stopWebService();
             Sync.stopSyncThread();
             System.exit(0);
         });

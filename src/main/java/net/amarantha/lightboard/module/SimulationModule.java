@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.module;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import javafx.stage.Stage;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.impl.GraphicalBoard;
@@ -16,8 +17,11 @@ public class SimulationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(LightBoard.class).to(GraphicalBoard.class);
+
         bind(Stage.class).toInstance(primaryStage);
+
+        bind(LightBoard.class).to(GraphicalBoard.class)
+                .in(Singleton.class);
     }
 
 }

@@ -12,10 +12,14 @@ public class ImageScene extends Scene {
 
     @Inject SceneManager sceneManager;
 
-    public ImageScene(LightBoardSurface surface, String image) {
+    @Inject
+    public ImageScene(LightBoardSurface surface) {
         super("Image Banner");
-        this.filename = image;
         setSceneDuration(null);
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     @Override

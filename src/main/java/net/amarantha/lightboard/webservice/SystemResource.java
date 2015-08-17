@@ -25,6 +25,9 @@ public class SystemResource {
 
     private static SceneManager sceneManager;
 
+    public SystemResource() {
+    }
+
     @Inject
     public SystemResource(SceneManager sceneManager) {
         SystemResource.sceneManager = sceneManager;

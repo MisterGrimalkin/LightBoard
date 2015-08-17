@@ -15,6 +15,10 @@ public class BroadcastMessageResource {
 
     @Inject private static SceneManager sceneManager;
 
+    public BroadcastMessageResource() {
+    }
+
+    @Inject
     public BroadcastMessageResource(SceneManager sceneManager) {
         BroadcastMessageResource.sceneManager = sceneManager;
     }

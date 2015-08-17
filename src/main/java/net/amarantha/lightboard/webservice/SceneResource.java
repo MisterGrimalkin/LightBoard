@@ -16,6 +16,9 @@ public class SceneResource {
 
     private static SceneManager sceneManager;
 
+    public SceneResource() {
+    }
+
     @Inject
     public SceneResource(SceneManager sceneManager) {
         SceneResource.sceneManager = sceneManager;

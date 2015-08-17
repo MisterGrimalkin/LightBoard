@@ -72,7 +72,7 @@ public abstract class LightBoardZone {
     }
 
     public void tick() {
-//        if ( !paused ) {
+        if ( !paused ) {
             if (resting) {
                 if (currentTimeMillis() - lastTick > restDuration) {
                     resting = false;
@@ -85,7 +85,7 @@ public abstract class LightBoardZone {
                 }
                 lastTick = currentTimeMillis();
             }
-//        }
+        }
     }
 
     protected Long scrollTick = null;

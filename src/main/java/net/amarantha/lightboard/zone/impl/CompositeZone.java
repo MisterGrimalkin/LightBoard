@@ -29,6 +29,22 @@ public class CompositeZone extends LightBoardZone {
         autoReset(false);
     }
 
+    @Override
+    public void pause() {
+        super.pause();
+        for ( TextZone z : zones ) {
+            z.pause();
+        }
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        for ( TextZone z : zones ) {
+            z.resume();
+        }
+    }
+
     private Map<Integer, Boolean> scrolledOut = new HashMap<>();
 
     private void prepareZone(final int zoneNo, TextZone zone) {

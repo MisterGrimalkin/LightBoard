@@ -7,14 +7,20 @@ import net.amarantha.lightboard.module.ApplicationModule;
 import net.amarantha.lightboard.module.SimulationModule;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.google.inject.util.Modules.override;
 
 public class Main extends Application {
 
+    private static boolean simulationMode;
+    private static boolean withServer;
+
     public static void main(String[] args) {
 
-        boolean simulationMode = Arrays.asList(args).contains("simulation");
+        List<String> params = Arrays.asList(args);
+        simulationMode = params.contains("simulation");
+        withServer = !params.contains("noserver");
 
         if ( simulationMode ) {
             // Launch application via JavaFX
@@ -22,7 +28,7 @@ public class Main extends Application {
         } else {
             Guice.createInjector(new ApplicationModule())
                 .getInstance(LightBoardApplication.class)
-                    .startApplication();
+                    .startApplication(withServer);
         }
 
     }
@@ -34,7 +40,7 @@ public class Main extends Application {
                     .with(new SimulationModule(primaryStage))
             )
             .getInstance(LightBoardApplication.class)
-                .startApplication();
+                .startApplication(withServer);
     }
 
 }

@@ -43,6 +43,7 @@ public class TubeStatusUpdater extends Updater {
                 if ( tubeStatuses.isEmpty() ) {
                     replaceMessage("{red}TfL returned no data");
                     summaryZone.clearMessages();
+                    summaryZone.addMessage("{red}Error Connecting to TfL");
                 } else {
                     StringBuilder summarySb = new StringBuilder();
                     summarySb.append("{yellow}|");

@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.module;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.utility.PropertyManager;
@@ -37,8 +38,10 @@ public class ApplicationModule extends AbstractModule {
         bindConstant().annotatedWith(Rows.class).to(rows);
         bindConstant().annotatedWith(Cols.class).to(cols);
 
-        bind(LightBoard.class).to(boardClass);
-        bind(LightBoard.class).annotatedWith(Debug.class).to(TextBoard.class);
+        bind(LightBoard.class).to(boardClass)
+                .in(Singleton.class);
+        bind(LightBoard.class).annotatedWith(Debug.class).to(TextBoard.class)
+                .in(Singleton.class);
 
         bind(PrintStream.class).toInstance(System.out);
 

@@ -76,11 +76,11 @@ public class BusTimesUpdater extends Updater {
 //            rightDestinationZone.resetScroll();
 //            rightTimesZone.resetScroll();
 
-            busNumberZone.clearMessages();
-            leftDestinationZone.clearMessages();
-            leftTimesZone.clearMessages();
-            rightDestinationZone.clearMessages();
-            rightTimesZone.clearMessages();
+            busNumberZone.clearAllMessages();
+            leftDestinationZone.clearAllMessages();
+            leftTimesZone.clearAllMessages();
+            rightDestinationZone.clearAllMessages();
+            rightTimesZone.clearAllMessages();
 
             BusData data = new BusData();
             for ( BusDeparture bus : buses) {
@@ -89,82 +89,90 @@ public class BusTimesUpdater extends Updater {
 
             int sourceId = 0;
 
-            for ( Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet() ) {
+            if ( data.getDataByBusNumber().entrySet().isEmpty() ) {
+                busNumberZone.addMessage(sourceId, "*");
+                leftDestinationZone.addMessage(sourceId, "{red}No Data");
+                leftTimesZone.addMessage(sourceId, "{red}* * *");
+                rightDestinationZone.addMessage(sourceId, "{red}No Data");
+                rightTimesZone.addMessage(sourceId, "{red}* * *");
+            } else {
+                for (Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet()) {
 
-                busNumberZone.setMaxMessagesPerSource(sourceId, 1);
-                leftDestinationZone.setMaxMessagesPerSource(sourceId, 1);
-                leftTimesZone.setMaxMessagesPerSource(sourceId, 1);
-                rightDestinationZone.setMaxMessagesPerSource(sourceId, 1);
-                rightTimesZone.setMaxMessagesPerSource(sourceId, 1);
+//                busNumberZone.setMaxMessagesPerSource(sourceId, 1);
+//                leftDestinationZone.setMaxMessagesPerSource(sourceId, 1);
+//                leftTimesZone.setMaxMessagesPerSource(sourceId, 1);
+//                rightDestinationZone.setMaxMessagesPerSource(sourceId, 1);
+//                rightTimesZone.setMaxMessagesPerSource(sourceId, 1);
 
-                busNumberZone.clearMessages(sourceId);
-                leftDestinationZone.clearMessages(sourceId);
-                leftTimesZone.clearMessages(sourceId);
-                rightDestinationZone.clearMessages(sourceId);
-                rightTimesZone.clearMessages(sourceId);
+                    busNumberZone.clearMessages(sourceId);
+                    leftDestinationZone.clearMessages(sourceId);
+                    leftTimesZone.clearMessages(sourceId);
+                    rightDestinationZone.clearMessages(sourceId);
+                    rightTimesZone.clearMessages(sourceId);
 
-                int activeBuses = numberOfActiveBuses(eBus.getValue());
+                    int activeBuses = numberOfActiveBuses(eBus.getValue());
 
-                if ( activeBuses > 0 ) {
+                    if (activeBuses > 0) {
 
-                    String busNumber = "{yellow}" + eBus.getKey();
-                    busNumberZone.addMessage(sourceId, busNumber);
+                        String busNumber = "{yellow}" + eBus.getKey();
+                        busNumberZone.addMessage(sourceId, busNumber);
 
-                    if ( activeBuses > 2 ) {
-                        leftDestinationZone.addMessage(sourceId, "{red}Too");
-                        leftTimesZone.addMessage(sourceId, "{red}Many");
-                        rightDestinationZone.addMessage(sourceId, "{red}Buses");
-                        rightTimesZone.addMessage(sourceId, "{red}Returned!");
-                    } else {
+                        if (activeBuses > 2) {
+                            leftDestinationZone.addMessage(sourceId, "{red}Too");
+                            leftTimesZone.addMessage(sourceId, "{red}Many");
+                            rightDestinationZone.addMessage(sourceId, "{red}Buses");
+                            rightTimesZone.addMessage(sourceId, "{red}Returned!");
+                        } else {
 
 
-                        int direction = 1;
+                            int direction = 1;
 
-                        for (Entry<BusDeparture, List<Long>> timeEntry : eBus.getValue().entrySet()) {
+                            for (Entry<BusDeparture, List<Long>> timeEntry : eBus.getValue().entrySet()) {
 
-                            String destination = "{yellow}" + timeEntry.getKey().getDestination();
+                                String destination = "{yellow}" + timeEntry.getKey().getDestination();
 
-                            List<Long> busTimes = timeEntry.getValue();
-                            Collections.sort(busTimes);
-                            StringBuilder sb = new StringBuilder();
-                            int count = 0;
-                            for (Long bt : busTimes) {
-                                Long busTime = bt+timeEntry.getKey().getOffset();
-                                if ( count<3 && busTime >= 0 ) {
-                                    if (busTime == 0) {
-                                        sb.append("{red}due ");
-                                    } else {
-                                        if ( busTime < 5 ) {
-                                            sb.append("{red}");
+                                List<Long> busTimes = timeEntry.getValue();
+                                Collections.sort(busTimes);
+                                StringBuilder sb = new StringBuilder();
+                                int count = 0;
+                                for (Long bt : busTimes) {
+                                    Long busTime = bt + timeEntry.getKey().getOffset();
+                                    if (count < 3 && busTime >= 0) {
+                                        if (busTime == 0) {
+                                            sb.append("{red}due ");
                                         } else {
-                                            sb.append("{green}");
+                                            if (busTime < 5) {
+                                                sb.append("{red}");
+                                            } else {
+                                                sb.append("{green}");
+                                            }
+                                            sb.append(busTime).append("m ");
                                         }
-                                        sb.append(busTime).append("m ");
                                     }
+                                    count++;
                                 }
-                                count++;
-                            }
-                            String timesMessage = sb.toString();
+                                String timesMessage = sb.toString();
 
-                            if ( direction==1 ) {
-                                leftDestinationZone.addMessage(sourceId, destination);
-                                leftTimesZone.addMessage(sourceId, timesMessage);
-                            } else if ( direction==2 ) {
-                                rightDestinationZone.addMessage(sourceId, destination);
-                                rightTimesZone.addMessage(sourceId, timesMessage);
-                            }
-                            direction++;
+                                if (direction == 1) {
+                                    leftDestinationZone.addMessage(sourceId, destination);
+                                    leftTimesZone.addMessage(sourceId, timesMessage);
+                                } else if (direction == 2) {
+                                    rightDestinationZone.addMessage(sourceId, destination);
+                                    rightTimesZone.addMessage(sourceId, timesMessage);
+                                }
+                                direction++;
 
-                            if ( activeBuses==1 ) {
-                                rightDestinationZone.addMessage(sourceId, "{yellow}-");
-                                rightTimesZone.addMessage(sourceId, "{yellow}-");
+                                if (activeBuses == 1) {
+                                    rightDestinationZone.addMessage(sourceId, "{yellow}-");
+                                    rightTimesZone.addMessage(sourceId, "{yellow}-");
+                                }
+
                             }
 
                         }
-
                     }
+                    sourceId++;
                 }
-                sourceId++;
             }
 
 //            busNumberZone.resetMessageSources();
@@ -194,16 +202,28 @@ public class BusTimesUpdater extends Updater {
 
             List<String[]> lineArrays = breakIntoLineArrays(httpResult);
 
+            if ( lineArrays.isEmpty() ) {
+                throw new Exception();
+            }
+
             for ( String[] line : lineArrays ) {
                 if ( line[BUS_NUMBER].equals(departure.getBusNo()) ) {
-
                     result.add(minutesIntoFuture(line[BUS_TIME]));
-
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+//            busNumberZone.clearAllMessages();
+//            leftDestinationZone.clearAllMessages();
+//            leftTimesZone.clearAllMessages();
+//            rightDestinationZone.clearAllMessages();
+//            rightTimesZone.clearAllMessages();
+//            busNumberZone.addMessage("{red}*");
+//            leftDestinationZone.addMessage("{red}No Data");
+//            leftTimesZone.addMessage("{red}* * *");
+//            rightDestinationZone.addMessage("{red}No Data");
+//            rightTimesZone.addMessage("{red}* * *");
         }
 
         return result;
