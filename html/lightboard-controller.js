@@ -90,9 +90,71 @@ function createLoadBoardFunction(ipLSB, name) {
 
         loadScenes();
         loadColours();
+        loadBuses();
     }
 }
 
+
+///////////
+// Buses //
+///////////
+
+function loadBuses() {
+
+    var panel = clearChildren("busList");
+
+    get(baseUrl, "lightboard/bus",
+
+    function(req) {
+
+        var json = JSON.parse(req.responseText);
+        var buses = json.buses;
+
+        for ( var i=0; i<buses.length; i++ ) {
+
+            var bus = buses[i];
+
+            var c = document.createElement("INPUT");
+            c.type="checkbox";
+//            c.style.float = "right";
+            c.style.width = "10%";
+            c.checked = bus.active;
+
+            var btn = createWithText("BUTTON", bus.bus + " " + bus.destination);
+            btn.id="bus"+baseUrl+bus.id;
+            btn.className = "btn-primary";
+            btn.style.width = "75%";
+            btn.style.height = "40px";
+            btn.style.textAlign = "left";
+            //btn.onclick = createLoadSceneFunction(scene.sceneId);
+
+            var deleteBtn = createWithText("BUTTON", "X");
+            deleteBtn.id="deleteBus"+baseUrl+bus.id;
+            deleteBtn.className = "btn-danger";
+            deleteBtn.style.width = "15%";
+            deleteBtn.style.height = "40px";
+
+
+            panel.appendChild(c);
+            panel.appendChild(btn);
+            panel.appendChild(deleteBtn);
+        }
+
+        var addBtn = createWithText("BUTTON", "+");
+        addBtn.className = "btn-success";
+        addBtn.style.width = "15%";
+        addBtn.style.height = "40px";
+        addBtn.style.float = "right";
+
+        panel.appendChild(addBtn);
+
+
+
+    },
+        errorAlert("Could not load buses.")
+    );
+
+}
 
 ////////////
 // Scenes //

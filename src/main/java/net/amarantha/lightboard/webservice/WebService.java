@@ -18,6 +18,7 @@ public class WebService {
     @Inject private ColourResource colourResource;
     @Inject private SceneResource sceneResource;
     @Inject private SystemResource systemResource;
+    @Inject private BusStopResource busStopResource;
 
     @Inject private PropertyManager props;
 

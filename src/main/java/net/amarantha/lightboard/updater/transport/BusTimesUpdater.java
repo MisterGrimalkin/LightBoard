@@ -39,7 +39,7 @@ public class BusTimesUpdater extends Updater {
         buses.put("5", new BusDeparture(76713, "41", "Tottenham Hale", true));
         buses.put("6", new BusDeparture(56403, "41", "Archway", true));
         buses.put("7", new BusDeparture(56403, "91", "Trafalgar Square", true));
-        buses.put("8", new BusDeparture(56403, "N91", "Trafalgar Square", false));
+        buses.put("8", new BusDeparture(56403, "N91", "Trafalgar Square", true));
 
     }
 

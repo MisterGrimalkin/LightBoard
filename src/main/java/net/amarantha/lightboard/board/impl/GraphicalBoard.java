@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.board.impl;
 
 import com.google.inject.Inject;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
@@ -9,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.module.Cols;
@@ -53,7 +55,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     private int d;
     private int spacer;
 
-    @Inject private WebService webService;
+//    @Inject private WebService webService;
 
     @Inject
     public GraphicalBoard(@Rows int rows, @Cols int cols, Stage stage) {
@@ -105,7 +107,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
         // Shut down application when window is closed
         stage.setOnCloseRequest(event -> {
-            webService.stopWebService();
+//            webService.stopWebService();
             Sync.stopSyncThread();
             System.exit(0);
         });

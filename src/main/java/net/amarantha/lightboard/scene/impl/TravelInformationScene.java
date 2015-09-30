@@ -9,7 +9,6 @@ import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.transport.BusTimesUpdater;
 import net.amarantha.lightboard.updater.transport.TubeStatusUpdater;
-import net.amarantha.lightboard.updater.weather.WeatherUpdater;
 import net.amarantha.lightboard.zone.impl.ClockZone;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
@@ -26,8 +25,10 @@ public class TravelInformationScene extends Scene {
     private static final int TUBE_HEIGHT = 8;
     private static final int STATUS_HEIGHT = 5;
 
+    private BusTimesUpdater busTimesUpdater;
+
     @Inject
-    public TravelInformationScene(LightBoardSurface surface) {
+    public TravelInformationScene() {
         super("Travel Information");
     }
 
@@ -86,9 +87,9 @@ public class TravelInformationScene extends Scene {
                 .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
 
         TubeStatusUpdater tubeStatus =  new TubeStatusUpdater(tubeDetailZone, tubeSummaryZone);
-        BusTimesUpdater busTimes = new BusTimesUpdater(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
+        busTimesUpdater = new BusTimesUpdater(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
         tubeStatus.setDataRefresh(60000);
-        busTimes.setDataRefresh(15000);
+        busTimesUpdater.setDataRefresh(15000);
 
         CompositeZone cZone = new CompositeZone(getSurface(), busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
         cZone.setScrollTick(100);//.setRestDuration(4000);
@@ -104,9 +105,12 @@ public class TravelInformationScene extends Scene {
 
         // Setup Scene
         registerZones(clockZone, tubeDetailZone, tubeSummaryZone, cZone);
-        registerUpdaters(busTimes, tubeStatus);//, weatherUpdater);
+        registerUpdaters(busTimesUpdater, tubeStatus);//, weatherUpdater);
         cZone.start();
 
     }
 
+    public BusTimesUpdater getBusTimesUpdater() {
+        return busTimesUpdater;
+    }
 }
