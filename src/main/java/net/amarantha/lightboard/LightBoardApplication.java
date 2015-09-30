@@ -35,7 +35,7 @@ public class LightBoardApplication {
 
         sceneManager.startScenes();
         sceneManager.cycleScenes();
-        sceneManager.loadScene(1);
+        sceneManager.loadScene(2);
 
         if ( withServer ) {
             service.startWebService();
