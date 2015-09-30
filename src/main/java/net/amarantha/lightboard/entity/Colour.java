@@ -10,8 +10,8 @@ public class Colour {
     public static final String GREEN = "green";
     public static final String BLUE = "blue";
     public static final String YELLOW = "yellow";
-
     public static final String MULTI = "multi";
+
     private double red;
     private double green;
     private double blue;

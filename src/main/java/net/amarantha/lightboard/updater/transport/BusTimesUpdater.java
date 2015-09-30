@@ -82,15 +82,20 @@ public class BusTimesUpdater extends Updater {
             rightDestinationZone.clearAllMessages();
             rightTimesZone.clearAllMessages();
 
+
             BusData data = new BusData();
-            for ( BusDeparture bus : buses) {
-                data.addResult(bus, getDepartureTimesFor(bus));
+            try {
+                for (BusDeparture bus : buses) {
+                    data.addResult(bus, getDepartureTimesFor(bus));
+                }
+            } catch ( Exception e ) {
+                data.getDataByBusNumber().clear();
             }
 
             int sourceId = 0;
 
             if ( data.getDataByBusNumber().entrySet().isEmpty() ) {
-                busNumberZone.addMessage(sourceId, "*");
+                busNumberZone.addMessage(sourceId, " ");
                 leftDestinationZone.addMessage(sourceId, "{red}No Data");
                 leftTimesZone.addMessage(sourceId, "{red}* * *");
                 rightDestinationZone.addMessage(sourceId, "{red}No Data");
@@ -192,11 +197,11 @@ public class BusTimesUpdater extends Updater {
     private static final int BUS_NUMBER = 2;
     private static final int BUS_TIME = 3;
 
-    private List<Long> getDepartureTimesFor(BusDeparture departure) {
+    private List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
 
         List<Long> result = new ArrayList<>();
 
-        try {
+//        try {
 
             String httpResult = Http.get(TFL_BUS_URL + "?StopCode1=" + departure.getStopCode()).text();
 
@@ -212,8 +217,8 @@ public class BusTimesUpdater extends Updater {
                 }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //            busNumberZone.clearAllMessages();
 //            leftDestinationZone.clearAllMessages();
 //            leftTimesZone.clearAllMessages();
@@ -224,7 +229,7 @@ public class BusTimesUpdater extends Updater {
 //            leftTimesZone.addMessage("{red}* * *");
 //            rightDestinationZone.addMessage("{red}No Data");
 //            rightTimesZone.addMessage("{red}* * *");
-        }
+//        }
 
         return result;
     }

@@ -17,7 +17,6 @@ import net.amarantha.lightboard.module.Rows;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 

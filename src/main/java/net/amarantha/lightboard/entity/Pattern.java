@@ -1,7 +1,5 @@
 package net.amarantha.lightboard.entity;
 
-import java.util.Arrays;
-
 /**
  * A pattern of dots represented as both binary (boolean) and colour data
  */

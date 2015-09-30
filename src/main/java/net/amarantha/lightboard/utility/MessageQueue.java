@@ -50,7 +50,7 @@ public class MessageQueue {
                 } else {
                     List<MessageWrapper> messages = allMessages.get(source);
                     Integer messagePointer = messagePointers.get(source);
-                    if ( messagePointer==null || messagePointer>=messages.size() ) {
+                    if ( messagePointer==null || messages==null || messagePointer>=messages.size() ) {
                         messagePointers.put(source, 0);
                         messagePointer = 0;
                     }

@@ -87,13 +87,12 @@ public class LightBoardSurface {
         }
     }
 
-    public boolean drawPattern(int xPos, int yPos, Pattern pattern) {
+    public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern) {
         return drawPattern(xPos, yPos, pattern, boardRegion);
     }
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, Region r) {
         return drawPattern(xPos, yPos, pattern, false, r);
     }
-
 
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
         boolean changed = false;
@@ -112,11 +111,11 @@ public class LightBoardSurface {
         return changed;
     }
 
-    public boolean clearPattern(int xPos, int yPos, boolean[][] chr) {
+    public synchronized boolean clearPattern(int xPos, int yPos, boolean[][] chr) {
         return clearPattern(xPos, yPos, chr, boardRegion);
     }
 
-    public boolean clearPattern(int xPos, int yPos, boolean[][] chr, Region r) {
+    public synchronized boolean clearPattern(int xPos, int yPos, boolean[][] chr, Region r) {
         boolean changed = false;
         if ( chr.length>0 && chr[0].length> 0 ) {
             for (int x = 0; x < chr[0].length; x++) {
@@ -130,7 +129,7 @@ public class LightBoardSurface {
         return changed;
     }
 
-    public boolean clearSurface() {
+    public synchronized boolean clearSurface() {
         return clearRegion(boardRegion);
     }
 

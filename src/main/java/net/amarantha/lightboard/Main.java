@@ -23,7 +23,6 @@ public class Main extends Application {
         withServer = !params.contains("noserver");
 
         if ( simulationMode ) {
-            // Launch application via JavaFX
             launch(args);
         } else {
             Guice.createInjector(new ApplicationModule())
