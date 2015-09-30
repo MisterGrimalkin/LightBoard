@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.scene.impl;
 
+import com.google.inject.Singleton;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.font.ShowerFont;
@@ -15,6 +16,7 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 
 import javax.inject.Inject;
 
+@Singleton
 public class TravelInformationScene extends Scene {
 
     private static final int BUS_NUMBER_WIDTH = 24;
@@ -83,7 +85,6 @@ public class TravelInformationScene extends Scene {
                 .setRestDuration(5000)
                 .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
 
-        // Bundle Travel Updater
         TubeStatusUpdater tubeStatus =  new TubeStatusUpdater(tubeDetailZone, tubeSummaryZone);
         BusTimesUpdater busTimes = new BusTimesUpdater(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
         tubeStatus.setDataRefresh(60000);
@@ -93,8 +94,8 @@ public class TravelInformationScene extends Scene {
         cZone.setScrollTick(100);//.setRestDuration(4000);
 
         // Weather
-        TextZone weatherZone = TextZone.fixed(getSurface());
-        WeatherUpdater weatherUpdater = new WeatherUpdater(weatherZone);
+//        TextZone weatherZone = TextZone.fixed(getSurface());
+//        WeatherUpdater weatherUpdater = new WeatherUpdater(weatherZone);
 
 
         // Clock

@@ -8,14 +8,15 @@ public class BusDeparture {
     private int offset;
     private boolean active = false;
 
-    public BusDeparture(long stopCode, String busNo, String destination) {
-        this(stopCode, busNo, destination, 0);
+    public BusDeparture(long stopCode, String busNo, String destination, boolean active) {
+        this(stopCode, busNo, destination, active, 0);
     }
 
-    public BusDeparture(long stopCode, String busNo, String destination, int offset) {
+    public BusDeparture(long stopCode, String busNo, String destination, boolean active, int offset) {
         this.stopCode = stopCode;
         this.busNo = busNo;
         this.destination = destination;
+        this.active = active;
         this.offset = offset;
     }
 

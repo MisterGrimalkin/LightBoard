@@ -12,7 +12,7 @@ public class BusTimesUpdater extends Updater {
 
     private final static String TFL_BUS_URL = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1";
 
-    private Set<BusDeparture> buses = new HashSet<>();
+    private Map<String, BusDeparture> buses = new HashMap<>();
 
     private TextZone busNumberZone;
     private TextZone leftDestinationZone;
@@ -32,15 +32,19 @@ public class BusTimesUpdater extends Updater {
 
     public void loadBusStops() {
 
-        buses.add(new BusDeparture(53785, "W7", "Muswell Hill"));
-        buses.add(new BusDeparture(56782, "W7", "Finsbury Park"));
-        buses.add(new BusDeparture(76713, "W5", "Harringay", -3));
-        buses.add(new BusDeparture(76985, "W5", "Archway", 3));
-        buses.add(new BusDeparture(76713, "41", "Tottenham Hale"));
-        buses.add(new BusDeparture(56403, "41", "Archway"));
-        buses.add(new BusDeparture(56403, "91", "Trafalgar Square"));
-        buses.add(new BusDeparture(56403, "N91", "Trafalgar Square"));
+        buses.put("1", new BusDeparture(53785, "W7", "Muswell Hill", true));
+        buses.put("2", new BusDeparture(56782, "W7", "Finsbury Park", true));
+        buses.put("3", new BusDeparture(76713, "W5", "Harringay", true, -3));
+        buses.put("4", new BusDeparture(76985, "W5", "Archway", true, 3));
+        buses.put("5", new BusDeparture(76713, "41", "Tottenham Hale", true));
+        buses.put("6", new BusDeparture(56403, "41", "Archway", true));
+        buses.put("7", new BusDeparture(56403, "91", "Trafalgar Square", true));
+        buses.put("8", new BusDeparture(56403, "N91", "Trafalgar Square", false));
 
+    }
+
+    public Map<String, BusDeparture> getBusDepartures() {
+        return buses;
     }
 
     private int numberOfActiveBuses(Map<BusDeparture, List<Long>> map) {
@@ -56,25 +60,7 @@ public class BusTimesUpdater extends Updater {
     @Override
     public void refresh() {
 
-//        busNumberZone.resetScroll();
-//        leftDestinationZone.resetScroll();
-//        leftTimesZone.resetScroll();
-//        rightDestinationZone.resetScroll();
-//        rightTimesZone.resetScroll();
-//
-//        busNumberZone.clearMessages();
-//        leftDestinationZone.clearMessages();
-//        leftTimesZone.clearMessages();
-//        rightDestinationZone.clearMessages();
-//        rightTimesZone.clearMessages();
-
         Thread thread = new Thread(() -> {
-
-//            busNumberZone.resetScroll();
-//            leftDestinationZone.resetScroll();
-//            leftTimesZone.resetScroll();
-//            rightDestinationZone.resetScroll();
-//            rightTimesZone.resetScroll();
 
             busNumberZone.clearAllMessages();
             leftDestinationZone.clearAllMessages();
@@ -82,11 +68,12 @@ public class BusTimesUpdater extends Updater {
             rightDestinationZone.clearAllMessages();
             rightTimesZone.clearAllMessages();
 
-
             BusData data = new BusData();
             try {
-                for (BusDeparture bus : buses) {
-                    data.addResult(bus, getDepartureTimesFor(bus));
+                for (BusDeparture bus : buses.values()) {
+                    if ( bus.isActive() ) {
+                        data.addResult(bus, getDepartureTimesFor(bus));
+                    }
                 }
             } catch ( Exception e ) {
                 data.getDataByBusNumber().clear();
@@ -102,12 +89,6 @@ public class BusTimesUpdater extends Updater {
                 rightTimesZone.addMessage(sourceId, "{red}* * *");
             } else {
                 for (Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet()) {
-
-//                busNumberZone.setMaxMessagesPerSource(sourceId, 1);
-//                leftDestinationZone.setMaxMessagesPerSource(sourceId, 1);
-//                leftTimesZone.setMaxMessagesPerSource(sourceId, 1);
-//                rightDestinationZone.setMaxMessagesPerSource(sourceId, 1);
-//                rightTimesZone.setMaxMessagesPerSource(sourceId, 1);
 
                     busNumberZone.clearMessages(sourceId);
                     leftDestinationZone.clearMessages(sourceId);
@@ -180,13 +161,6 @@ public class BusTimesUpdater extends Updater {
                 }
             }
 
-//            busNumberZone.resetMessageSources();
-//            leftDestinationZone.resetMessageSources();
-//            leftTimesZone.resetMessageSources();
-//            rightDestinationZone.resetMessageSources();
-//            rightTimesZone.resetMessageSources();
-
-
         });
 
         thread.start();
@@ -201,35 +175,19 @@ public class BusTimesUpdater extends Updater {
 
         List<Long> result = new ArrayList<>();
 
-//        try {
+        String httpResult = Http.get(TFL_BUS_URL + "?StopCode1=" + departure.getStopCode()).text();
 
-            String httpResult = Http.get(TFL_BUS_URL + "?StopCode1=" + departure.getStopCode()).text();
+        List<String[]> lineArrays = breakIntoLineArrays(httpResult);
 
-            List<String[]> lineArrays = breakIntoLineArrays(httpResult);
+        if ( lineArrays.isEmpty() ) {
+            throw new Exception();
+        }
 
-            if ( lineArrays.isEmpty() ) {
-                throw new Exception();
+        for ( String[] line : lineArrays ) {
+            if ( line[BUS_NUMBER].equals(departure.getBusNo()) ) {
+                result.add(minutesIntoFuture(line[BUS_TIME]));
             }
-
-            for ( String[] line : lineArrays ) {
-                if ( line[BUS_NUMBER].equals(departure.getBusNo()) ) {
-                    result.add(minutesIntoFuture(line[BUS_TIME]));
-                }
-            }
-
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            busNumberZone.clearAllMessages();
-//            leftDestinationZone.clearAllMessages();
-//            leftTimesZone.clearAllMessages();
-//            rightDestinationZone.clearAllMessages();
-//            rightTimesZone.clearAllMessages();
-//            busNumberZone.addMessage("{red}*");
-//            leftDestinationZone.addMessage("{red}No Data");
-//            leftTimesZone.addMessage("{red}* * *");
-//            rightDestinationZone.addMessage("{red}No Data");
-//            rightTimesZone.addMessage("{red}* * *");
-//        }
+        }
 
         return result;
     }
