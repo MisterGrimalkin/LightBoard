@@ -3,16 +3,11 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.updater.transport.BusDeparture;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import net.amarantha.lightboard.updater.transport.BusTimesUpdater;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 @Singleton
 @Path("bus")
@@ -30,24 +25,29 @@ public class BusStopResource extends Resource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBusStops() {
-        JSONObject json = new JSONObject();
-        JSONArray ja = new JSONArray();
-
-        for ( Map.Entry<String, BusDeparture> entry : travelInformationScene.getBusTimesUpdater().getBusDepartures().entrySet() ) {
-            JSONObject jsonBus = new JSONObject();
-            jsonBus.put("id", entry.getKey());
-            BusDeparture bus = entry.getValue();
-            jsonBus.put("stop", bus.getStopCode());
-            jsonBus.put("bus", bus.getBusNo());
-            jsonBus.put("destination", bus.getDestination());
-            jsonBus.put("offset", bus.getOffset());
-            jsonBus.put("active", bus.isActive());
-            ja.add(jsonBus);
-        }
-
-        json.put("buses", ja);
-        return ok(json.toString());
+        return ok(travelInformationScene.getBusTimesUpdater().getBusStopJson().toString());
     }
 
+    @POST
+    @Path("enable")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response enableBus(@QueryParam("id") String id) {
+        BusTimesUpdater busTimesUpdater = travelInformationScene.getBusTimesUpdater();
+        busTimesUpdater.getBusDepartures().get(id).setActive(true);
+        busTimesUpdater.saveBusConfig();
+        busTimesUpdater.refresh();
+        return ok("Bus info " + id + " enabled");
+    }
+
+    @POST
+    @Path("disable")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response disableBus(@QueryParam("id") String id) {
+        BusTimesUpdater busTimesUpdater = travelInformationScene.getBusTimesUpdater();
+        busTimesUpdater.getBusDepartures().get(id).setActive(false);
+        busTimesUpdater.saveBusConfig();
+        busTimesUpdater.refresh();
+        return ok("Bus info " + id + " disabled");
+    }
 
 }

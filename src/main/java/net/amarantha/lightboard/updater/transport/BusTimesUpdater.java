@@ -3,7 +3,15 @@ package net.amarantha.lightboard.updater.transport;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -27,22 +35,68 @@ public class BusTimesUpdater extends Updater {
         this.leftTimesZone = leftTimesZone;
         this.rightDestinationZone = rightDestinationZone;
         this.rightTimesZone = rightTimesZone;
-        loadBusStops();
     }
 
-    public void loadBusStops() {
+    public void loadBusConfig() {
 
-        buses.put("1", new BusDeparture(53785, "W7", "Muswell Hill", true));
-        buses.put("2", new BusDeparture(56782, "W7", "Finsbury Park", true));
-        buses.put("3", new BusDeparture(76713, "W5", "Harringay", true, -3));
-        buses.put("4", new BusDeparture(76985, "W5", "Archway", true, 3));
-        buses.put("5", new BusDeparture(76713, "41", "Tottenham Hale", true));
-        buses.put("6", new BusDeparture(56403, "41", "Archway", true));
-        buses.put("7", new BusDeparture(56403, "91", "Trafalgar Square", true));
-        buses.put("8", new BusDeparture(56403, "N91", "Trafalgar Square", true));
+        JSONParser parser = new JSONParser();
 
+        try {
+            Object obj = parser.parse(new FileReader("busconfig.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONArray busJa = (JSONArray)jsonObject.get("buses");
+            Iterator<JSONObject> iter = busJa.iterator();
+            while ( iter.hasNext() ) {
+                JSONObject bus = iter.next();
+                buses.put(
+                        (String)bus.get("id"),
+                        new BusDeparture(
+                                (long)bus.get("stop"),
+                                (String)bus.get("bus"),
+                                (String)bus.get("destination"),
+                                (boolean)bus.get("active"),
+                                (long)bus.get("offset")
+                        )
+                );
+            }
+        } catch (ParseException | IOException e) {
+            saveBusConfig();
+            e.printStackTrace();
+        }
     }
 
+    public void saveBusConfig() {
+        try {
+            JSONObject json = getBusStopJson();
+            FileWriter file = new FileWriter("busconfig.json");
+            file.write(json.toString());
+            file.flush();
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JSONObject getBusStopJson() {
+        JSONObject json = new JSONObject();
+        JSONArray ja = new JSONArray();
+
+        for ( Map.Entry<String, BusDeparture> entry : buses.entrySet() ) {
+            JSONObject jsonBus = new JSONObject();
+            jsonBus.put("id", entry.getKey());
+            BusDeparture bus = entry.getValue();
+            jsonBus.put("stop", bus.getStopCode());
+            jsonBus.put("bus", bus.getBusNo());
+            jsonBus.put("destination", bus.getDestination());
+            jsonBus.put("offset", bus.getOffset());
+            jsonBus.put("active", bus.isActive());
+            ja.add(jsonBus);
+        }
+
+        json.put("buses", ja);
+        return json;
+    }
     public Map<String, BusDeparture> getBusDepartures() {
         return buses;
     }
@@ -59,6 +113,8 @@ public class BusTimesUpdater extends Updater {
 
     @Override
     public void refresh() {
+
+        loadBusConfig();
 
         Thread thread = new Thread(() -> {
 

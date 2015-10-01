@@ -5,14 +5,14 @@ public class BusDeparture {
     private long stopCode;
     private String busNo;
     private String destination;
-    private int offset;
+    private long offset;
     private boolean active = false;
 
     public BusDeparture(long stopCode, String busNo, String destination, boolean active) {
         this(stopCode, busNo, destination, active, 0);
     }
 
-    public BusDeparture(long stopCode, String busNo, String destination, boolean active, int offset) {
+    public BusDeparture(long stopCode, String busNo, String destination, boolean active, long offset) {
         this.stopCode = stopCode;
         this.busNo = busNo;
         this.destination = destination;
@@ -40,7 +40,7 @@ public class BusDeparture {
         return destination;
     }
 
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 

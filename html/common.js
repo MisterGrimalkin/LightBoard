@@ -90,3 +90,14 @@ function errorInElement(panel, message) {
 }
 
 
+/////////////
+// Utility //
+/////////////
+
+function bindFunction(f, i) {
+    return f(i);
+}
+
+
+
+
