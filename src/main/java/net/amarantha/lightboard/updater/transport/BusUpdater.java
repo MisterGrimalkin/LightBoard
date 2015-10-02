@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.updater.transport;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class BusTimesUpdater extends Updater {
+public class BusUpdater extends Updater {
 
     private final static String TFL_BUS_URL = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1";
 
@@ -28,13 +29,18 @@ public class BusTimesUpdater extends Updater {
     private TextZone rightDestinationZone;
     private TextZone rightTimesZone;
 
-    public BusTimesUpdater(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+    @Inject
+    public BusUpdater() {
         super(null);
+    }
+
+    public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
         this.busNumberZone = busNumberZone;
         this.leftDestinationZone = leftDestinationZone;
         this.leftTimesZone = leftTimesZone;
         this.rightDestinationZone = rightDestinationZone;
         this.rightTimesZone = rightTimesZone;
+        return this;
     }
 
     public void loadBusConfig() {

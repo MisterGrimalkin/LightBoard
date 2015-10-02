@@ -12,6 +12,8 @@ public class MessageScrollerScene extends Scene {
 
     @Inject private SceneManager sceneManager;
 
+    @Inject private TextZone zone;
+
     public MessageScrollerScene(LightBoardSurface surface) {
         super("Message Scroller");
     }
@@ -19,8 +21,7 @@ public class MessageScrollerScene extends Scene {
     @Override
     public void build() {
 
-        TextZone zone = TextZone.scrollUp(getSurface());
-        zone.setScrollTick(20);
+        zone.scrollUp().setScrollTick(20);
 
         zone.addScrollCompleteHandler(() -> {
             zone.advanceMessage();

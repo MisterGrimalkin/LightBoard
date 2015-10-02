@@ -331,7 +331,7 @@ public abstract class LightBoardZone {
         return this;
     }
 
-    public LightBoardZone masterDelta(int d) {
+    public LightBoardZone setMasterDelta(int d) {
         masterDelta = d;
         return this;
     }

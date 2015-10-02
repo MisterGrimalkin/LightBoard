@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.zone.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.*;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SimpleFont;
@@ -11,25 +12,10 @@ public class TextZone extends LightBoardZone {
 
     private Font font;
 
-    private Edge defaultScrollFrom;
-    private Edge defaultScrollTo;
-    private AlignH defaultRestH;
-    private AlignV defaultRestV;
-    private int defaultRestDuration;
-
-    public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration) {
-            this(surface, scrollFrom, scrollTo, restDuration, new SimpleFont());
-    }
-
-    public TextZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration, Font font) {
+    @Inject
+    public TextZone(LightBoardSurface surface) {
         super(surface);
-        defaultScrollFrom = scrollFrom;
-        defaultScrollTo = scrollTo;
-        defaultRestH = AlignH.CENTRE;
-        defaultRestV = AlignV.MIDDLE;
-        defaultRestDuration = restDuration;
         setDefaults();
-        this.font = font;
         addScrollCompleteHandler(() -> {
             if (override) {
                 TextZone.this.clearOverride();
@@ -39,9 +25,11 @@ public class TextZone extends LightBoardZone {
     }
 
     private void setDefaults() {
-        scroll(defaultScrollFrom, defaultScrollTo);
-        setRestPosition(defaultRestH, defaultRestV);
-        setRestDuration(defaultRestDuration);
+        font = new SimpleFont();
+        scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
+        setRestPosition(AlignH.CENTRE, AlignV.MIDDLE);
+        setRestDuration(3000);
+        setScrollTick(60);
     }
 
     public void advanceMessage() {
@@ -53,24 +41,35 @@ public class TextZone extends LightBoardZone {
     // Factory //
     /////////////
 
-    public static TextZone fixed(LightBoardSurface s) {
-        return new TextZone(s, Edge.NO_SCROLL, Edge.NO_SCROLL, 3000, new SimpleFont());
+    public TextZone fixed() {
+        scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
+        setScrollTick(1000);
+        setRestDuration(1000);
+        return this;
     }
 
-    public static TextZone scrollLeft(LightBoardSurface s) {
-        return new TextZone(s, Edge.RIGHT, Edge.LEFT, 3000, new SimpleFont());
+    public TextZone scrollLeft() {
+        scroll(Edge.RIGHT, Edge.LEFT);
+        setScrollTick(25);
+        return this;
     }
 
-    public static TextZone scrollRight(LightBoardSurface s) {
-        return new TextZone(s, Edge.LEFT, Edge.RIGHT, 3000, new SimpleFont());
+    public TextZone scrollRight() {
+        scroll(Edge.LEFT, Edge.RIGHT);
+        setScrollTick(25);
+        return this;
     }
 
-    public static TextZone scrollUp(LightBoardSurface s) {
-        return new TextZone(s, Edge.BOTTOM, Edge.TOP, 3000, new SimpleFont());
+    public TextZone scrollUp() {
+        scroll(Edge.BOTTOM, Edge.TOP);
+        setScrollTick(60);
+        return this;
     }
 
-    public static TextZone scrollDown(LightBoardSurface s) {
-        return new TextZone(s, Edge.TOP, Edge.BOTTOM, 3000, new SimpleFont());
+    public TextZone scrollDown() {
+        scroll(Edge.TOP, Edge.BOTTOM);
+        setScrollTick(60);
+        return this;
     }
 
 
@@ -123,6 +122,12 @@ public class TextZone extends LightBoardZone {
 
     public TextZone clearAllMessages() {
         messageQueue.clearAllMessages();
+        return this;
+    }
+
+    public TextZone replaceMessage(String message) {
+        clearMessages();
+        addMessage(message);
         return this;
     }
 

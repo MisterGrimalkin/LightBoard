@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.updater.transport;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
@@ -17,16 +18,22 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TubeStatusUpdater extends Updater {
+public class TubeUpdater extends Updater {
 
     private final static String TFL_TS_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
 
+    private TextZone detailZone;
     private TextZone summaryZone;
 
-    public TubeStatusUpdater(TextZone zone, TextZone summaryZone) {
-        super(zone);
+    @Inject
+    public TubeUpdater() {
+        super(null);
+    }
+
+    public TubeUpdater setZones(TextZone detailZone, TextZone summaryZone) {
+        this.detailZone = detailZone;
         this.summaryZone = summaryZone;
-        System.out.println("Tube Status Updater Ready....");
+        return this;
     }
 
     @Override
@@ -41,9 +48,8 @@ public class TubeStatusUpdater extends Updater {
                 clearMessages();
 
                 if ( tubeStatuses.isEmpty() ) {
-                    replaceMessage("{red}TfL returned no data");
-                    summaryZone.clearMessages();
-                    summaryZone.addMessage("{red}Error Connecting to TfL");
+                    detailZone.replaceMessage("{red}TfL returned no data");
+                    summaryZone.replaceMessage("{red}Error Connecting to TfL");
                 } else {
                     StringBuilder summarySb = new StringBuilder();
                     summarySb.append("{yellow}|");
@@ -68,7 +74,7 @@ public class TubeStatusUpdater extends Updater {
                         }
 
                         if ( !isGood ) {
-                            addMessage("{yellow}" + ts.getLineName() + ":" + colour + statusDetail);
+                            detailZone.addMessage("{yellow}" + ts.getLineName() + ":" + colour + statusDetail);
                             badCount++;
                         }
 
@@ -79,8 +85,7 @@ public class TubeStatusUpdater extends Updater {
                     }
 
                     if ( badCount==0 ) {
-                        addMessage("   ");
-//                        addMessage("{green}Good Service on all TfL lines");
+                        detailZone.addMessage("   ");
                     }
 
                     String summaryMessage = summarySb.toString().trim();

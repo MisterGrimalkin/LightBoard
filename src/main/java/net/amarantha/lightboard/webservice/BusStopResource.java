@@ -3,7 +3,7 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.updater.transport.BusTimesUpdater;
+import net.amarantha.lightboard.updater.transport.BusUpdater;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -25,17 +25,17 @@ public class BusStopResource extends Resource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBusStops() {
-        return ok(travelInformationScene.getBusTimesUpdater().getBusStopJson().toString());
+        return ok(travelInformationScene.getBusUpdater().getBusStopJson().toString());
     }
 
     @POST
     @Path("enable")
     @Produces(MediaType.TEXT_PLAIN)
     public Response enableBus(@QueryParam("id") String id) {
-        BusTimesUpdater busTimesUpdater = travelInformationScene.getBusTimesUpdater();
-        busTimesUpdater.getBusDepartures().get(id).setActive(true);
-        busTimesUpdater.saveBusConfig();
-        busTimesUpdater.refresh();
+        BusUpdater busUpdater = travelInformationScene.getBusUpdater();
+        busUpdater.getBusDepartures().get(id).setActive(true);
+        busUpdater.saveBusConfig();
+        busUpdater.refresh();
         return ok("Bus info " + id + " enabled");
     }
 
@@ -43,10 +43,10 @@ public class BusStopResource extends Resource {
     @Path("disable")
     @Produces(MediaType.TEXT_PLAIN)
     public Response disableBus(@QueryParam("id") String id) {
-        BusTimesUpdater busTimesUpdater = travelInformationScene.getBusTimesUpdater();
-        busTimesUpdater.getBusDepartures().get(id).setActive(false);
-        busTimesUpdater.saveBusConfig();
-        busTimesUpdater.refresh();
+        BusUpdater busUpdater = travelInformationScene.getBusUpdater();
+        busUpdater.getBusDepartures().get(id).setActive(false);
+        busUpdater.saveBusConfig();
+        busUpdater.refresh();
         return ok("Bus info " + id + " disabled");
     }
 

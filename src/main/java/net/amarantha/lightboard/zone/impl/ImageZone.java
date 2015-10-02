@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.zone.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -15,28 +16,16 @@ import static org.imgscalr.Scalr.Mode;
 
 public class ImageZone extends LightBoardZone {
 
-    public static ImageZone fixed(LightBoardSurface s) {
-        ImageZone zone = new ImageZone(s);
-        zone.scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
-        return zone;
-    }
-
-    public static ImageZone scrollUp(LightBoardSurface s) {
-        ImageZone zone = new ImageZone(s);
-        zone.scroll(Edge.BOTTOM, Edge.TOP);
-        return zone;
-    }
-
-    public static ImageZone scrollLeft(LightBoardSurface s) {
-        ImageZone zone = new ImageZone(s);
-        zone.scroll(Edge.RIGHT, Edge.LEFT);
-        return zone;
+    public ImageZone scrollUp() {
+        scroll(Edge.BOTTOM, Edge.TOP);
+        return this;
     }
 
     Pattern imagePattern;
     double[][][] convertedImage;
     boolean[][] convertedImageBinary;
 
+    @Inject
     public ImageZone(LightBoardSurface surface) {
         super(surface);
         scroll(Edge.BOTTOM, Edge.TOP);
@@ -44,7 +33,7 @@ public class ImageZone extends LightBoardZone {
         setRestDuration(2000);
     }
 
-    public void loadImage(String filename) {
+    public ImageZone loadImage(String filename) {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File(filename));
@@ -52,6 +41,7 @@ public class ImageZone extends LightBoardZone {
             e.printStackTrace();
         }
         convertImage(Scalr.resize(image, Mode.FIT_TO_WIDTH, getRegion().width, getRegion().height));
+        return this;
     }
 
     @Override

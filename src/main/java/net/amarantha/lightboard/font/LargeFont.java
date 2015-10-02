@@ -2,9 +2,9 @@ package net.amarantha.lightboard.font;
 
 import net.amarantha.lightboard.entity.Pattern;
 
-public class ShowerFont extends Font {
+public class LargeFont extends Font {
 
-    public ShowerFont() {
+    public LargeFont() {
         registerPattern('0', ZERO);
         registerPattern('1', ONE);
         registerPattern('2', TWO);

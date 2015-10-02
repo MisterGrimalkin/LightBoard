@@ -9,8 +9,9 @@ import javax.inject.Inject;
 
 public class TeleprompterScene extends Scene {
 
-    @Inject
-    SceneManager sceneManager;
+    @Inject private SceneManager sceneManager;
+
+    @Inject private TextZone zone;
 
     private static final String[] messages = {
             "A long time ago",
@@ -33,8 +34,7 @@ public class TeleprompterScene extends Scene {
     @Override
     public void build() {
 
-        TextZone zone = TextZone.scrollUp(getSurface());
-        zone.addScrollCompleteHandler(sceneManager::advanceScene);
+        zone.scrollUp().addScrollCompleteHandler(sceneManager::advanceScene);
 
         StringBuilder sb = new StringBuilder();
         for ( String message : messages ) {

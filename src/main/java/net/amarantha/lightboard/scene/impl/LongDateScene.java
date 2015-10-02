@@ -12,8 +12,9 @@ import net.amarantha.lightboard.zone.impl.TextZone;
 
 public class LongDateScene extends Scene {
 
-    @Inject
-    SceneManager sceneManager;
+    @Inject private SceneManager sceneManager;
+
+    @Inject private TextZone dateZone;
 
     public LongDateScene(LightBoardSurface surface) {
         super("Long Date");
@@ -22,8 +23,9 @@ public class LongDateScene extends Scene {
     @Override
     public void build() {
 
-        TextZone dateZone = new TextZone(getSurface(), Edge.BOTTOM, Edge.TOP, 3000);
-        dateZone.setRegion(0, 0, getCols(), getRows())
+        dateZone
+                .scrollUp()
+                .setRegion(0, 0, getCols(), getRows())
                 .setScrollTick(30)
                 .addScrollCompleteHandler(sceneManager::advanceScene);
 

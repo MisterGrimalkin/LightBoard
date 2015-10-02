@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.zone.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
@@ -13,15 +14,13 @@ import java.util.Date;
 
 public class ClockZone extends TextZone {
 
+    @Inject
     public ClockZone(LightBoardSurface surface) {
-        super(surface, Edge.NO_SCROLL, Edge.NO_SCROLL, 500, new SmallFont());
+        super(surface);
         setScrollTick(500);
         setRestDuration(0);
         setRestPosition(AlignH.CENTRE, AlignV.MIDDLE);
-    }
-
-    public ClockZone(LightBoardSurface surface, Edge scrollFrom, Edge scrollTo, int restDuration, Font font) {
-        super(surface, scrollFrom, scrollTo, restDuration, font);
+        setFont(new SmallFont());
     }
 
     private boolean colon = false;

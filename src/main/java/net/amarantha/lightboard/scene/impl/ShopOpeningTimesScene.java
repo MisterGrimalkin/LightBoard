@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.scene.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
@@ -11,6 +12,9 @@ import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 
 public class ShopOpeningTimesScene extends Scene {
 
+    @Inject private TextZone dateZone;
+    @Inject private TextZone openingTimesZone;
+
     public ShopOpeningTimesScene(LightBoardSurface surface) {
         super("Shop Hours");
         setSceneDuration(2000);
@@ -18,8 +22,8 @@ public class ShopOpeningTimesScene extends Scene {
 
     public void build() {
 
-        TextZone dateZone = TextZone.fixed(getSurface());
         dateZone
+            .fixed()
             .setRegion(0, 0, getCols(), getRows() / 2)
             .setRestDuration(0)
             .setRestPosition(LEFT, MIDDLE)
@@ -27,8 +31,8 @@ public class ShopOpeningTimesScene extends Scene {
         DateTimeUpdater dateUpdater = new DateTimeUpdater(dateZone, "EEEE d MMMM yyyy  h:mma");
         dateUpdater.setDataRefresh(500);
 
-        TextZone openingTimesZone = TextZone.scrollUp(getSurface());
         openingTimesZone
+            .scrollUp()
             .setRegion(0, getRows() / 2, getCols(), getRows() / 2)
             .setRestDuration(3500)
             .setRestPosition(LEFT, MIDDLE)

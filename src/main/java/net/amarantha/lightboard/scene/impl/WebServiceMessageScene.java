@@ -18,13 +18,13 @@ public class WebServiceMessageScene extends Scene {
         super("Web Messages");
     }
 
-    private TextZone zone;
+    @Inject private TextZone zone;
 
     @Override
     public void build() {
 
-        zone = TextZone.scrollUp(getSurface());
         zone
+            .scrollUp()
             .setScrollTick(60)
             .addScrollCompleteHandler(() -> {
                 sceneManager.reloadScene();

@@ -10,10 +10,12 @@ public class ImageScene extends Scene {
 
     private String filename;
 
-    @Inject SceneManager sceneManager;
+    @Inject private SceneManager sceneManager;
+
+    @Inject private ImageZone zone;
 
     @Inject
-    public ImageScene(LightBoardSurface surface) {
+    public ImageScene() {
         super("Image Banner");
         setSceneDuration(null);
     }
@@ -25,7 +27,7 @@ public class ImageScene extends Scene {
     @Override
     public void build() {
 
-        ImageZone zone = ImageZone.scrollUp(getSurface());
+        zone.scrollUp();
         zone.setScrollTick(50);
         zone.setRestDuration(2500);
         zone.loadImage(filename);

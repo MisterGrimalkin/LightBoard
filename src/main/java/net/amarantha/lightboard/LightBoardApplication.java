@@ -3,6 +3,7 @@ package net.amarantha.lightboard;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.scene.impl.ImageScene;
+import net.amarantha.lightboard.scene.impl.ShowerTicketsScene;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
@@ -13,6 +14,9 @@ import net.amarantha.lightboard.webservice.WebService;
 public class LightBoardApplication {
 
     @Inject private LightBoardSurface surface;
+
+    @Inject private PropertyManager props;
+
     @Inject private WebService service;
 
     @Inject private SceneManager sceneManager;
@@ -20,14 +24,11 @@ public class LightBoardApplication {
     @Inject private TravelInformationScene travelInformationScene;
     @Inject private ImageScene imageScene;
 
-
-    @Inject private PropertyManager props;
-
     public void startApplication(boolean withServer) {
 
         surface.init();
 
-        imageScene.setFilename("gp192x32.jpg");
+        imageScene.setFilename(props.getString("bannerImage", "gp192x32.jpg"));
 
         sceneManager.addScene(0, webServiceMessageScene, null, false);
         sceneManager.addScene(1, travelInformationScene, 600000, true);

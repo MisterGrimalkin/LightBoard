@@ -23,6 +23,7 @@ public class Sync {
             public void run() {
             System.out.println("Sync Thread Running");
             while (run) {
+                System.out.println("Hello");
                 for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
                     entry.getValue().checkAndRun();
                 }

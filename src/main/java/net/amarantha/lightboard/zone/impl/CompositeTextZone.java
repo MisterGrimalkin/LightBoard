@@ -1,5 +1,6 @@
 package net.amarantha.lightboard.zone.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
@@ -9,24 +10,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CompositeZone extends LightBoardZone {
+public class CompositeTextZone extends LightBoardZone {
 
     private List<TextZone> zones = new ArrayList<>();
 
     private int width = 0;
     private int height = 0;
 
-    public CompositeZone(LightBoardSurface surface, TextZone... lightBoardZones) {
+    @Inject
+    public CompositeTextZone(LightBoardSurface surface) {
         super(surface);
+        autoReset(false);
+    }
+
+    public CompositeTextZone bindZones(TextZone... tz) {
         int i = 0;
-        for ( TextZone z : lightBoardZones) {
+        for ( TextZone z : tz) {
             zones.add(z);
             width = Math.max(width, z.getRegion().width);
             height = Math.max(height, z.getRegion().height);
             prepareZone(i, z);
             i++;
         }
-        autoReset(false);
+        return this;
     }
 
     @Override
@@ -52,42 +58,7 @@ public class CompositeZone extends LightBoardZone {
         zone.resetScroll();
         zone.removeAllHandlers();
         zone.autoReset(false);
-//        zone.addScrollCompleteHandler(() -> {
-//            if ( zoneNo==2 ) {
-//                System.out.println("FUCKED");
-//            }
-//            if ( !scrolledOut.get(zoneNo) ) {
-//                scrolledOut.put(zoneNo, true);
-//                System.out.println("Zone " + zoneNo + " out");
-//                if (allScrolledOut()) {
-//                    System.out.println("RESET");
-//                    for (TextZone z : zones) {
-//                        z.clearOverride();
-//                        z.advanceMessage();
-//                        z.resetScroll();
-//                    }
-//                    List<Integer> index = new ArrayList<>(scrolledOut.keySet());
-//                    for (Integer i : index) {
-//                        scrolledOut.put(i, false);
-//                    }
-//                }
-//            }
-//        });
     }
-
-//    private boolean allScrolledOut() {
-//        for ( Boolean b : scrolledOut.values() ) {
-//            if ( !b ) {
-//                return false;
-//            }
-//        }
-//        System.out.println("ALL");
-//        return true;
-//    }
-//
-//    private int zonesScrolledOut = 0;
-//
-
 
     public LightBoardZone start() {
         if ( !singleRender ) {
@@ -111,31 +82,13 @@ public class CompositeZone extends LightBoardZone {
         return super.setRestDuration(pause);
     }
 
-    //    private boolean paused;
-
-//    @Override
-//    public void pause() {
-//        paused = true;
-//    }
-//
-//    @Override
-//    public void resume() {
-//        paused = false;
-//    }
-
     @Override
     public void tick() {
-//        if ( !paused ) {
-//            super.tick();
-            for (LightBoardZone zone : zones) {
-                zone.tick();
-//                zone.render();
-            }
-            render();
-//        }
+        for (LightBoardZone zone : zones) {
+            zone.tick();
+        }
+        render();
     }
-
-
 
     @Override
     public int getContentWidth() {
