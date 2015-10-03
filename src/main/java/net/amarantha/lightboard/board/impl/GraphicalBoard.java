@@ -1,7 +1,6 @@
 package net.amarantha.lightboard.board.impl;
 
 import com.google.inject.Inject;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
@@ -10,14 +9,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.module.Cols;
 import net.amarantha.lightboard.module.Debug;
 import net.amarantha.lightboard.module.Rows;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.webservice.WebService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,8 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     private final int cols;
 
     private Circle[][] leds;
+
+    private final Sync sync;
 
     // Colour bounds for colour switching
     private double redMin = 0.05;
@@ -58,13 +57,14 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 //    @Inject private WebService webService;
 
     @Inject
-    public GraphicalBoard(@Rows int rows, @Cols int cols, Stage stage) {
-        this(rows, cols, stage, "LightBoard Simulation", 3, 0);
+    public GraphicalBoard(@Rows int rows, @Cols int cols, Sync sync, Stage stage) {
+        this(rows, cols, sync, stage, "LightBoard Simulation", 3, 0);
     }
 
-    public GraphicalBoard(int rows, int cols, Stage stage, String title, int ledRadius, int spacer) {
+    public GraphicalBoard(int rows, int cols, Sync sync, Stage stage, String title, int ledRadius, int spacer) {
         this.rows = rows;
         this.cols = cols;
+        this.sync = sync;
         this.stage = stage;
         this.title = title;
         this.ledRadius = ledRadius;
@@ -108,7 +108,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
         // Shut down application when window is closed
         stage.setOnCloseRequest(event -> {
 //            webService.stopWebService();
-            Sync.stopSyncThread();
+            sync.stopSyncThread();
             System.exit(0);
         });
 

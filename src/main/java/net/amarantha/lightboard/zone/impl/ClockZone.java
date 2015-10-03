@@ -3,11 +3,10 @@ package net.amarantha.lightboard.zone.impl;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
-import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.utility.Sync;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +14,8 @@ import java.util.Date;
 public class ClockZone extends TextZone {
 
     @Inject
-    public ClockZone(LightBoardSurface surface) {
-        super(surface);
+    public ClockZone(LightBoardSurface surface, Sync sync) {
+        super(surface, sync);
         setScrollTick(500);
         setRestDuration(0);
         setRestPosition(AlignH.CENTRE, AlignV.MIDDLE);

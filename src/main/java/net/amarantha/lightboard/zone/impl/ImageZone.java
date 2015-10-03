@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
 import org.imgscalr.Scalr;
 
@@ -26,8 +27,8 @@ public class ImageZone extends LightBoardZone {
     boolean[][] convertedImageBinary;
 
     @Inject
-    public ImageZone(LightBoardSurface surface) {
-        super(surface);
+    public ImageZone(LightBoardSurface surface, Sync sync) {
+        super(surface, sync);
         scroll(Edge.BOTTOM, Edge.TOP);
         clear(false);
         setRestDuration(2000);

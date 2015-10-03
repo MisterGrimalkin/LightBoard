@@ -4,14 +4,14 @@ import com.googlecode.guicebehave.Modules;
 import com.googlecode.guicebehave.Story;
 import com.googlecode.guicebehave.StoryRunner;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.module.ApplicationModule;
+import net.amarantha.lightboard.module.ApplicationTestModule;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(StoryRunner.class) @Modules(ApplicationModule.class)
+@RunWith(StoryRunner.class) @Modules(ApplicationTestModule.class)
 public class FontTest {
 
     @Inject Font font;

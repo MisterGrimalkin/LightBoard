@@ -1,16 +1,17 @@
 package net.amarantha.lightboard.updater;
 
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.utility.Sync;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class Updater {
 
-    protected TextZone zone;
+//    protected TextZone zone;
 
-    protected Updater(TextZone zone) {
-        this.zone = zone;
+    protected final Sync sync;
+
+    protected Updater(Sync sync) {
+        this.sync = sync;
         id = nextId++;
     }
 
@@ -33,19 +34,12 @@ public abstract class Updater {
     }
 
     public void start() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        sync.startTimerTask(new TimerTask() {
             @Override
             public void run() {
                 doRefresh();
             }
-        }, 0, dataRefresh);
-//        Sync.addTask(new Sync.Task(dataRefresh) {
-//            @Override
-//            public void runTask() {
-//                doRefresh();
-//            }
-//        });
+        }, dataRefresh);
         System.out.println("Updater running every " + dataRefresh + "ms");
     }
 
@@ -62,17 +56,12 @@ public abstract class Updater {
 
     private void doRefresh() {
         if ( !paused ) {
-//            Thread update = new Thread(() -> {
-
-                try {
-                    refresh();
-                } catch ( Exception e ) {
-                    System.out.println("ERROR!\n"+e.getMessage());
-                    e.printStackTrace();
-                }
-//            });
-//            update.setPriority(MIN_PRIORITY);
-//            update.start();
+            try {
+                refresh();
+            } catch ( Exception e ) {
+                System.out.println("ERROR!\n"+e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,24 +69,24 @@ public abstract class Updater {
     // Messages to TextZone //
     //////////////////////////
 
-    protected void replaceMessage(String... messages) {
-        clearMessages();
-        addMessage(messages);
-    }
-
-    protected void clearMessages() {
-        if ( zone!=null ) {
-            zone.clearMessages(id);
-        }
-    }
-
-    protected void addMessage(String... messages) {
-        if ( zone!=null ) {
-            for (String message : messages) {
-                zone.addMessage(id, message);
-            }
-        }
-    }
+//    protected void replaceMessage(String... messages) {
+//        clearMessages();
+//        addMessage(messages);
+//    }
+//
+//    protected void clearMessages() {
+//        if ( zone!=null ) {
+//            zone.clearMessages(id);
+//        }
+//    }
+//
+//    protected void addMessage(String... messages) {
+//        if ( zone!=null ) {
+//            for (String message : messages) {
+//                zone.addMessage(id, message);
+//            }
+//        }
+//    }
 
     protected final int id;
     public static int nextId = 0;

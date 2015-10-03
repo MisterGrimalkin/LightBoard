@@ -12,10 +12,12 @@ public class SelfTest {
     int testBounces = 0;
     boolean testInvert = false;
 
-    private LightBoardSurface surface;
+    private final LightBoardSurface surface;
+    private final Sync sync;
 
-    public SelfTest(LightBoardSurface surface) {
+    public SelfTest(LightBoardSurface surface, Sync sync) {
         this.surface = surface;
+        this.sync = sync;
     }
 
     public void run() {
@@ -29,7 +31,7 @@ public class SelfTest {
                                 "#-#"
                 );
 
-        Sync.addTask(new Sync.Task(20L) {
+        sync.addTask(new Sync.Task(20L) {
             @Override
             public void runTask() {
 

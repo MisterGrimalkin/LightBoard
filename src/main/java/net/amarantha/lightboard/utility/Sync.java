@@ -1,21 +1,24 @@
 package net.amarantha.lightboard.utility;
 
+import com.google.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.lang.Thread.NORM_PRIORITY;
 
+@Singleton
 public class Sync {
 
-    private static Thread syncThread;
+    private Thread syncThread;
 
-//    private static Task priorityTask;
+    protected Map<Integer, Task> tasks = new HashMap<>();
 
-    private static Map<Integer, Task> tasks = new HashMap<>();
+    protected boolean run = false;
 
-    private static boolean run = false;
-
-    public static void startSyncThread() {
+    public void startSyncThread() {
         System.out.println("Staring Sync Thread with " + tasks.size() + " tasks....");
         run = true;
         syncThread = new Thread() {
@@ -23,7 +26,6 @@ public class Sync {
             public void run() {
             System.out.println("Sync Thread Running");
             while (run) {
-                System.out.println("Hello");
                 for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
                     entry.getValue().checkAndRun();
                 }
@@ -34,28 +36,33 @@ public class Sync {
         syncThread.start();
     }
 
+    public void startTimerTask(TimerTask task, Long interval) {
+        Timer timer = new Timer();
+        timer.schedule(task, 0, interval);
+    }
+
     private static int nextTask = 0;
 
-    public static int addTask(Task task) {
+    public int addTask(Task task) {
         tasks.put(nextTask, task);
         return nextTask++;
     }
 
-    public static void resumeTask(int id) {
+    public void resumeTask(int id) {
         Task task = tasks.get(id);
         if ( task!=null ) {
             task.active = true;
         }
     }
 
-    public static void pauseTask(int id) {
+    public void pauseTask(int id) {
         Task task = tasks.get(id);
         if ( task!=null ) {
             task.active = false;
         }
     }
 
-    public static void stopSyncThread() {
+    public void stopSyncThread() {
         run = false;
         syncThread = null;
     }
@@ -77,6 +84,9 @@ public class Sync {
                     lastRun = now;
                 }
             }
+        }
+        public void setInterval(Long interval) {
+            this.interval = interval;
         }
         public abstract void runTask();
     }

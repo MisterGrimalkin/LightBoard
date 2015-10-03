@@ -1,5 +1,7 @@
 package net.amarantha.lightboard.updater;
 
+import com.google.inject.Inject;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -15,14 +17,19 @@ public class ShowerTicketUpdater extends Updater {
     private TextZone tickets1;
     private TextZone tickets2;
 
-    public ShowerTicketUpdater(TextZone name1, TextZone name2, TextZone tickets1, TextZone tickets2) {
-        super(name1);
+    @Inject
+    public ShowerTicketUpdater(Sync sync) {
+        super(sync);
+    }
+
+    public ShowerTicketUpdater setZones(TextZone name1, TextZone name2, TextZone tickets1, TextZone tickets2) {
         this.name1 = name1;
         this.name2 = name2;
         this.tickets1 = tickets1;
         this.tickets2 = tickets2;
         name1.addMessage(id, "{green}Female");
         name2.addMessage(id, "{green}Male");
+        return this;
     }
 
     @Override

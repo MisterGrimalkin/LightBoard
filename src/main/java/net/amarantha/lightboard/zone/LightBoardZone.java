@@ -16,9 +16,11 @@ import static java.lang.System.currentTimeMillis;
 public abstract class LightBoardZone {
 
     protected final LightBoardSurface surface;
+    protected final Sync sync;
 
-    protected LightBoardZone(LightBoardSurface surface) {
+    protected LightBoardZone(LightBoardSurface surface, Sync sync) {
         this.surface = surface;
+        this.sync = sync;
         region = surface.safeRegion(0, 0, surface.getCols(), surface.getRows());
     }
 
@@ -45,7 +47,7 @@ public abstract class LightBoardZone {
 
     public LightBoardZone start() {
         if ( !singleRender ) {
-            Sync.addTask(new Sync.Task(scrollTick) {
+            sync.addTask(new Sync.Task(scrollTick) {
                 @Override
                 public void runTask() {
                     tick();

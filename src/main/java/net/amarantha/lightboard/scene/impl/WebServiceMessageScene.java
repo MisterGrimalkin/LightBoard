@@ -12,6 +12,7 @@ import javax.inject.Inject;
 public class WebServiceMessageScene extends Scene {
 
     @Inject private SceneManager sceneManager;
+    @Inject private PostMessageUpdater updater;
 
     @Inject
     public WebServiceMessageScene(LightBoardSurface surface) {
@@ -32,7 +33,7 @@ public class WebServiceMessageScene extends Scene {
             });
         zone.addMessage(0, "");
 
-        PostMessageUpdater updater = new PostMessageUpdater(zone);
+        updater.setZones(zone);
         BroadcastMessageResource.bindUpdater(updater);
         BroadcastMessageResource.bindScene(0);
 

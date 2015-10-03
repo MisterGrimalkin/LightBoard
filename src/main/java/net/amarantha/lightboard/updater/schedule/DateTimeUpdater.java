@@ -1,6 +1,8 @@
 package net.amarantha.lightboard.updater.schedule;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 import java.text.SimpleDateFormat;
@@ -8,17 +10,24 @@ import java.util.Date;
 
 public class DateTimeUpdater extends Updater {
 
-    public static DateTimeUpdater tickingClock(TextZone zone) {
-        return new DateTimeUpdater(zone, "HH:mm", "HH mm");
+    private String[] formats;
+    private int formatIndex = 0;
+    private TextZone zone;
+
+    @Inject
+    public DateTimeUpdater(Sync sync) {
+        super(sync);
+        System.out.println("Date/Time Updater Ready....");
     }
 
-    private final String[] formats;
-    private int formatIndex = 0;
+    public DateTimeUpdater setZone(TextZone zone) {
+        this.zone = zone;
+        return this;
+    }
 
-    public DateTimeUpdater(TextZone zone, String... formats) {
-        super(zone);
+    public DateTimeUpdater setFormats(String... formats) {
         this.formats = formats;
-        System.out.println("Date/Time Updater Ready....");
+        return this;
     }
 
     @Override
@@ -26,7 +35,7 @@ public class DateTimeUpdater extends Updater {
         if ( formatIndex >= formats.length ) {
             formatIndex = 0;
         }
-        replaceMessage("{yellow}"+new SimpleDateFormat(formats[formatIndex++]).format(new Date()));
+        zone.replaceMessage("{yellow}" + new SimpleDateFormat(formats[formatIndex++]).format(new Date()));
     }
 
 }

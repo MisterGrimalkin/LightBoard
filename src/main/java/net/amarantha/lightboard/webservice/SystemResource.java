@@ -3,9 +3,6 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.utility.PropertyManager;
-import net.amarantha.lightboard.utility.Sync;
-import org.javalite.http.Http;
-import org.javalite.http.Post;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,13 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 @Path("system")
 public class SystemResource {

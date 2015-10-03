@@ -1,13 +1,11 @@
 package net.amarantha.lightboard.zone.impl;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
 public class NoiseZone extends LightBoardZone {
-
-    public static NoiseZone ripplingFlag(LightBoardSurface s) {
-        return new NoiseZone(s, 0.5, 0.2, 0.8, 0.05, true, false);
-    }
 
     private double threshold = 0.5;
     private double minThreshold = 0.4;
@@ -17,15 +15,24 @@ public class NoiseZone extends LightBoardZone {
     private boolean ripple = true;
     private boolean pulse = false;
 
-    public NoiseZone(LightBoardSurface surface, double threshold, double minThreshold, double maxThreshold, double thresholdDelta, boolean ripple, boolean pulse) {
-        super(surface);
+    @Inject
+    public NoiseZone(LightBoardSurface surface, Sync sync) {
+        super(surface, sync);
+        setRestDuration(0);
+    }
+
+    public NoiseZone setup(double threshold, double minThreshold, double maxThreshold, double thresholdDelta, boolean ripple, boolean pulse) {
         this.threshold = threshold;
         this.minThreshold = minThreshold;
         this.maxThreshold = maxThreshold;
         this.thresholdDelta = thresholdDelta;
         this.ripple = ripple;
         this.pulse = pulse;
-        setRestDuration(0);
+        return this;
+    }
+
+    public NoiseZone ripplingFlag() {
+        return setup(0.5, 0.2, 0.8, 0.05, true, false);
     }
 
     @Override

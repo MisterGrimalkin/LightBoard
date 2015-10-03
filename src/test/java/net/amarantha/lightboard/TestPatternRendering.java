@@ -5,22 +5,44 @@ import com.googlecode.guicebehave.Modules;
 import com.googlecode.guicebehave.Story;
 import com.googlecode.guicebehave.StoryRunner;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.module.ApplicationModule;
-import net.amarantha.lightboard.module.Debug;
+import net.amarantha.lightboard.entity.Pattern;
+import net.amarantha.lightboard.module.ApplicationTestModule;
+import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.utility.MockSync;
+import net.amarantha.lightboard.utility.Sync;
 import org.junit.runner.RunWith;
 
-@RunWith(StoryRunner.class) @Modules(ApplicationModule.class)
+@RunWith(StoryRunner.class) @Modules(ApplicationTestModule.class)
 public class TestPatternRendering {
 
-    @Inject @Debug
-    LightBoard board;
+    @Inject private LightBoard board;
+
+    @Inject private LightBoardSurface surface;
+
+    @Inject private Sync sync;
 
     @Story
     public void testPatternRendering() {
 
-        System.out.println(board.getClass().getName());
+        surface.init();
 
-        System.out.println(board.getCols());
+        sync.startSyncThread();
+
+        ((MockSync)sync).runAllOnce();
+
+        surface.drawPattern(0,0,square);
+
+        ((MockSync)sync).runAllOnce();
+
+
+
+
     }
+
+    Pattern square = new Pattern(
+            5,
+            "#--#-" +
+            "#--#-");
+
 
 }

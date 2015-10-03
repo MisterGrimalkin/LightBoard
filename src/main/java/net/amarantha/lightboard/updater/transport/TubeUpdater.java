@@ -2,6 +2,7 @@ package net.amarantha.lightboard.updater.transport;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
 import org.w3c.dom.Document;
@@ -26,8 +27,8 @@ public class TubeUpdater extends Updater {
     private TextZone summaryZone;
 
     @Inject
-    public TubeUpdater() {
-        super(null);
+    public TubeUpdater(Sync sync) {
+        super(sync);
     }
 
     public TubeUpdater setZones(TextZone detailZone, TextZone summaryZone) {
@@ -45,7 +46,8 @@ public class TubeUpdater extends Updater {
 
                 List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
 
-                clearMessages();
+                detailZone.clearMessages();
+                summaryZone.clearMessages();
 
                 if ( tubeStatuses.isEmpty() ) {
                     detailZone.replaceMessage("{red}TfL returned no data");
@@ -97,11 +99,14 @@ public class TubeUpdater extends Updater {
         }, 0);
     }
 
+    protected String doTflCall() {
+        return Http.get(TFL_TS_URL).text();
+    }
+
     private Document queryWebService() {
         Document doc = null;
         try {
-
-            String xml = Http.get(TFL_TS_URL).text();
+            String xml = doTflCall();
             InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -109,7 +114,7 @@ public class TubeUpdater extends Updater {
             doc.getDocumentElement().normalize();
 
         } catch (Exception e) {
-            replaceMessage("-Error Querying TfL-");
+            summaryZone.replaceMessage("-Error Querying TfL-");
             e.printStackTrace();
         }
         return doc;

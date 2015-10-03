@@ -14,6 +14,8 @@ public class MessageScrollerScene extends Scene {
 
     @Inject private TextZone zone;
 
+    @Inject private MessageUpdater updater;
+
     public MessageScrollerScene(LightBoardSurface surface) {
         super("Message Scroller");
     }
@@ -29,7 +31,7 @@ public class MessageScrollerScene extends Scene {
             sceneManager.advanceScene();
         });
 
-        MessageUpdater updater = new MessageUpdater(zone);
+        updater.setZone(zone);
         updater.setDataRefresh(10000);
 
         registerZones(zone);

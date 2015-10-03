@@ -1,9 +1,12 @@
 package net.amarantha.lightboard.updater.schedule;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PostMessageUpdater extends Updater {
@@ -11,11 +14,13 @@ public class PostMessageUpdater extends Updater {
     private List<TextZone> zones = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
-    public PostMessageUpdater(TextZone... zs) {
-        super(zs[0]);
-        for ( int i=0; i<zs.length; i++ ) {
-            this.zones.add(zs[i]);
-        }
+    @Inject
+    public PostMessageUpdater(Sync sync) {
+        super(sync);
+    }
+
+    public void setZones(TextZone... zs) {
+        Collections.addAll(this.zones, zs);
     }
 
     public PostMessageUpdater addMessages(String... msg) {

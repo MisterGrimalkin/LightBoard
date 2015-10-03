@@ -18,8 +18,8 @@ public class CompositeTextZone extends LightBoardZone {
     private int height = 0;
 
     @Inject
-    public CompositeTextZone(LightBoardSurface surface) {
-        super(surface);
+    public CompositeTextZone(LightBoardSurface surface, Sync sync) {
+        super(surface, sync);
         autoReset(false);
     }
 
@@ -62,7 +62,7 @@ public class CompositeTextZone extends LightBoardZone {
 
     public LightBoardZone start() {
         if ( !singleRender ) {
-            Sync.addTask(new Sync.Task(scrollTick) {
+            sync.addTask(new Sync.Task(scrollTick) {
                 @Override
                 public void runTask() {
                     tick();

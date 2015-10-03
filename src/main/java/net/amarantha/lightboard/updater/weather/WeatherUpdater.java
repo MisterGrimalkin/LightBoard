@@ -1,7 +1,8 @@
 package net.amarantha.lightboard.updater.weather;
 
+import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.utility.Sync;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.javalite.http.Get;
@@ -11,8 +12,9 @@ public class WeatherUpdater extends Updater {
 
     private static final String URL = "http://api.openweathermap.org/data/2.5/weather?q=London";
 
-    public WeatherUpdater(TextZone zone) {
-        super(zone);
+    @Inject
+    protected WeatherUpdater(Sync sync) {
+        super(sync);
     }
 
     @Override

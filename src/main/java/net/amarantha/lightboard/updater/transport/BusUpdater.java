@@ -2,6 +2,7 @@ package net.amarantha.lightboard.updater.transport;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
 import org.json.simple.JSONArray;
@@ -9,7 +10,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class BusUpdater extends Updater {
 
     private final static String TFL_BUS_URL = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1";
 
-    private Map<String, BusDeparture> buses = new HashMap<>();
+    protected Map<String, BusDeparture> buses = new HashMap<>();
 
     private TextZone busNumberZone;
     private TextZone leftDestinationZone;
@@ -30,8 +30,8 @@ public class BusUpdater extends Updater {
     private TextZone rightTimesZone;
 
     @Inject
-    public BusUpdater() {
-        super(null);
+    public BusUpdater(Sync sync) {
+        super(sync);
     }
 
     public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
@@ -230,10 +230,7 @@ public class BusUpdater extends Updater {
 
     }
 
-    private static final int BUS_NUMBER = 2;
-    private static final int BUS_TIME = 3;
-
-    private List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
+    protected List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
 
         List<Long> result = new ArrayList<>();
 
@@ -309,5 +306,8 @@ public class BusUpdater extends Updater {
         }
         return messages;
     }
+
+    private static final int BUS_NUMBER = 2;
+    private static final int BUS_TIME = 3;
 
 }

@@ -8,14 +8,11 @@ import java.util.List;
 
 public class UpdaterBundle extends Updater {
 
-    public static UpdaterBundle bundle(Updater... updaters) {
-        return new UpdaterBundle(updaters);
-    }
-
     private List<Updater> updaters = new ArrayList<>();
 
-    private UpdaterBundle(Updater... upds) {
-        super(null);
+
+    private UpdaterBundle(Sync sync, Updater... upds) {
+        super(sync);
         Collections.addAll(updaters, upds);
     }
 
@@ -34,13 +31,14 @@ public class UpdaterBundle extends Updater {
 
     @Override
     public void start() {
-        Sync.addTask(new Sync.Task(dataRefresh) {
-            @Override
-            public void runTask() {
-                doRefresh();
-            }
-        });
-        System.out.println("UpdaterBundle running every " + dataRefresh + "ms");
+//        sync.addTask(new Sync.Task(dataRefresh) {
+//            @Override
+//            public void runTask() {
+//                doRefresh();
+//            }
+//        });
+        System.out.println("UpdaterBundle NOT SUPPORTED!!!!!!!!!!!!!!!!!!!");
+//        System.out.println("UpdaterBundle running every " + dataRefresh + "ms");
     }
 
     private boolean paused = false;

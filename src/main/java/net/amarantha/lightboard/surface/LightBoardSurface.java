@@ -16,12 +16,14 @@ public class LightBoardSurface {
     private double[][][] ledState;
 
     private final LightBoard board;
+    private final Sync sync;
 
     protected Region boardRegion;
 
     @Inject
-    public LightBoardSurface(LightBoard board) {
+    public LightBoardSurface(LightBoard board, Sync sync) {
         this.board = board;
+        this.sync = sync;
 
         rows = board.getRows();
         cols = board.getCols();
@@ -40,7 +42,7 @@ public class LightBoardSurface {
     public LightBoardSurface init() {
         board.init();
         System.out.println("Starting LightBoardSurface....");
-        Sync.addTask(new Sync.Task(board.getUpdateInterval()) {
+        sync.addTask(new Sync.Task(board.getUpdateInterval()) {
             @Override
             public void runTask() {
                 board.update(ledState);

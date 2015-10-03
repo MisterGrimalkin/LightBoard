@@ -3,34 +3,42 @@ package net.amarantha.lightboard.scene;
 import com.googlecode.guicebehave.Modules;
 import com.googlecode.guicebehave.Story;
 import com.googlecode.guicebehave.StoryRunner;
-import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.font.Font;
-import net.amarantha.lightboard.module.ApplicationModule;
+import net.amarantha.lightboard.module.ApplicationTestModule;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
+import net.amarantha.lightboard.utility.MockSync;
 import net.amarantha.lightboard.utility.Sync;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
-
-@RunWith(StoryRunner.class) @Modules(ApplicationModule.class)
+@RunWith(StoryRunner.class) @Modules(ApplicationTestModule.class)
 public class TravelInformationSceneTest {
 
     @Inject private LightBoardSurface surface;
     @Inject private SceneManager sceneManager;
     @Inject private TravelInformationScene scene;
+    @Inject private Sync sync;
+
 
     @Story
     public void testScene() {
 
         surface.init();
 
+        scene.build();
         scene.start();
-        sceneManager.addScene(1, scene);
+        scene.resume();
 
-        Sync.startSyncThread();
+        sync.startSyncThread();
+
+//        for ( int i=0; i<100000; i++ )
+            ((MockSync)sync).runAllOnce();
+
+
+
+//        sceneManager.addScene(1, scene);
+
 
 
 

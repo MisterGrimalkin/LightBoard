@@ -1,11 +1,9 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
@@ -15,6 +13,8 @@ public class LongDateScene extends Scene {
     @Inject private SceneManager sceneManager;
 
     @Inject private TextZone dateZone;
+
+    @Inject private DateTimeUpdater dateUpdater;
 
     public LongDateScene(LightBoardSurface surface) {
         super("Long Date");
@@ -29,7 +29,7 @@ public class LongDateScene extends Scene {
                 .setScrollTick(30)
                 .addScrollCompleteHandler(sceneManager::advanceScene);
 
-        Updater dateUpdater = new DateTimeUpdater(dateZone, "EEEE d MMMM YYYY");
+        dateUpdater.setZone(dateZone).setFormats("EEEE d MMMM YYYY");
 
         registerZones(dateZone);
         registerUpdaters(dateUpdater);

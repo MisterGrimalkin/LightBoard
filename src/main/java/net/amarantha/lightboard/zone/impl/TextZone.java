@@ -6,6 +6,7 @@ import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.MessageQueue;
+import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
 public class TextZone extends LightBoardZone {
@@ -13,8 +14,8 @@ public class TextZone extends LightBoardZone {
     private Font font;
 
     @Inject
-    public TextZone(LightBoardSurface surface) {
-        super(surface);
+    public TextZone(LightBoardSurface surface, Sync sync) {
+        super(surface, sync);
         setDefaults();
         addScrollCompleteHandler(() -> {
             if (override) {

@@ -15,6 +15,9 @@ public class ShopOpeningTimesScene extends Scene {
     @Inject private TextZone dateZone;
     @Inject private TextZone openingTimesZone;
 
+    @Inject private DateTimeUpdater dateTimeUpdater;
+    @Inject private OpeningTimesUpdater openingTimesUpdater;
+
     public ShopOpeningTimesScene(LightBoardSurface surface) {
         super("Shop Hours");
         setSceneDuration(2000);
@@ -28,8 +31,11 @@ public class ShopOpeningTimesScene extends Scene {
             .setRestDuration(0)
             .setRestPosition(LEFT, MIDDLE)
             .setScrollTick(500);
-        DateTimeUpdater dateUpdater = new DateTimeUpdater(dateZone, "EEEE d MMMM yyyy  h:mma");
-        dateUpdater.setDataRefresh(500);
+
+        dateTimeUpdater
+            .setZone(dateZone)
+            .setFormats("EEEE d MMMM yyyy  h:mma")
+            .setDataRefresh(500);
 
         openingTimesZone
             .scrollUp()
@@ -37,11 +43,12 @@ public class ShopOpeningTimesScene extends Scene {
             .setRestDuration(3500)
             .setRestPosition(LEFT, MIDDLE)
             .setScrollTick(40);
-        OpeningTimesUpdater openingTimesUpdater = new OpeningTimesUpdater(openingTimesZone);
-        openingTimesUpdater.setDataRefresh(60000);
+        openingTimesUpdater
+            .setZone(openingTimesZone)
+            .setDataRefresh(60000);
 
         registerZones(dateZone, openingTimesZone);
-        registerUpdaters(dateUpdater, openingTimesUpdater);
+        registerUpdaters(dateTimeUpdater, openingTimesUpdater);
 
     }
 }
