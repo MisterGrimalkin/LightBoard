@@ -3,6 +3,7 @@ package net.amarantha.lightboard.module;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.board.MockBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.MockBusUpdater;
 import net.amarantha.lightboard.scene.MockTubeUpdater;
@@ -31,7 +32,7 @@ public class ApplicationTestModule extends AbstractModule {
         bindConstant().annotatedWith(Rows.class).to(rows);
         bindConstant().annotatedWith(Cols.class).to(cols);
 
-        bind(LightBoard.class).to(TextBoard.class)
+        bind(LightBoard.class).to(MockBoard.class)
                 .in(Singleton.class);
         bind(LightBoard.class).annotatedWith(Debug.class).to(TextBoard.class)
                 .in(Singleton.class);

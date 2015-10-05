@@ -32,10 +32,7 @@ public class BusStopResource extends Resource {
     @Path("enable")
     @Produces(MediaType.TEXT_PLAIN)
     public Response enableBus(@QueryParam("id") String id) {
-        BusUpdater busUpdater = travelInformationScene.getBusUpdater();
-        busUpdater.getBusDepartures().get(id).setActive(true);
-        busUpdater.saveBusConfig();
-        busUpdater.refresh();
+        getBusUpdater().enableBusStop(id);
         return ok("Bus info " + id + " enabled");
     }
 
@@ -43,11 +40,47 @@ public class BusStopResource extends Resource {
     @Path("disable")
     @Produces(MediaType.TEXT_PLAIN)
     public Response disableBus(@QueryParam("id") String id) {
-        BusUpdater busUpdater = travelInformationScene.getBusUpdater();
-        busUpdater.getBusDepartures().get(id).setActive(false);
-        busUpdater.saveBusConfig();
-        busUpdater.refresh();
+        getBusUpdater().disableBusStop(id);
         return ok("Bus info " + id + " disabled");
+    }
+
+    @POST
+    @Path("remove")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response removeBus(@QueryParam("id") String id) {
+        getBusUpdater().removeBusStop(id);
+        return ok("Bus info " + id + " removed");
+    }
+
+    @POST
+    @Path("add")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response addBus(
+        @QueryParam("stopCode") long stopCode,
+        @QueryParam("busNo") String busNo,
+        @QueryParam("destination") String destination,
+        @QueryParam("offset") int offset
+    ) {
+        String id = getBusUpdater().addBusStop(stopCode, busNo, destination, offset);
+        return ok("Bus info " + id + " added");
+    }
+
+    @POST
+    @Path("update")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response updateBus(
+        @QueryParam("id") String id,
+        @QueryParam("stopCode") long stopCode,
+        @QueryParam("busNo") String busNo,
+        @QueryParam("destination") String destination,
+        @QueryParam("offset") int offset
+    ) {
+        getBusUpdater().updateBusStop(id, stopCode, busNo, destination, offset);
+        return ok("Bus info " + id + " updated");
+    }
+
+    private BusUpdater getBusUpdater() {
+        return travelInformationScene.getBusUpdater();
     }
 
 }

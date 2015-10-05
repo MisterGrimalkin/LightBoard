@@ -28,11 +28,11 @@ public class TestPatternRendering {
 
         sync.startSyncThread();
 
-        ((MockSync)sync).runAllOnce();
+        ((MockSync)sync).runTasks();
 
         surface.drawPattern(0,0,square);
 
-        ((MockSync)sync).runAllOnce();
+        ((MockSync)sync).runTasks();
 
 
 

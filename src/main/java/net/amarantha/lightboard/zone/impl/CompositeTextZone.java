@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.zone.impl;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class CompositeTextZone extends LightBoardZone {
 
@@ -26,7 +28,7 @@ public class CompositeTextZone extends LightBoardZone {
     public CompositeTextZone bindZones(TextZone... tz) {
         int i = 0;
         for ( TextZone z : tz) {
-            zones.add(z);
+            zones.add(i, z);
             width = Math.max(width, z.getRegion().width);
             height = Math.max(height, z.getRegion().height);
             prepareZone(i, z);
@@ -54,10 +56,37 @@ public class CompositeTextZone extends LightBoardZone {
     private Map<Integer, Boolean> scrolledOut = new HashMap<>();
 
     private void prepareZone(final int zoneNo, TextZone zone) {
-        scrolledOut.put(zoneNo, false);
         zone.resetScroll();
         zone.removeAllHandlers();
         zone.autoReset(false);
+        zone.autoRender(false);
+        zone.clear(true);
+
+        scrolledOut.put(zoneNo, false);
+        zone.addScrollCompleteHandler(() -> {
+            scrolledOut.put(zoneNo, true);
+            if ( allScrolledOut() ) {
+                advanceAllZones();
+            }
+        });
+    }
+
+    private boolean allScrolledOut() {
+        for (Entry<Integer, Boolean> entry : scrolledOut.entrySet() ) {
+            if ( !entry.getValue() ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void advanceAllZones() {
+        for (Entry<Integer, Boolean> entry : scrolledOut.entrySet() ) {
+            TextZone z = zones.get(entry.getKey());
+            z.advanceMessage();
+            z.resetScroll();
+            scrolledOut.put(entry.getKey(), false);
+        }
     }
 
     public LightBoardZone start() {
@@ -83,6 +112,14 @@ public class CompositeTextZone extends LightBoardZone {
     }
 
     @Override
+    public LightBoardZone scroll(Edge from, Edge to) {
+        for (LightBoardZone zone : zones) {
+            zone.scroll(from, to);
+        }
+        return super.scroll(from, to);
+    }
+
+    @Override
     public void tick() {
         for (LightBoardZone zone : zones) {
             zone.tick();
@@ -104,13 +141,11 @@ public class CompositeTextZone extends LightBoardZone {
     public boolean render() {
         boolean drawn = false;
         for ( TextZone zone : zones ) {
+            zone.clear();
             drawn |= zone.render();
         }
         if ( !drawn ) {
-            for ( TextZone lightBoardZone : zones ) {
-                lightBoardZone.advanceMessage();
-                lightBoardZone.resetScroll();
-            }
+            advanceAllZones();
         }
         return drawn;
     }

@@ -81,8 +81,8 @@ public abstract class LightBoardZone {
                     initScroll(Scrolling.OUT);
                 }
             } else {
-                updateScroll();
-                if (autoRender) {
+                boolean scrollCompleted = updateScroll();
+                if (autoRender && !scrollCompleted) {
                     doRender();
                 }
                 lastTick = currentTimeMillis();
@@ -113,6 +113,12 @@ public abstract class LightBoardZone {
     private int deltaY = 0;
 
     private Scrolling currentScrollMode;
+
+    private boolean skipPauseIfContentTooWidth = true;
+
+    public void setDontPauseIfContentTooWide(boolean skipPauseIfContentTooWidth) {
+        this.skipPauseIfContentTooWidth = skipPauseIfContentTooWidth;
+    }
 
     private void initScroll(Scrolling scrolling) {
         currentScrollMode = scrolling;
@@ -179,6 +185,7 @@ public abstract class LightBoardZone {
                 contentTop = restY;
                 deltaX = 0;
                 deltaY = 0;
+                resting = true;
                 break;
         }
     }
@@ -210,7 +217,8 @@ public abstract class LightBoardZone {
         }
     }
 
-    private void updateScroll() {
+    private boolean updateScroll() {
+        boolean scrollComplete = false;
         contentLeft += deltaX;
         contentTop += deltaY;
         if ( isInRestPosition() ) {
@@ -218,11 +226,12 @@ public abstract class LightBoardZone {
         }
         if ( !contentVisible() ) { //&& autoReset ) {
                 onScrollComplete();
+            scrollComplete = true;
             if ( autoReset ) {
                 resetScroll();
             }
         }
-
+        return scrollComplete;
     }
 
     public void resetScroll() {
@@ -242,14 +251,25 @@ public abstract class LightBoardZone {
     }
 
     private boolean isInRestPosition() {
+
+        double ch = getContentHeight();
+        double rh = region.height;
+
+        boolean a = getContentWidth()<=region.width;
+        boolean b = !skipPauseIfContentTooWidth;
+        boolean c = ( getScrollFrom()==Edge.BOTTOM && getScrollTo()==Edge.TOP );
+        boolean c2 = ( getContentHeight()<=region.height || !skipPauseIfContentTooWidth );
+        boolean d = getContentHeight()<=region.height;
+        boolean e = Math.abs(contentLeft - restX) < masterDelta;
+        boolean f = Math.abs(contentTop-restY) < masterDelta;
+        boolean g = currentScrollMode.equals(Scrolling.IN);
+
         return
-                ( getContentWidth()<=region.width
-                        ||
-                        ( getScrollFrom()==Edge.BOTTOM
-                            && getScrollTo()==Edge.TOP
-                        )
+                (          getContentWidth()<=region.width
+                        || !skipPauseIfContentTooWidth
+                        || ( getScrollFrom()==Edge.BOTTOM && getScrollTo()==Edge.TOP )
                 )
-                && getContentHeight()<=region.height
+                && ( getContentHeight()<=region.height || !skipPauseIfContentTooWidth )
                 && Math.abs(contentLeft - restX) < masterDelta
                 && Math.abs(contentTop-restY) < masterDelta
                 && currentScrollMode.equals(Scrolling.IN);

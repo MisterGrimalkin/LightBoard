@@ -40,6 +40,7 @@ public abstract class Updater {
                 doRefresh();
             }
         }, dataRefresh);
+        doRefresh();
         System.out.println("Updater running every " + dataRefresh + "ms");
     }
 

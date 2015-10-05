@@ -146,6 +146,6 @@ public class MessageQueue {
     // Wrapper //
     /////////////
 
-    private final static MessageWrapper DEFAULT_MESSAGE = new MessageWrapper("{red}* {yellow}* {green}*");
+    public final static MessageWrapper DEFAULT_MESSAGE = new MessageWrapper("{red}* {yellow}* {green}*");
 
 }

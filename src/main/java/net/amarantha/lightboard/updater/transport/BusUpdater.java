@@ -34,14 +34,151 @@ public class BusUpdater extends Updater {
         super(sync);
     }
 
-    public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
-        this.busNumberZone = busNumberZone;
-        this.leftDestinationZone = leftDestinationZone;
-        this.leftTimesZone = leftTimesZone;
-        this.rightDestinationZone = rightDestinationZone;
-        this.rightTimesZone = rightTimesZone;
-        return this;
+    @Override
+    public void refresh() {
+
+        loadBusConfig();
+
+        busNumberZone.clearAllMessages();
+        leftDestinationZone.clearAllMessages();
+        leftTimesZone.clearAllMessages();
+        rightDestinationZone.clearAllMessages();
+        rightTimesZone.clearAllMessages();
+
+        BusData data = new BusData();
+        try {
+            for (BusDeparture bus : buses.values()) {
+                if ( bus.isActive() ) {
+                    data.addResult(bus, getDepartureTimesFor(bus));
+                }
+            }
+        } catch ( Exception e ) {
+            data.getDataByBusNumber().clear();
+        }
+
+        int sourceId = 0;
+
+        if ( data.getDataByBusNumber().entrySet().isEmpty() ) {
+            busNumberZone.addMessage(sourceId, " ");
+            leftDestinationZone.addMessage(sourceId, "{red}No Data");
+            leftTimesZone.addMessage(sourceId, "{red}* * *");
+            rightDestinationZone.addMessage(sourceId, "{red}No Data");
+            rightTimesZone.addMessage(sourceId, "{red}* * *");
+        } else {
+            for (Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet()) {
+
+                busNumberZone.clearMessages(sourceId);
+                leftDestinationZone.clearMessages(sourceId);
+                leftTimesZone.clearMessages(sourceId);
+                rightDestinationZone.clearMessages(sourceId);
+                rightTimesZone.clearMessages(sourceId);
+
+                int activeBuses = numberOfActiveBuses(eBus.getValue());
+
+                if (activeBuses > 0) {
+
+                    String busNumber = "{yellow}" + eBus.getKey();
+                    busNumberZone.addMessage(sourceId, busNumber);
+
+                    if (activeBuses > 2) {
+                        leftDestinationZone.addMessage(sourceId, "{red}Too");
+                        leftTimesZone.addMessage(sourceId, "{red}Many");
+                        rightDestinationZone.addMessage(sourceId, "{red}Buses");
+                        rightTimesZone.addMessage(sourceId, "{red}Returned!");
+                    } else {
+
+
+                        int direction = 1;
+
+                        for (Entry<BusDeparture, List<Long>> timeEntry : eBus.getValue().entrySet()) {
+
+                            String destination = "{yellow}" + timeEntry.getKey().getDestination();
+
+                            List<Long> busTimes = timeEntry.getValue();
+                            Collections.sort(busTimes);
+                            StringBuilder sb = new StringBuilder();
+                            int count = 0;
+                            for (Long bt : busTimes) {
+                                Long busTime = bt + timeEntry.getKey().getOffset();
+                                if (count < 3 && busTime >= 0) {
+                                    if (busTime == 0) {
+                                        sb.append("{red}due ");
+                                    } else {
+                                        if (busTime < 5) {
+                                            sb.append("{red}");
+                                        } else {
+                                            sb.append("{green}");
+                                        }
+                                        sb.append(busTime).append("m ");
+                                    }
+                                }
+                                count++;
+                            }
+                            String timesMessage = sb.toString();
+
+                            if (direction == 1) {
+                                leftDestinationZone.addMessage(sourceId, destination);
+                                leftTimesZone.addMessage(sourceId, timesMessage);
+                            } else if (direction == 2) {
+                                rightDestinationZone.addMessage(sourceId, destination);
+                                rightTimesZone.addMessage(sourceId, timesMessage);
+                            }
+                            direction++;
+
+                            if (activeBuses == 1) {
+                                rightDestinationZone.addMessage(sourceId, "{yellow}-");
+                                rightTimesZone.addMessage(sourceId, "{yellow}-");
+                            }
+
+                        }
+
+                    }
+                }
+                sourceId++;
+            }
+        }
+
     }
+
+
+    ///////////////////////
+    // Config Management //
+    ///////////////////////
+
+    public void enableBusStop(String id) {
+        buses.get(id).setActive(true);
+        saveBusConfig();
+        refresh();
+    }
+
+    public void disableBusStop(String id) {
+        buses.get(id).setActive(false);
+        saveBusConfig();
+        refresh();
+    }
+
+    public void removeBusStop(String id) {
+        buses.remove(id);
+        saveBusConfig();
+        refresh();
+    }
+
+    public String addBusStop(long stopCode, String busNo, String destination, long offset) {
+        return updateBusStop(UUID.randomUUID().toString(), stopCode, busNo, destination, offset);
+    }
+
+    public String updateBusStop(String id, long stopCode, String busNo, String destination, long offset) {
+        BusDeparture newBus = new BusDeparture(stopCode, busNo, destination, true, offset);
+        buses.put(id, newBus);
+        saveBusConfig();
+        refresh();
+        return id;
+    }
+
+
+    ////////////////////////
+    // Config Persistence //
+    ////////////////////////
 
     public void loadBusConfig() {
 
@@ -84,6 +221,11 @@ public class BusUpdater extends Updater {
         }
     }
 
+
+    ////////////////
+    // Build JSON //
+    ////////////////
+
     public JSONObject getBusStopJson() {
         JSONObject json = new JSONObject();
         JSONArray ja = new JSONArray();
@@ -103,132 +245,25 @@ public class BusUpdater extends Updater {
         json.put("buses", ja);
         return json;
     }
-    public Map<String, BusDeparture> getBusDepartures() {
-        return buses;
+
+
+    //////////////////
+    // Zone Binding //
+    //////////////////
+
+    public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+        this.busNumberZone = busNumberZone;
+        this.leftDestinationZone = leftDestinationZone;
+        this.leftTimesZone = leftTimesZone;
+        this.rightDestinationZone = rightDestinationZone;
+        this.rightTimesZone = rightTimesZone;
+        return this;
     }
 
-    private int numberOfActiveBuses(Map<BusDeparture, List<Long>> map) {
-        int result = 0;
-        for ( Entry<BusDeparture, List<Long>> timeEntry : map.entrySet() ) {
-            if ( !timeEntry.getValue().isEmpty() ) {
-                result ++;
-            }
-        }
-        return result;
-    }
 
-    @Override
-    public void refresh() {
-
-        loadBusConfig();
-
-        Thread thread = new Thread(() -> {
-
-            busNumberZone.clearAllMessages();
-            leftDestinationZone.clearAllMessages();
-            leftTimesZone.clearAllMessages();
-            rightDestinationZone.clearAllMessages();
-            rightTimesZone.clearAllMessages();
-
-            BusData data = new BusData();
-            try {
-                for (BusDeparture bus : buses.values()) {
-                    if ( bus.isActive() ) {
-                        data.addResult(bus, getDepartureTimesFor(bus));
-                    }
-                }
-            } catch ( Exception e ) {
-                data.getDataByBusNumber().clear();
-            }
-
-            int sourceId = 0;
-
-            if ( data.getDataByBusNumber().entrySet().isEmpty() ) {
-                busNumberZone.addMessage(sourceId, " ");
-                leftDestinationZone.addMessage(sourceId, "{red}No Data");
-                leftTimesZone.addMessage(sourceId, "{red}* * *");
-                rightDestinationZone.addMessage(sourceId, "{red}No Data");
-                rightTimesZone.addMessage(sourceId, "{red}* * *");
-            } else {
-                for (Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet()) {
-
-                    busNumberZone.clearMessages(sourceId);
-                    leftDestinationZone.clearMessages(sourceId);
-                    leftTimesZone.clearMessages(sourceId);
-                    rightDestinationZone.clearMessages(sourceId);
-                    rightTimesZone.clearMessages(sourceId);
-
-                    int activeBuses = numberOfActiveBuses(eBus.getValue());
-
-                    if (activeBuses > 0) {
-
-                        String busNumber = "{yellow}" + eBus.getKey();
-                        busNumberZone.addMessage(sourceId, busNumber);
-
-                        if (activeBuses > 2) {
-                            leftDestinationZone.addMessage(sourceId, "{red}Too");
-                            leftTimesZone.addMessage(sourceId, "{red}Many");
-                            rightDestinationZone.addMessage(sourceId, "{red}Buses");
-                            rightTimesZone.addMessage(sourceId, "{red}Returned!");
-                        } else {
-
-
-                            int direction = 1;
-
-                            for (Entry<BusDeparture, List<Long>> timeEntry : eBus.getValue().entrySet()) {
-
-                                String destination = "{yellow}" + timeEntry.getKey().getDestination();
-
-                                List<Long> busTimes = timeEntry.getValue();
-                                Collections.sort(busTimes);
-                                StringBuilder sb = new StringBuilder();
-                                int count = 0;
-                                for (Long bt : busTimes) {
-                                    Long busTime = bt + timeEntry.getKey().getOffset();
-                                    if (count < 3 && busTime >= 0) {
-                                        if (busTime == 0) {
-                                            sb.append("{red}due ");
-                                        } else {
-                                            if (busTime < 5) {
-                                                sb.append("{red}");
-                                            } else {
-                                                sb.append("{green}");
-                                            }
-                                            sb.append(busTime).append("m ");
-                                        }
-                                    }
-                                    count++;
-                                }
-                                String timesMessage = sb.toString();
-
-                                if (direction == 1) {
-                                    leftDestinationZone.addMessage(sourceId, destination);
-                                    leftTimesZone.addMessage(sourceId, timesMessage);
-                                } else if (direction == 2) {
-                                    rightDestinationZone.addMessage(sourceId, destination);
-                                    rightTimesZone.addMessage(sourceId, timesMessage);
-                                }
-                                direction++;
-
-                                if (activeBuses == 1) {
-                                    rightDestinationZone.addMessage(sourceId, "{yellow}-");
-                                    rightTimesZone.addMessage(sourceId, "{yellow}-");
-                                }
-
-                            }
-
-                        }
-                    }
-                    sourceId++;
-                }
-            }
-
-        });
-
-        thread.start();
-
-
-    }
+    //////////////////////
+    // Web Service Call //
+    //////////////////////
 
     protected List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
 
@@ -248,6 +283,21 @@ public class BusUpdater extends Updater {
             }
         }
 
+        return result;
+    }
+
+
+    /////////////
+    // Utility //
+    /////////////
+
+    private int numberOfActiveBuses(Map<BusDeparture, List<Long>> map) {
+        int result = 0;
+        for ( Entry<BusDeparture, List<Long>> timeEntry : map.entrySet() ) {
+            if ( !timeEntry.getValue().isEmpty() ) {
+                result ++;
+            }
+        }
         return result;
     }
 
@@ -274,37 +324,6 @@ public class BusUpdater extends Updater {
             result.add(cols);
         }
         return result;
-    }
-
-    private Map<String, List<Long>> parseResult(String result) {
-        Map<String, List<Long>> messages = new HashMap<>();
-        String[] lines = result.split("\n");
-        for (int l = 1; l < lines.length; l++) {
-            String[] cols = lines[l].split(",");
-            String bus = cols[2].substring(1, cols[2].length() - 1);
-            List<Long> dueTimes = messages.get(bus);
-            if (dueTimes == null) {
-                dueTimes = new ArrayList<>();
-                messages.put(bus, dueTimes);
-            }
-            String timecodeStr = cols[3].split("]")[0];
-            Long timecode = null;
-            try {
-                timecode = Long.parseLong(timecodeStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Bad time " + timecodeStr);
-            }
-            if (timecode != null && dueTimes.size() < 3) {
-
-                Date due = new Date(timecode - System.currentTimeMillis());
-                SimpleDateFormat sdf = new SimpleDateFormat("m");
-                Long time = Long.parseLong(sdf.format(due)) + 0;
-                if (time >= 0) {
-                    dueTimes.add(time);
-                }
-            }
-        }
-        return messages;
     }
 
     private static final int BUS_NUMBER = 2;

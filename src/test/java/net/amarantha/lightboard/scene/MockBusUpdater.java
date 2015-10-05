@@ -38,6 +38,14 @@ public class MockBusUpdater extends BusUpdater {
             result.add(3L);
             result.add(4L);
         }
+        if ( departure.getStopCode()==3 ) {
+            result.add(5L);
+            result.add(6L);
+        }
+        else if ( departure.getStopCode()==4 ) {
+            result.add(7L);
+            result.add(8L);
+        }
         return result;
     }
 }

@@ -14,10 +14,13 @@ public class MockSync extends Sync {
         run = true;
     }
 
-    public void runAllOnce() {
+    public void runTasks() {
         for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
             entry.getValue().runTask();
         }
+    }
+
+    public void runTimerTasks() {
         timerTasks.forEach(java.util.TimerTask::run);
     }
 

@@ -1,8 +1,10 @@
 package net.amarantha.lightboard.scene;
 
+import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.LightBoardZone;
+import net.amarantha.lightboard.zone.impl.TextZone;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -44,6 +46,18 @@ public abstract class Scene {
         zones.forEach(LightBoardZone::resume);
         zones.forEach(LightBoardZone::render);
         updaters.forEach(Updater::resume);
+    }
+
+    public void testMode() {
+        for ( LightBoardZone zone : zones ) {
+            zone.scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
+            zone.setScrollTick(0);
+            zone.setRestDuration(0);
+            zone.setDontPauseIfContentTooWide(false);
+            if ( zone instanceof TextZone ) {
+                ((TextZone)zone).clearAllMessages();
+            }
+        }
     }
 
     public Integer getSceneDuration() {
