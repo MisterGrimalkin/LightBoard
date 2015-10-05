@@ -153,7 +153,8 @@ public class SystemResource {
             public void run() {
                 System.exit(0);
             }
-        }, 4000);
+        }, 2000);
+        System.out.println("System Shutting Down");
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("So long and thanks for all the fish")

@@ -140,12 +140,14 @@ public class CompositeTextZone extends LightBoardZone {
     @Override
     public boolean render() {
         boolean drawn = false;
-        for ( TextZone zone : zones ) {
-            zone.clear();
-            drawn |= zone.render();
-        }
-        if ( !drawn ) {
-            advanceAllZones();
+        if ( !paused ) {
+            for (TextZone zone : zones) {
+                zone.clear();
+                drawn |= zone.render();
+            }
+            if (!drawn) {
+                advanceAllZones();
+            }
         }
         return drawn;
     }

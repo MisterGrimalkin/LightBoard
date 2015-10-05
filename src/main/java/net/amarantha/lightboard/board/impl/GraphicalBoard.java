@@ -228,6 +228,16 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
         return cols;
     }
 
+    @Override
+    public void sleep() {
+
+    }
+
+    @Override
+    public void wake() {
+
+    }
+
     public int getHeightPixels() {
         return (rows + 1) * d;
     }

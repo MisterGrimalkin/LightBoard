@@ -90,7 +90,9 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
 
         Thread t = new Thread(() -> {
             while(true) {
-                push();
+                if ( !sleeping ) {
+                    push();
+                }
             }
         });
         t.setPriority(Thread.MAX_PRIORITY);
@@ -105,6 +107,8 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     private static final int YELLOW_MODE = 3;
 
     private int colour = MULTI_MODE;
+
+    private boolean sleeping = false;
 
     @Override
     public void update(double[][][] data) {
@@ -230,6 +234,16 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     @Override
     public int getCols() {
         return cols;
+    }
+
+    @Override
+    public void sleep() {
+        sleeping = true;
+    }
+
+    @Override
+    public void wake() {
+        sleeping = false;
     }
 
     @Override

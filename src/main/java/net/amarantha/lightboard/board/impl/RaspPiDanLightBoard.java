@@ -204,6 +204,16 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
     }
 
     @Override
+    public void sleep() {
+
+    }
+
+    @Override
+    public void wake() {
+
+    }
+
+    @Override
     public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
         result.add(RED);

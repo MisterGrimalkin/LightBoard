@@ -102,6 +102,31 @@
 
     </div>
 
+    <div id="mask" class="mask">
+    </div>
+
+    <div id="addBusPanel" class="addBusPanel">
+        <div style="height: 70%">
+            <div id="addBusPanelHeader"></div>
+
+            <div class="formLabel">Stop Code</div>
+            <input id="stopCodeField" style="width: 60px;" type="text" class="formField"/>
+
+            <div class="formLabel">Bus Number</div>
+            <input id="busField" style="width: 40px;" type="text" class="formField"/>
+
+            <div class="formLabel">Destination</div>
+            <input id="destinationField" type="text" class="formField"/>
+
+            <div class="formLabel">Offset</div>
+            <input id="offsetField" style="width: 40px;" type="text" class="formField"/>
+        </div>
+        <div style="height: 30%;">
+            <button class="btn-primary" style="width: 70px;" type="button" onclick="closeBusDetails();">CANCEL</button>
+            <button class="btn-primary" style="width: 70px;" type="button" onclick="saveBusDetails();">OK</button>
+        </div>
+    </div>
+
 
 </body>
 

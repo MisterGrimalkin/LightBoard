@@ -1,14 +1,24 @@
 package net.amarantha.lightboard.scene;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.utility.Now;
+import net.amarantha.lightboard.utility.PropertyManager;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static net.amarantha.lightboard.utility.Now.*;
 
 @Singleton
 public class SceneManager {
+
+    @Inject private Now now;
+    @Inject private PropertyManager props;
+
+    @Inject private LightBoard board;
 
     private Integer scenePointer = null;
     private Integer currentSceneId = 0;
@@ -89,12 +99,30 @@ public class SceneManager {
 
     private long sceneLoaded;
 
+    private Date wake;
+    private Date sleep;
+
     public void startScenes() {
+        loadTimes();
         for ( Scene scene : scenes.values() ) {
             scene.start();
             scene.pause();
         }
         advanceScene();
+    }
+
+    private void loadTimes() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+        String wakeString = props.getString("wakeTime", "0500");
+        String sleepString = props.getString("sleepTime", "0200");
+        try {
+            wake = sdf.parse(wakeString);
+            sleep = sdf.parse(sleepString);
+        } catch (ParseException e) {
+            wake = null;
+            sleep = null;
+            e.printStackTrace();
+        }
     }
 
     private boolean cycleMode = false;
@@ -107,13 +135,18 @@ public class SceneManager {
         cycleMode = mode;
     }
 
-
     public void cycleScenes() {
         cycleMode = true;
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if ( !sleeping && sleep!=null && timeOnly(sleep).equals(now.time()) ) {
+                    sleep();
+                }
+                if ( sleeping && wake!=null && timeOnly(wake).equals(now.time()) ) {
+                    wake();
+                }
                 long now = System.currentTimeMillis();
                 if (currentScene != null && currentScene.getSceneDuration() != null
                         && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
@@ -126,11 +159,16 @@ public class SceneManager {
     private boolean sleeping = false;
 
     public void sleep() {
+        System.out.println("Sleep");
+        board.sleep();
         currentScene.pause();
         sleeping = true;
     }
 
     public void wake() {
+        System.out.println("Wake");
+        loadTimes();
+        board.wake();
         currentScene.resume();
         sleeping = false;
     }

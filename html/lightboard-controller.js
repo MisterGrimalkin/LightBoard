@@ -126,13 +126,14 @@ function loadBuses() {
                 btn.style.width = "75%";
                 btn.style.height = "40px";
                 btn.style.textAlign = "left";
-                //btn.onclick = createLoadSceneFunction(scene.sceneId);
+                btn.onclick = showBusDetailsFunction(bus);
 
                 var deleteBtn = createWithText("BUTTON", "X");
                 deleteBtn.id="deleteBus"+baseUrl+bus.id;
                 deleteBtn.className = "btn-danger";
                 deleteBtn.style.width = "15%";
                 deleteBtn.style.height = "40px";
+                deleteBtn.onclick = removeBusFunction(bus);
 
 
                 panel.appendChild(c);
@@ -145,6 +146,7 @@ function loadBuses() {
             addBtn.style.width = "15%";
             addBtn.style.height = "40px";
             addBtn.style.float = "right";
+            addBtn.onclick = showBusDetailsFunction();
 
             panel.appendChild(addBtn);
 
@@ -164,12 +166,89 @@ function enableBusFunction(id, checkbox) {
         }
         post(baseUrl, "lightboard/bus/"+action+"?id=" + id,
             function() {
-//                loadBuses();
+                // OK
             },
             function() {
                 loadBuses();
             }
         );
+    }
+}
+
+function showBusDetailsFunction(bus) {
+    return function() {
+        element("mask").style.display = "block";
+        element("addBusPanel").style.display = "block";
+        if ( bus ) {
+            clearChildren("addBusPanelHeader").appendChild(createWithText("H3", "Edit Bus Stop"));
+            editingId = bus.id;
+            element("stopCodeField").value = bus.stop;
+            element("busField").value = bus.bus;
+            element("destinationField").value = bus.destination;
+            element("offsetField").value = bus.offset;
+        } else {
+            clearChildren("addBusPanelHeader").appendChild(createWithText("H3", "Add Bus Stop"));
+            editingId = null;
+            element("stopCodeField").value = "";
+            element("busField").value = "";
+            element("destinationField").value = "";
+            element("offsetField").value = 0;
+        }
+    }
+}
+
+function closeBusDetails() {
+    element("mask").style.display = "none";
+    element("addBusPanel").style.display = "none";
+    editingId = null;
+}
+
+var editingId;
+
+function saveBusDetails() {
+    if ( editingId ) {
+        post(baseUrl, "lightboard/bus/update?id=" + editingId
+            + "&stopCode=" + element("stopCodeField").value
+            + "&busNo=" + element("busField").value
+            + "&destination=" + element("destinationField").value
+            + "&offset=" + element("offsetField").value,
+            function() {
+                closeBusDetails();
+                loadBuses();
+            },
+            function() {
+                window.alert("Could not create bus stop");
+            }
+        )
+    } else {
+        post(baseUrl, "lightboard/bus/add?stopCode=" + element("stopCodeField").value
+            + "&busNo=" + element("busField").value
+            + "&destination=" + element("destinationField").value
+            + "&offset=" + element("offsetField").value,
+            function() {
+                closeBusDetails();
+                loadBuses();
+            },
+            function() {
+                window.alert("Could not create bus stop");
+            }
+        )
+    };
+}
+
+function removeBusFunction(bus) {
+    return function() {
+        var reply = window.confirm("Delete bus stop: " + bus.bus + " to " + bus.destination + " (stop " + bus.stop + ")?");
+        if ( reply===true ) {
+            post(baseUrl, "lightboard/bus/remove?id=" + bus.id,
+                function() {
+                    loadBuses();
+                },
+                function() {
+                    window.alert("Could not remove bus stop " + bus.id);
+                }
+            );
+        }
     }
 }
 
@@ -401,16 +480,19 @@ function sleep() {
 }
 
 function shutdown() {
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function() {
-        if (req.readyState==4 && req.status==200 ) {
-            setTimeout(function() {
-                location.reload();
-            }, 3000);
+    var reply = window.confirm("Close LightBoard software?");
+    if ( reply===true ) {
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function() {
+            if (req.readyState==4 && req.status==200 ) {
+                setTimeout(function() {
+                    location.reload();
+                }, 3000);
+            }
         }
+        req.open("POST", url("system/shutdown"), true);
+        req.send();
     }
-    req.open("POST", url("system/shutdown"), true);
-    req.send();
 }
 
 function resetServerConnection() {

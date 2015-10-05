@@ -42,4 +42,14 @@ public class CLightBoard implements LightBoard {
         return cols;
     }
 
+    @Override
+    public void sleep() {
+
+    }
+
+    @Override
+    public void wake() {
+
+    }
+
 }

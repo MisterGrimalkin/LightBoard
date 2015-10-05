@@ -45,6 +45,16 @@ public class MockBoard implements LightBoard {
         return cols;
     }
 
+    @Override
+    public void sleep() {
+
+    }
+
+    @Override
+    public void wake() {
+
+    }
+
     public double[][][] getData() {
         return data;
     }

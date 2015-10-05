@@ -33,4 +33,8 @@ public interface LightBoard {
      */
     int getCols();
 
+    void sleep();
+
+    void wake();
+
 }
