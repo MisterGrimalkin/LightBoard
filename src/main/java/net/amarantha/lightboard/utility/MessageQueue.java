@@ -104,10 +104,13 @@ public class MessageQueue {
 
     public void clearAllMessages() {
         allMessages.clear();
+        messagePointers.clear();
+        resetSourceIndex();
     }
 
     public void clearMessages(Integer key) {
         getOrCreateMessageList(key).clear();
+        messagePointers.clear();
 //        messagePointers.put(key, 0);
     }
 

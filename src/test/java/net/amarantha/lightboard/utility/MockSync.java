@@ -14,6 +14,12 @@ public class MockSync extends Sync {
         run = true;
     }
 
+    @Override
+    public void init() {
+        super.init();
+        timerTasks = new ArrayList<>();
+    }
+
     public void runTasks() {
         for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
             entry.getValue().runTask();

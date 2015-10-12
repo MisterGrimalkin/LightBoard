@@ -265,13 +265,11 @@ public class BusUpdater extends Updater {
     // Web Service Call //
     //////////////////////
 
-    protected List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
+    private List<Long> getDepartureTimesFor(BusDeparture departure) throws Exception {
 
         List<Long> result = new ArrayList<>();
 
-        String httpResult = Http.get(TFL_BUS_URL + "?StopCode1=" + departure.getStopCode()).text();
-
-        List<String[]> lineArrays = breakIntoLineArrays(httpResult);
+        List<String[]> lineArrays = breakIntoLineArrays(getDataFromWebService(departure.getStopCode()));
 
         if ( lineArrays.isEmpty() ) {
             throw new Exception();
@@ -284,6 +282,10 @@ public class BusUpdater extends Updater {
         }
 
         return result;
+    }
+
+    protected String getDataFromWebService(long stopCode) {
+        return Http.get(TFL_BUS_URL + "?StopCode1=" + stopCode).text();
     }
 
 

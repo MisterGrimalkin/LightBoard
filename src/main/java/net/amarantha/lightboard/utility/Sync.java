@@ -18,6 +18,10 @@ public class Sync {
 
     protected boolean run = false;
 
+    public void init() {
+        tasks = new HashMap<>();
+    }
+
     public void startSyncThread() {
         System.out.println("Staring Sync Thread with " + tasks.size() + " tasks....");
         run = true;

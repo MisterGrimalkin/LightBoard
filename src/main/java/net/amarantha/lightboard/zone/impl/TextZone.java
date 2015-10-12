@@ -172,6 +172,10 @@ public class TextZone extends LightBoardZone {
         return font;
     }
 
+    public int countMessages() {
+        return messageQueue.countMessages();
+    }
+
     //////////////
     // Override //
     //////////////

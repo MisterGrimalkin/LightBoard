@@ -17,11 +17,11 @@ public class MockBoard implements LightBoard {
     public MockBoard(@Rows int rows, @Cols int cols) {
         this.rows = rows;
         this.cols = cols;
-        data = new double[3][rows][cols];
     }
 
     @Override
     public void init() {
+        data = new double[3][rows][cols];
         System.out.println("Mock LightBoard Ready");
     }
 

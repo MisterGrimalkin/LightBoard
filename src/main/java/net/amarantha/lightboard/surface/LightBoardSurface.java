@@ -40,6 +40,7 @@ public class LightBoardSurface {
     ///////////////////
 
     public LightBoardSurface init() {
+        ledState = new double[3][rows][cols];
         board.init();
         System.out.println("Starting LightBoardSurface....");
         sync.addTask(new Sync.Task(board.getUpdateInterval()) {
@@ -105,7 +106,12 @@ public class LightBoardSurface {
                     if ( x-xPos >= 0 && x-xPos < chr[0][0].length && y-yPos >= 0 && y-yPos < chr[0].length ) {
                         int imgCol = x-xPos;
                         int imgRow = y-yPos;
-                        changed |= drawPoint(x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
+                        double red = chr[0][imgRow][imgCol];
+                        double green = chr[1][imgRow][imgCol];
+                        double blue = chr[2][imgRow][imgCol];
+                        if ( clearBackground || (red>0.0 && green>0.0 && blue>0.0) ) {
+                            changed |= drawPoint(x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
+                        }
                     }
                 }
             }
