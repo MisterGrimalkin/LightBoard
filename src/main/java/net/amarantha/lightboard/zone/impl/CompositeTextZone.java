@@ -66,7 +66,6 @@ public class CompositeTextZone extends LightBoardZone {
         zone.addScrollCompleteHandler(() -> {
             scrolledOut.put(zoneNo, true);
             if ( allScrolledOut() ) {
-                System.out.println("ALL SCROLLED OUT");
                 clearScrolledOut();
                 onScrollComplete();
             }
@@ -85,6 +84,7 @@ public class CompositeTextZone extends LightBoardZone {
     private void clearScrolledOut() {
         for (Entry<Integer, Boolean> entry : scrolledOut.entrySet() ) {
             scrolledOut.put(entry.getKey(), false);
+            zones.get(entry.getKey()).advanceMessage();
             zones.get(entry.getKey()).resetScroll();
         }
     }
@@ -145,10 +145,10 @@ public class CompositeTextZone extends LightBoardZone {
                 zone.clear();
                 drawn |= zone.render();
             }
-            if (!drawn) {
+//            if (!drawn) {
 //                clearScrolledOut();
 //                onScrollComplete();
-            }
+//            }
         }
         return drawn;
     }

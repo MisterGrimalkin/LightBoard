@@ -23,12 +23,6 @@ public class BusUpdater extends Updater {
 
     protected Map<String, BusDeparture> buses = new HashMap<>();
 
-//    private TextZone busNumberZone;
-//    private TextZone leftDestinationZone;
-//    private TextZone leftTimesZone;
-//    private TextZone rightDestinationZone;
-//    private TextZone rightTimesZone;
-
     @Inject
     public BusUpdater(Sync sync) {
         super(sync);
@@ -132,8 +126,8 @@ public class BusUpdater extends Updater {
                         }
 
                     }
+                    sourceId++;
                 }
-                sourceId++;
             }
         }
 
@@ -143,32 +137,27 @@ public class BusUpdater extends Updater {
 
     private int currentSource = 0;
 
-
     public void updateZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+
         busNumberZone.clearAllMessages();
         leftDestinationZone.clearAllMessages();
         leftTimesZone.clearAllMessages();
         rightDestinationZone.clearAllMessages();
-        leftTimesZone.clearAllMessages();
+        rightTimesZone.clearAllMessages();
 
         if ( busNumbers!=null) {
 
             if (currentSource >= busNumbers.size()) {
                 currentSource = 0;
             }
-            System.out.println("Update zoned " + currentSource);
 
-            busNumberZone.addMessage(busNumbers.get(currentSource));
-            leftDestinationZone.addMessage(busDestinationsLeft.get(currentSource));
-            leftTimesZone.addMessage(busTimesLeft.get(currentSource));
-            rightDestinationZone.addMessage(busDestinationsRight.get(currentSource));
-            rightTimesZone.addMessage(busTimesRight.get(currentSource));
-
-            busNumberZone.advanceMessage();
-            leftDestinationZone.advanceMessage();
-            leftTimesZone.advanceMessage();
-            rightDestinationZone.advanceMessage();
-            rightTimesZone.advanceMessage();
+            if ( busNumbers.get(currentSource)!=null ) {
+                busNumberZone.addMessage(busNumbers.get(currentSource));
+                leftDestinationZone.addMessage(busDestinationsLeft.get(currentSource));
+                leftTimesZone.addMessage(busTimesLeft.get(currentSource));
+                rightDestinationZone.addMessage(busDestinationsRight.get(currentSource));
+                rightTimesZone.addMessage(busTimesRight.get(currentSource));
+            }
 
             currentSource++;
 

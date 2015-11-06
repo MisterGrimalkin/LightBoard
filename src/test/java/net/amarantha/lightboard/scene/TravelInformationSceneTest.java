@@ -26,7 +26,7 @@ public class TravelInformationSceneTest {
 
 
     @Story
-//    @Ignore
+    @Ignore
     public void testScene() {
 
         given_the_lighboard();

@@ -48,28 +48,28 @@ public class TravelInformationScene extends Scene {
         busNumber
                 .scrollRight()
                 .setFont(new LargeFont())
-                .setRestDuration(3200)
+                .setRestDuration(3000)
                 .setMasterDelta(2)
                 .setRegion(0, 0, BUS_NUMBER_WIDTH, BUSES_HEIGHT - 2);
 
         busDestinationLeft
                 .scrollUp()
-                .setRestDuration(3400)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH, 0, busFrameWidth, BUSES_HEIGHT/2);
 
         busTimesLeft
                 .scrollDown()
-                .setRestDuration(3400)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH, BUSES_HEIGHT/2, busFrameWidth, BUSES_HEIGHT/2);
 
         busDestinationRight
                 .scrollUp()
-                .setRestDuration(3600)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH + busFrameWidth, 0, busFrameWidth, BUSES_HEIGHT/2);
 
         busTimesRight
                 .scrollDown()
-                .setRestDuration(3600)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH + busFrameWidth, BUSES_HEIGHT/2, busFrameWidth, BUSES_HEIGHT / 2);
 
         busComposite
@@ -77,18 +77,17 @@ public class TravelInformationScene extends Scene {
                 .setScrollTick(30);
 
         // Tube
-//        tubeDetail
-//                .scrollLeft()
-//                .setRestDuration(5000)
-//                .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
-//
-//        tubeSummary
-//                .fixed()
-//                .setFont(new SmallFont())
-//                .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
+        tubeDetail
+                .scrollLeft()
+                .setRestDuration(5000)
+                .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
 
-        registerZones(busComposite);
-//        registerZones(clock, busComposite, tubeDetail, tubeSummary);
+        tubeSummary
+                .fixed()
+                .setFont(new SmallFont())
+                .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
+
+        registerZones(clock, busComposite, tubeDetail, tubeSummary);
 
         busComposite.addScrollCompleteHandler(() -> updateZones());
 
@@ -97,14 +96,11 @@ public class TravelInformationScene extends Scene {
         busUpdater
                 .setDataRefresh(15000);
 
-//        tubeUpdater
-//                .setZones(tubeDetail, tubeSummary)
-//                .setDataRefresh(60000);
-//
-        registerUpdaters(busUpdater);
-//        registerUpdaters(busUpdater, tubeUpdater);
+        tubeUpdater
+                .setZones(tubeDetail, tubeSummary)
+                .setDataRefresh(60000);
 
-//        testMode();
+        registerUpdaters(busUpdater, tubeUpdater);
 
     }
 
