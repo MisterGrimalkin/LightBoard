@@ -23,27 +23,33 @@ public class BusUpdater extends Updater {
 
     protected Map<String, BusDeparture> buses = new HashMap<>();
 
-    private TextZone busNumberZone;
-    private TextZone leftDestinationZone;
-    private TextZone leftTimesZone;
-    private TextZone rightDestinationZone;
-    private TextZone rightTimesZone;
+//    private TextZone busNumberZone;
+//    private TextZone leftDestinationZone;
+//    private TextZone leftTimesZone;
+//    private TextZone rightDestinationZone;
+//    private TextZone rightTimesZone;
 
     @Inject
     public BusUpdater(Sync sync) {
         super(sync);
     }
 
+    private Map<Integer, String> busNumbers;
+    private Map<Integer, String> busDestinationsLeft;
+    private Map<Integer, String> busDestinationsRight;
+    private Map<Integer, String> busTimesLeft;
+    private Map<Integer, String> busTimesRight;
+
     @Override
     public void refresh() {
 
         loadBusConfig();
 
-        busNumberZone.clearAllMessages();
-        leftDestinationZone.clearAllMessages();
-        leftTimesZone.clearAllMessages();
-        rightDestinationZone.clearAllMessages();
-        rightTimesZone.clearAllMessages();
+        busNumbers = new HashMap<>();
+        busDestinationsLeft = new HashMap<>();
+        busDestinationsRight = new HashMap<>();
+        busTimesLeft = new HashMap<>();
+        busTimesRight = new HashMap<>();
 
         BusData data = new BusData();
         try {
@@ -59,34 +65,27 @@ public class BusUpdater extends Updater {
         int sourceId = 0;
 
         if ( data.getDataByBusNumber().entrySet().isEmpty() ) {
-            busNumberZone.addMessage(sourceId, " ");
-            leftDestinationZone.addMessage(sourceId, "{red}No Data");
-            leftTimesZone.addMessage(sourceId, "{red}* * *");
-            rightDestinationZone.addMessage(sourceId, "{red}No Data");
-            rightTimesZone.addMessage(sourceId, "{red}* * *");
+            busNumbers.put(sourceId, "*");
+            busDestinationsLeft.put(sourceId, "{red}No Data");
+            busDestinationsRight.put(sourceId, "{red}No Data");
+            busTimesLeft.put(sourceId, "{red}* * *");
+            busTimesRight.put(sourceId, "{red}* * *");
         } else {
             for (Entry<String, Map<BusDeparture, List<Long>>> eBus : data.getDataByBusNumber().entrySet()) {
-
-                busNumberZone.clearMessages(sourceId);
-                leftDestinationZone.clearMessages(sourceId);
-                leftTimesZone.clearMessages(sourceId);
-                rightDestinationZone.clearMessages(sourceId);
-                rightTimesZone.clearMessages(sourceId);
 
                 int activeBuses = numberOfActiveBuses(eBus.getValue());
 
                 if (activeBuses > 0) {
 
                     String busNumber = "{yellow}" + eBus.getKey();
-                    busNumberZone.addMessage(sourceId, busNumber);
+                    busNumbers.put(sourceId, busNumber);
 
                     if (activeBuses > 2) {
-                        leftDestinationZone.addMessage(sourceId, "{red}Too");
-                        leftTimesZone.addMessage(sourceId, "{red}Many");
-                        rightDestinationZone.addMessage(sourceId, "{red}Buses");
-                        rightTimesZone.addMessage(sourceId, "{red}Returned!");
+                        busDestinationsLeft.put(sourceId, "{red}Too");
+                        busTimesLeft.put(sourceId, "{red}Many");
+                        busDestinationsRight.put(sourceId, "{red}Buses");
+                        busTimesRight.put(sourceId, "{red}Returned!");
                     } else {
-
 
                         int direction = 1;
 
@@ -117,17 +116,17 @@ public class BusUpdater extends Updater {
                             String timesMessage = sb.toString();
 
                             if (direction == 1) {
-                                leftDestinationZone.addMessage(sourceId, destination);
-                                leftTimesZone.addMessage(sourceId, timesMessage);
+                                busDestinationsLeft.put(sourceId, destination);
+                                busTimesLeft.put(sourceId, timesMessage);
                             } else if (direction == 2) {
-                                rightDestinationZone.addMessage(sourceId, destination);
-                                rightTimesZone.addMessage(sourceId, timesMessage);
+                                busDestinationsRight.put(sourceId, destination);
+                                busTimesRight.put(sourceId, timesMessage);
                             }
                             direction++;
 
                             if (activeBuses == 1) {
-                                rightDestinationZone.addMessage(sourceId, "{yellow}-");
-                                rightTimesZone.addMessage(sourceId, "{yellow}-");
+                                busDestinationsRight.put(sourceId, "{yellow}-");
+                                busTimesRight.put(sourceId, "{yellow}-");
                             }
 
                         }
@@ -136,6 +135,43 @@ public class BusUpdater extends Updater {
                 }
                 sourceId++;
             }
+        }
+
+        currentSource = 0;
+
+    }
+
+    private int currentSource = 0;
+
+
+    public void updateZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+        busNumberZone.clearAllMessages();
+        leftDestinationZone.clearAllMessages();
+        leftTimesZone.clearAllMessages();
+        rightDestinationZone.clearAllMessages();
+        leftTimesZone.clearAllMessages();
+
+        if ( busNumbers!=null) {
+
+            if (currentSource >= busNumbers.size()) {
+                currentSource = 0;
+            }
+            System.out.println("Update zoned " + currentSource);
+
+            busNumberZone.addMessage(busNumbers.get(currentSource));
+            leftDestinationZone.addMessage(busDestinationsLeft.get(currentSource));
+            leftTimesZone.addMessage(busTimesLeft.get(currentSource));
+            rightDestinationZone.addMessage(busDestinationsRight.get(currentSource));
+            rightTimesZone.addMessage(busTimesRight.get(currentSource));
+
+            busNumberZone.advanceMessage();
+            leftDestinationZone.advanceMessage();
+            leftTimesZone.advanceMessage();
+            rightDestinationZone.advanceMessage();
+            rightTimesZone.advanceMessage();
+
+            currentSource++;
+
         }
 
     }
@@ -251,14 +287,14 @@ public class BusUpdater extends Updater {
     // Zone Binding //
     //////////////////
 
-    public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
-        this.busNumberZone = busNumberZone;
-        this.leftDestinationZone = leftDestinationZone;
-        this.leftTimesZone = leftTimesZone;
-        this.rightDestinationZone = rightDestinationZone;
-        this.rightTimesZone = rightTimesZone;
-        return this;
-    }
+//    public BusUpdater setZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+//        this.busNumberZone = busNumberZone;
+//        this.leftDestinationZone = leftDestinationZone;
+//        this.leftTimesZone = leftTimesZone;
+//        this.rightDestinationZone = rightDestinationZone;
+//        this.rightTimesZone = rightTimesZone;
+//        return this;
+//    }
 
 
     //////////////////////

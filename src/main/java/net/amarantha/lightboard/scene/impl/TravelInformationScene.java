@@ -6,6 +6,7 @@ import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
+import net.amarantha.lightboard.zone.LightBoardZone;
 import net.amarantha.lightboard.zone.impl.ClockZone;
 import net.amarantha.lightboard.zone.impl.CompositeTextZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
@@ -76,34 +77,39 @@ public class TravelInformationScene extends Scene {
                 .setScrollTick(30);
 
         // Tube
-        tubeDetail
-                .scrollLeft()
-                .setRestDuration(5000)
-                .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
+//        tubeDetail
+//                .scrollLeft()
+//                .setRestDuration(5000)
+//                .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
+//
+//        tubeSummary
+//                .fixed()
+//                .setFont(new SmallFont())
+//                .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
 
-        tubeSummary
-                .fixed()
-                .setFont(new SmallFont())
-                .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
+        registerZones(busComposite);
+//        registerZones(clock, busComposite, tubeDetail, tubeSummary);
 
-//        registerZones(busComposite);
-        registerZones(clock, busComposite, tubeDetail, tubeSummary);
-
+        busComposite.addScrollCompleteHandler(() -> updateZones());
 
         // Updaters
 
         busUpdater
-                .setZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight)
                 .setDataRefresh(15000);
 
-        tubeUpdater
-                .setZones(tubeDetail, tubeSummary)
-                .setDataRefresh(60000);
-
-        registerUpdaters(busUpdater, tubeUpdater);
+//        tubeUpdater
+//                .setZones(tubeDetail, tubeSummary)
+//                .setDataRefresh(60000);
+//
+        registerUpdaters(busUpdater);
+//        registerUpdaters(busUpdater, tubeUpdater);
 
 //        testMode();
 
+    }
+
+    private void updateZones() {
+        busUpdater.updateZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
     }
 
     public BusUpdater getBusUpdater() {

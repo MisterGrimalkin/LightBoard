@@ -49,24 +49,26 @@ public class Font {
         int width = 0;
         int rowWidth = 0;
         boolean inTag = false;
-        for ( int i=0; i<str.length(); i++ ) {
-            char c = str.charAt(i);
-            if ( inTag ) {
-                if ( c==CLOSE_TAG ) {
-                    inTag = false;
-                }
-            } else {
-                if ( c==OPEN_TAG ) {
-                    inTag = true;
+        if ( str!=null ) {
+            for (int i = 0; i < str.length(); i++) {
+                char c = str.charAt(i);
+                if (inTag) {
+                    if (c == CLOSE_TAG) {
+                        inTag = false;
+                    }
                 } else {
-                    if (i == str.length() - 1) {
-                        rowWidth += getWidth(c);
-                        width = Math.max(rowWidth, width);
-                    } else if (c == NL) {
-                        width = Math.max(rowWidth, width);
-                        rowWidth = 0;
+                    if (c == OPEN_TAG) {
+                        inTag = true;
                     } else {
-                        rowWidth += getWidth(c) + 1;
+                        if (i == str.length() - 1) {
+                            rowWidth += getWidth(c);
+                            width = Math.max(rowWidth, width);
+                        } else if (c == NL) {
+                            width = Math.max(rowWidth, width);
+                            rowWidth = 0;
+                        } else {
+                            rowWidth += getWidth(c) + 1;
+                        }
                     }
                 }
             }
@@ -78,22 +80,24 @@ public class Font {
         int height = 0;
         int rowHeight = 0;
         boolean inTag = false;
-        for ( int i=0; i<str.length(); i++ ) {
-            char c = str.charAt(i);
-            if ( inTag ) {
-                if ( c==CLOSE_TAG ) {
-                    inTag = false;
-                }
-            } else {
-                if ( c==OPEN_TAG ) {
-                    inTag = true;
+        if ( str!=null ) {
+            for (int i = 0; i < str.length(); i++) {
+                char c = str.charAt(i);
+                if (inTag) {
+                    if (c == CLOSE_TAG) {
+                        inTag = false;
+                    }
                 } else {
-                    rowHeight = Math.max(rowHeight, getHeight(c));
-                    if (i == str.length() - 1) {
-                        height += rowHeight;
-                    } else if (c == NL) {
-                        height += rowHeight;
-                        rowHeight = 0;
+                    if (c == OPEN_TAG) {
+                        inTag = true;
+                    } else {
+                        rowHeight = Math.max(rowHeight, getHeight(c));
+                        if (i == str.length() - 1) {
+                            height += rowHeight;
+                        } else if (c == NL) {
+                            height += rowHeight;
+                            rowHeight = 0;
+                        }
                     }
                 }
             }
