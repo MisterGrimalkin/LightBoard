@@ -131,8 +131,6 @@ public class BusUpdater extends Updater {
             }
         }
 
-        currentSource = 0;
-
     }
 
     private int currentSource = 0;
