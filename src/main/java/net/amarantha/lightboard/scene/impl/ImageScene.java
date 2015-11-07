@@ -27,7 +27,7 @@ public class ImageScene extends Scene {
 
         zone.scrollUp();
         zone.setScrollTick(50);
-        zone.setRestDuration(2500);
+        zone.setRestDuration(props.getInt("bannerTime",2)*1000);
         zone.loadImage(props.getString("bannerImage", "gp192x32.jpg"));
         zone.addScrollCompleteHandler(sceneManager::advanceScene);
 

@@ -31,8 +31,10 @@ public class LightBoardApplication {
 
         surface.init();
 
+        int bannerInterval = props.getInt("bannerInterval", 60) * 1000;
+
         sceneManager.addScene(0, webServiceMessageScene, null, false);
-        sceneManager.addScene(1, travelInformationScene, 600000, true);
+        sceneManager.addScene(1, travelInformationScene, bannerInterval, true);
         sceneManager.addScene(2, imageScene, null, true);
 
         sceneManager.startScenes();
