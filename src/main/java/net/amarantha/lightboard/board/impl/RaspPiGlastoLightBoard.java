@@ -256,8 +256,16 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
         return result;
     }
 
+    private String colourName = "multi";
+
+    @Override
+    public String getColour() {
+        return colourName;
+    }
+
     @Override
     public void setColour(String colourName) {
+        this.colourName = colourName;
         if (RED.equals(colourName)) {
             colour = RED_MODE;
             digitalWrite(data1G, true);

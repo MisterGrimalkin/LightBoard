@@ -11,4 +11,6 @@ public interface ColourSwitcher {
 
     void setColour(String colour);
 
+    String getColour();
+
 }

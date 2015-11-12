@@ -6,7 +6,7 @@ import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.zone.impl.ImageZone;
 
-public class ImageScene extends Scene {
+public class ImageBanner extends Scene {
 
     private String filename;
 
@@ -17,7 +17,7 @@ public class ImageScene extends Scene {
     @Inject private PropertyManager props;
 
     @Inject
-    public ImageScene() {
+    public ImageBanner() {
         super("Image Banner");
         setSceneDuration(null);
     }

@@ -38,41 +38,6 @@ public class TextZone extends LightBoardZone {
     }
 
 
-    /////////////
-    // Factory //
-    /////////////
-
-    public TextZone fixed() {
-        scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
-        setScrollTick(1000);
-        setRestDuration(1000);
-        return this;
-    }
-
-    public TextZone scrollLeft() {
-        scroll(Edge.RIGHT, Edge.LEFT);
-        setScrollTick(25);
-        return this;
-    }
-
-    public TextZone scrollRight() {
-        scroll(Edge.LEFT, Edge.RIGHT);
-        setScrollTick(25);
-        return this;
-    }
-
-    public TextZone scrollUp() {
-        scroll(Edge.BOTTOM, Edge.TOP);
-        setScrollTick(60);
-        return this;
-    }
-
-    public TextZone scrollDown() {
-        scroll(Edge.TOP, Edge.BOTTOM);
-        setScrollTick(60);
-        return this;
-    }
-
 
     /////////////////////////
     // Zone Implementation //
@@ -106,6 +71,11 @@ public class TextZone extends LightBoardZone {
         return font.getStringHeight(getCurrentMessage().getMessage());
     }
 
+    @Override
+    public void resetScroll() {
+        advanceMessage();
+        super.resetScroll();
+    }
 
     //////////////
     // Messages //

@@ -42,8 +42,8 @@ public abstract class Scene {
     }
 
     public void resume() {
-        zones.forEach(LightBoardZone::resetScroll);
         zones.forEach(LightBoardZone::resume);
+        zones.forEach(LightBoardZone::resetScroll);
         zones.forEach(LightBoardZone::render);
         updaters.forEach(Updater::resume);
     }

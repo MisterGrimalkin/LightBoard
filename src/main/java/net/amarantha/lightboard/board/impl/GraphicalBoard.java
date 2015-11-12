@@ -262,8 +262,11 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
         return result;
     }
 
+    private String colour = "multi";
+
     @Override
     public void setColour(String colour) {
+        this.colour = colour;
         if (RED.equals(colour)) {
             colourOverride = true;
             redMin = 0.05;
@@ -307,6 +310,10 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
         }
     }
 
+    @Override
+    public String getColour() {
+        return colour;
+    }
 
     ///////////////
     // Debugging //

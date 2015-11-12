@@ -61,4 +61,11 @@ public class ColourResource extends Resource {
         return error("Colour Override Not Supported");
     }
 
+    public String getColour() {
+        if ( board!=null ) {
+            return board.getColour();
+        }
+        return null;
+    }
+
 }
