@@ -6,6 +6,7 @@ import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
+import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.webservice.ColourResource;
 import net.amarantha.lightboard.zone.impl.ClockZone;
@@ -34,7 +35,7 @@ public class TravelInformationScene extends Scene {
     @Inject private TubeUpdater tubeUpdater;
 
     @Inject private ColourResource colourResource;
-    @Inject private PropertyManager props;
+    @Inject private LightBoardProperties props;
 
     @Inject
     public TravelInformationScene() {
@@ -81,18 +82,16 @@ public class TravelInformationScene extends Scene {
                 .setScrollTick(30);
 
         boolean showSummary = props.getString("showTubeSummary", "true").equals("true");
-        int detailHeight = showSummary
-                ? TUBE_HEIGHT : TUBE_HEIGHT + STATUS_HEIGHT;
 
         // Tube
         tubeDetail
                 .scrollLeft()
                 .setRestDuration(5000)
-                .setRegion(0, BUSES_HEIGHT, getCols(), showSummary ? TUBE_HEIGHT : TUBE_HEIGHT + STATUS_HEIGHT );
+                .setRegion(0, BUSES_HEIGHT, getCols(), props.showTubeSummary() ? TUBE_HEIGHT : TUBE_HEIGHT + STATUS_HEIGHT );
 
         registerZones(clock, busComposite, tubeDetail);
 
-        if ( showSummary ) {
+        if ( props.showTubeSummary() ) {
             tubeSummary
                     .setFont(new SmallFont())
                     .fixed()

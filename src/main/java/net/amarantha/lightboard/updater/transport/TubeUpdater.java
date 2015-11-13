@@ -2,6 +2,7 @@ package net.amarantha.lightboard.updater.transport;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
@@ -27,7 +28,7 @@ public class TubeUpdater extends Updater {
     private TextZone detailZone;
     private TextZone summaryZone;
 
-    @Inject private PropertyManager props;
+    @Inject private LightBoardProperties props;
 
     @Inject
     public TubeUpdater(Sync sync) {
@@ -70,7 +71,7 @@ public class TubeUpdater extends Updater {
                         boolean isMinor = "Minor Delays".equalsIgnoreCase(ts.getStatusDescription());
                         String colour = (isGood ? "{green}" : isMinor ? "{yellow}" : "{red}" );
                         String statusDetail = (isGood ? ts.getStatusDescription()
-                                : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
+                                : !props.showTubeFullDetails() || ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
                                         ? ts.getStatusDescription()
                                         : ts.getStatusDetail() );
 
@@ -94,7 +95,7 @@ public class TubeUpdater extends Updater {
                     }
 
                     if ( badCount==0 ) {
-                        if ( props.getString("showTubeSummary", "true").equals("true") ) {
+                        if ( props.showTubeSummary() ) {
                             detailZone.addMessage("   ");
                         } else {
                             detailZone.addMessage("{green}Good service on all TfL lines");

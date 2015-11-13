@@ -6,9 +6,7 @@ import com.google.inject.Injector;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
-import net.amarantha.lightboard.scene.impl.ImageBanner;
-import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
+import net.amarantha.lightboard.scene.impl.*;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
@@ -24,6 +22,8 @@ public class LightBoardApplication {
 
     @Inject private WebServiceMessageScene webServiceMessageScene;
     @Inject private TravelInformationScene travelInformationScene;
+    @Inject private ShowerTicketsScene showerTicketsScene;
+    @Inject private MessagesScene messagesScene;
 
     private Scene imageBanner;
     //@Inject private FireAndIceBannerScene imageScene;
@@ -45,7 +45,9 @@ public class LightBoardApplication {
 
         sceneManager.addScene(0, webServiceMessageScene, null, false);
         sceneManager.addScene(1, imageBanner, null, true);
-        sceneManager.addScene(2, travelInformationScene, bannerInterval, true);
+        sceneManager.addScene(2, messagesScene, null, true);
+        sceneManager.addScene(3, travelInformationScene, bannerInterval, true);
+//        sceneManager.addScene(3, showerTicketsScene, 3000, true);
 
         sceneManager.startScenes();
         sceneManager.cycleScenes();
