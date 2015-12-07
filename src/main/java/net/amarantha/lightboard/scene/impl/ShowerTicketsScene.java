@@ -31,8 +31,8 @@ public class ShowerTicketsScene extends Scene {
 
         // Shower Tickets
         label
-                .fixed()
                 .setFont(new SmallFont())
+                .fixed()
                 .setRestPosition(AlignH.RIGHT, AlignV.MIDDLE)
                 .singleRender(true)
                 .setRegion(0, 0, LABEL_WIDTH, getRows() - MESSAGE_HEIGHT)
@@ -43,8 +43,8 @@ public class ShowerTicketsScene extends Scene {
         label.addMessage("{red}NEXT SHOWER:");
 
         female
-                .fixed()
                 .setFont(new LargeFont())
+                .fixed()
                 .singleRender(true)
                 .setRegion(
                         LABEL_WIDTH,
@@ -58,8 +58,8 @@ public class ShowerTicketsScene extends Scene {
         female.addMessage("{red}* {yellow}* {green}*");
 
         male
-                .fixed()
                 .setFont(new LargeFont())
+                .fixed()
                 .singleRender(true)
                 .setRegion(
                         LABEL_WIDTH + ((getCols() - LABEL_WIDTH) / 2),

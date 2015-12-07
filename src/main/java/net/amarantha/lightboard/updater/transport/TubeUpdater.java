@@ -2,6 +2,8 @@ package net.amarantha.lightboard.updater.transport;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
+import net.amarantha.lightboard.utility.LightBoardProperties;
+import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.impl.TextZone;
 import org.javalite.http.Http;
@@ -26,6 +28,8 @@ public class TubeUpdater extends Updater {
     private TextZone detailZone;
     private TextZone summaryZone;
 
+    @Inject private LightBoardProperties props;
+
     @Inject
     public TubeUpdater(Sync sync) {
         super(sync);
@@ -47,11 +51,15 @@ public class TubeUpdater extends Updater {
                 List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
 
                 detailZone.clearMessages();
-                summaryZone.clearMessages();
+                if ( summaryZone!=null ) {
+                    summaryZone.clearMessages();
+                }
 
                 if ( tubeStatuses.isEmpty() ) {
                     detailZone.replaceMessage("{red}TfL returned no data");
-                    summaryZone.replaceMessage("{red}Error Connecting to TfL");
+                    if ( summaryZone!=null ) {
+                        summaryZone.replaceMessage("{red}Error Connecting to TfL");
+                    }
                 } else {
                     StringBuilder summarySb = new StringBuilder();
                     summarySb.append("{yellow}|");
@@ -63,7 +71,7 @@ public class TubeUpdater extends Updater {
                         boolean isMinor = "Minor Delays".equalsIgnoreCase(ts.getStatusDescription());
                         String colour = (isGood ? "{green}" : isMinor ? "{yellow}" : "{red}" );
                         String statusDetail = (isGood ? ts.getStatusDescription()
-                                : ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
+                                : !props.showTubeFullDetails() || ts.getStatusDetail()==null || ts.getStatusDetail().isEmpty()
                                         ? ts.getStatusDescription()
                                         : ts.getStatusDetail() );
 
@@ -87,12 +95,18 @@ public class TubeUpdater extends Updater {
                     }
 
                     if ( badCount==0 ) {
-                        detailZone.addMessage("   ");
+                        if ( props.showTubeSummary() ) {
+                            detailZone.addMessage("   ");
+                        } else {
+                            detailZone.addMessage("{green}Good service on all TfL lines");
+                        }
                     }
 
-                    String summaryMessage = summarySb.toString().trim();
-                    summaryZone.clearMessages();
-                    summaryZone.addMessage(summaryMessage);
+                    if ( summaryZone!=null ) {
+                        String summaryMessage = summarySb.toString().trim();
+                        summaryZone.clearMessages();
+                        summaryZone.addMessage(summaryMessage);
+                    }
 
                 }
             }

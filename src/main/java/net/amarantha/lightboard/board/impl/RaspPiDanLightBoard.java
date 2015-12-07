@@ -223,6 +223,13 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
         return result;
     }
 
+    private String colourName = "multi";
+
+    @Override
+    public String getColour() {
+        return colourName;
+    }
+
     @Override
     public void setColour(String colourName) {
         if (RED.equals(colourName)) {

@@ -222,6 +222,9 @@ public abstract class LightBoardZone {
         contentLeft += deltaX;
         contentTop += deltaY;
         if ( isInRestPosition() ) {
+            if ( !resting ) {
+                scrollRestHandlers.forEach(ScrollRestHandler::onScrollRest);
+            }
             resting = true;
         }
         if ( !contentVisible() ) { //&& autoReset ) {
@@ -251,19 +254,6 @@ public abstract class LightBoardZone {
     }
 
     private boolean isInRestPosition() {
-
-        double ch = getContentHeight();
-        double rh = region.height;
-
-        boolean a = getContentWidth()<=region.width;
-        boolean b = !skipPauseIfContentTooWidth;
-        boolean c = ( getScrollFrom()==Edge.BOTTOM && getScrollTo()==Edge.TOP );
-        boolean c2 = ( getContentHeight()<=region.height || !skipPauseIfContentTooWidth );
-        boolean d = getContentHeight()<=region.height;
-        boolean e = Math.abs(contentLeft - restX) < masterDelta;
-        boolean f = Math.abs(contentTop-restY) < masterDelta;
-        boolean g = currentScrollMode.equals(Scrolling.IN);
-
         return
                 (          getContentWidth()<=region.width
                         || !skipPauseIfContentTooWidth
@@ -348,6 +338,41 @@ public abstract class LightBoardZone {
     // Options //
     /////////////
 
+    ///////////////
+    // Scrolling //
+    ///////////////
+
+    public LightBoardZone fixed() {
+        scroll(Edge.NO_SCROLL, Edge.NO_SCROLL);
+        setScrollTick(1000);
+        setRestDuration(1000);
+        return this;
+    }
+
+    public LightBoardZone scrollLeft() {
+        scroll(Edge.RIGHT, Edge.LEFT);
+        setScrollTick(25);
+        return this;
+    }
+
+    public LightBoardZone scrollRight() {
+        scroll(Edge.LEFT, Edge.RIGHT);
+        setScrollTick(25);
+        return this;
+    }
+
+    public LightBoardZone scrollUp() {
+        scroll(Edge.BOTTOM, Edge.TOP);
+        setScrollTick(60);
+        return this;
+    }
+
+    public LightBoardZone scrollDown() {
+        scroll(Edge.TOP, Edge.BOTTOM);
+        setScrollTick(60);
+        return this;
+    }
+
     public LightBoardZone region(Region region) {
         this.region = region;
         return this;
@@ -426,17 +451,27 @@ public abstract class LightBoardZone {
     private int restDuration = 3000;
 
     private List<ScrollCompleteHandler> scrollCompleteHandlers = new ArrayList<>();
+    private List<ScrollRestHandler> scrollRestHandlers = new ArrayList<>();
 
-    public static interface  ScrollCompleteHandler {
+    public static interface ScrollCompleteHandler {
         void onScrollComplete();
+    }
+
+    public static interface ScrollRestHandler {
+        void onScrollRest();
     }
 
     public void addScrollCompleteHandler(ScrollCompleteHandler handler) {
         scrollCompleteHandlers.add(handler);
     }
 
+    public void addScrollRestHandler(ScrollRestHandler handler) {
+        scrollRestHandlers.add(handler);
+    }
+
     public void removeAllHandlers() {
         scrollCompleteHandlers.clear();
+        scrollRestHandlers.clear();
     }
 
 

@@ -17,11 +17,6 @@ import static org.imgscalr.Scalr.Mode;
 
 public class ImageZone extends LightBoardZone {
 
-    public ImageZone scrollUp() {
-        scroll(Edge.BOTTOM, Edge.TOP);
-        return this;
-    }
-
     Pattern imagePattern;
     double[][][] convertedImage;
     boolean[][] convertedImageBinary;

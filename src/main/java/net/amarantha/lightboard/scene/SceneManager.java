@@ -3,6 +3,7 @@ package net.amarantha.lightboard.scene;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.Now;
 import net.amarantha.lightboard.utility.PropertyManager;
 
@@ -10,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static net.amarantha.lightboard.utility.Now.*;
+import static net.amarantha.lightboard.utility.Now.timeOnly;
 
 @Singleton
 public class SceneManager {
@@ -18,6 +19,7 @@ public class SceneManager {
     @Inject private Now now;
     @Inject private PropertyManager props;
 
+    @Inject private LightBoardSurface surface;
     @Inject private LightBoard board;
 
     private Integer scenePointer = null;
@@ -75,6 +77,7 @@ public class SceneManager {
         currentSceneId = id;
         Scene newScene = scenes.get(id);
         if ( newScene!=null ) {
+//            surface.clearSurface();
             if ( skipIfNotInCycle && !newScene.isIncludeInCycle() ) {
                 advanceScene();
             } else {

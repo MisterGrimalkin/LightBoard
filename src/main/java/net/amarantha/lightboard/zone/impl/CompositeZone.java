@@ -12,22 +12,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class CompositeTextZone extends LightBoardZone {
+public class CompositeZone extends LightBoardZone {
 
-    private List<TextZone> zones = new ArrayList<>();
+    private List<LightBoardZone> zones = new ArrayList<>();
 
     private int width = 0;
     private int height = 0;
 
     @Inject
-    public CompositeTextZone(LightBoardSurface surface, Sync sync) {
+    public CompositeZone(LightBoardSurface surface, Sync sync) {
         super(surface, sync);
         autoReset(false);
     }
 
-    public CompositeTextZone bindZones(TextZone... tz) {
+    public CompositeZone bindZones(LightBoardZone... tz) {
         int i = 0;
-        for ( TextZone z : tz) {
+        for ( LightBoardZone z : tz) {
             zones.add(i, z);
             width = Math.max(width, z.getRegion().width);
             height = Math.max(height, z.getRegion().height);
@@ -40,22 +40,18 @@ public class CompositeTextZone extends LightBoardZone {
     @Override
     public void pause() {
         super.pause();
-        for ( TextZone z : zones ) {
-            z.pause();
-        }
+        zones.forEach(LightBoardZone::pause);
     }
 
     @Override
     public void resume() {
         super.resume();
-        for ( TextZone z : zones ) {
-            z.resume();
-        }
+        zones.forEach(LightBoardZone::resume);
     }
 
     private Map<Integer, Boolean> scrolledOut = new HashMap<>();
 
-    private void prepareZone(final int zoneNo, TextZone zone) {
+    private void prepareZone(final int zoneNo, LightBoardZone zone) {
         zone.resetScroll();
         zone.removeAllHandlers();
         zone.autoReset(false);
@@ -66,7 +62,8 @@ public class CompositeTextZone extends LightBoardZone {
         zone.addScrollCompleteHandler(() -> {
             scrolledOut.put(zoneNo, true);
             if ( allScrolledOut() ) {
-                advanceAllZones();
+                clearScrolledOut();
+                onScrollComplete();
             }
         });
     }
@@ -80,12 +77,11 @@ public class CompositeTextZone extends LightBoardZone {
         return true;
     }
 
-    private void advanceAllZones() {
+    private void clearScrolledOut() {
         for (Entry<Integer, Boolean> entry : scrolledOut.entrySet() ) {
-            TextZone z = zones.get(entry.getKey());
-            z.advanceMessage();
-            z.resetScroll();
             scrolledOut.put(entry.getKey(), false);
+//            zones.get(entry.getKey()).advanceMessage();
+            zones.get(entry.getKey()).resetScroll();
         }
     }
 
@@ -121,9 +117,7 @@ public class CompositeTextZone extends LightBoardZone {
 
     @Override
     public void tick() {
-        for (LightBoardZone zone : zones) {
-            zone.tick();
-        }
+        zones.forEach(LightBoardZone::tick);
         render();
     }
 
@@ -141,12 +135,9 @@ public class CompositeTextZone extends LightBoardZone {
     public boolean render() {
         boolean drawn = false;
         if ( !paused ) {
-            for (TextZone zone : zones) {
+            for (LightBoardZone zone : zones) {
                 zone.clear();
                 drawn |= zone.render();
-            }
-            if (!drawn) {
-                advanceAllZones();
             }
         }
         return drawn;

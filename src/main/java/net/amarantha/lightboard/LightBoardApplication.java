@@ -1,10 +1,12 @@
 package net.amarantha.lightboard;
 
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import net.amarantha.lightboard.board.impl.TextBoard;
+import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
-import net.amarantha.lightboard.scene.impl.ImageScene;
-import net.amarantha.lightboard.scene.impl.TravelInformationScene;
-import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
+import net.amarantha.lightboard.scene.impl.*;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
@@ -20,24 +22,36 @@ public class LightBoardApplication {
 
     @Inject private WebServiceMessageScene webServiceMessageScene;
     @Inject private TravelInformationScene travelInformationScene;
-    @Inject private ImageScene imageScene;
+    @Inject private ShowerTicketsScene showerTicketsScene;
+    @Inject private MessagesScene messagesScene;
+
+    private Scene imageBanner;
+    //@Inject private FireAndIceBannerScene imageScene;
 
     @Inject private WebService service;
 
     @Inject private Sync sync;
+
+    @Inject private Injector injector;
 
 
     public void startApplication(boolean withServer) {
 
         surface.init();
 
+        int bannerInterval = props.getInt("bannerInterval", 60) * 1000;
+
+        imageBanner = (Scene)injector.getInstance(getImageBannerClass());
+
         sceneManager.addScene(0, webServiceMessageScene, null, false);
-        sceneManager.addScene(1, travelInformationScene, 600000, true);
-        sceneManager.addScene(2, imageScene, null, true);
+        sceneManager.addScene(1, imageBanner, null, true);
+        sceneManager.addScene(2, messagesScene, null, true);
+        sceneManager.addScene(3, travelInformationScene, bannerInterval, true);
+//        sceneManager.addScene(3, showerTicketsScene, 3000, true);
 
         sceneManager.startScenes();
         sceneManager.cycleScenes();
-        sceneManager.loadScene(2);
+        sceneManager.loadScene(1);
 
         if ( withServer ) {
             service.startWebService();
@@ -47,5 +61,14 @@ public class LightBoardApplication {
 
     }
 
+    private Class getImageBannerClass() {
+        String className = props.getString("imageBannerClass", "net.amarantha.lightboard.scene.impl.ImageBanner");
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + className);
+        }
+        return ImageBanner.class;
+    }
 
 }

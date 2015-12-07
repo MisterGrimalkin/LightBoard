@@ -1,13 +1,13 @@
 package net.amarantha.lightboard.zone;
 
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.zone.impl.CompositeTextZone;
+import net.amarantha.lightboard.zone.impl.CompositeZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 public class Zones {
 
 
-    public static CompositeTextZone startFourSpinner(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
+    public static CompositeZone startFourSpinner(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
 
 //        TextZone z1 = new TextZone(surface, Edge.LEFT, Edge.BOTTOM, 0);
 //        z1.setRestPosition(AlignH.RIGHT, AlignV.TOP).setRestDuration(0).clear(false);

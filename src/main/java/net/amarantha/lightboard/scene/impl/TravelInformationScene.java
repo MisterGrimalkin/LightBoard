@@ -6,8 +6,11 @@ import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
+import net.amarantha.lightboard.utility.LightBoardProperties;
+import net.amarantha.lightboard.utility.PropertyManager;
+import net.amarantha.lightboard.webservice.ColourResource;
 import net.amarantha.lightboard.zone.impl.ClockZone;
-import net.amarantha.lightboard.zone.impl.CompositeTextZone;
+import net.amarantha.lightboard.zone.impl.CompositeZone;
 import net.amarantha.lightboard.zone.impl.TextZone;
 
 import javax.inject.Inject;
@@ -18,7 +21,7 @@ public class TravelInformationScene extends Scene {
 
     @Inject private ClockZone clock;
 
-    @Inject private CompositeTextZone busComposite;
+    @Inject private CompositeZone busComposite;
     @Inject private TextZone busNumber;
     @Inject private TextZone busDestinationLeft;
     @Inject private TextZone busTimesLeft;
@@ -30,6 +33,9 @@ public class TravelInformationScene extends Scene {
 
     @Inject private BusUpdater busUpdater;
     @Inject private TubeUpdater tubeUpdater;
+
+    @Inject private ColourResource colourResource;
+    @Inject private LightBoardProperties props;
 
     @Inject
     public TravelInformationScene() {
@@ -45,55 +51,59 @@ public class TravelInformationScene extends Scene {
         int busFrameWidth = (getCols()-CLOCK_WIDTH-BUS_NUMBER_WIDTH)/2;
 
         busNumber
-                .scrollRight()
                 .setFont(new LargeFont())
-                .setRestDuration(3200)
+                .scrollRight()
+                .setRestDuration(3000)
                 .setMasterDelta(2)
                 .setRegion(0, 0, BUS_NUMBER_WIDTH, BUSES_HEIGHT - 2);
 
         busDestinationLeft
                 .scrollUp()
-                .setRestDuration(3400)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH, 0, busFrameWidth, BUSES_HEIGHT/2);
 
         busTimesLeft
                 .scrollDown()
-                .setRestDuration(3400)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH, BUSES_HEIGHT/2, busFrameWidth, BUSES_HEIGHT/2);
 
         busDestinationRight
                 .scrollUp()
-                .setRestDuration(3600)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH + busFrameWidth, 0, busFrameWidth, BUSES_HEIGHT/2);
 
         busTimesRight
                 .scrollDown()
-                .setRestDuration(3600)
+                .setRestDuration(3000)
                 .setRegion(BUS_NUMBER_WIDTH + busFrameWidth, BUSES_HEIGHT/2, busFrameWidth, BUSES_HEIGHT / 2);
 
         busComposite
                 .bindZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight)
                 .setScrollTick(30);
 
+        boolean showSummary = props.getString("showTubeSummary", "true").equals("true");
+
         // Tube
         tubeDetail
                 .scrollLeft()
                 .setRestDuration(5000)
-                .setRegion(0, BUSES_HEIGHT, getCols(), TUBE_HEIGHT);
+                .setRegion(0, BUSES_HEIGHT, getCols(), props.showTubeSummary() ? TUBE_HEIGHT : TUBE_HEIGHT + STATUS_HEIGHT );
 
-        tubeSummary
-                .fixed()
-                .setFont(new SmallFont())
-                .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
+        registerZones(clock, busComposite, tubeDetail);
 
-//        registerZones(busComposite);
-        registerZones(clock, busComposite, tubeDetail, tubeSummary);
+        if ( props.showTubeSummary() ) {
+            tubeSummary
+                    .setFont(new SmallFont())
+                    .fixed()
+                    .setRegion(0, getRows() - STATUS_HEIGHT, getCols(), STATUS_HEIGHT);
+            registerZones(tubeSummary);
+        }
 
+        busComposite.addScrollCompleteHandler(() -> updateBusInformation());
 
         // Updaters
 
         busUpdater
-                .setZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight)
                 .setDataRefresh(15000);
 
         tubeUpdater
@@ -102,8 +112,27 @@ public class TravelInformationScene extends Scene {
 
         registerUpdaters(busUpdater, tubeUpdater);
 
-//        testMode();
+    }
 
+    private String lastColour = null;
+
+    @Override
+    public void resume() {
+        lastColour = colourResource.getColour();
+        colourResource.colour(props.getString("travelInfoColour", "multi"));
+        super.resume();
+    }
+
+    @Override
+    public void pause() {
+        if ( lastColour!=null ) {
+            colourResource.colour(lastColour);
+        }
+        super.pause();
+    }
+
+    private void updateBusInformation() {
+        busUpdater.updateZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight);
     }
 
     public BusUpdater getBusUpdater() {
@@ -118,7 +147,7 @@ public class TravelInformationScene extends Scene {
         return clock;
     }
 
-    public CompositeTextZone getBusComposite() {
+    public CompositeZone getBusComposite() {
         return busComposite;
     }
 

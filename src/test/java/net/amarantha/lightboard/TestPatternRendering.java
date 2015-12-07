@@ -11,7 +11,6 @@ import net.amarantha.lightboard.module.ApplicationTestModule;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.MockSync;
 import net.amarantha.lightboard.utility.Sync;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
