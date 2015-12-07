@@ -81,8 +81,6 @@ public class TravelInformationScene extends Scene {
                 .bindZones(busNumber, busDestinationLeft, busTimesLeft, busDestinationRight, busTimesRight)
                 .setScrollTick(30);
 
-        boolean showSummary = props.getString("showTubeSummary", "true").equals("true");
-
         // Tube
         tubeDetail
                 .scrollLeft()
@@ -99,7 +97,7 @@ public class TravelInformationScene extends Scene {
             registerZones(tubeSummary);
         }
 
-        busComposite.addScrollCompleteHandler(() -> updateBusInformation());
+        busComposite.addScrollCompleteHandler(this::updateBusInformation);
 
         // Updaters
 

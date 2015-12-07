@@ -44,18 +44,15 @@ public class MessagesScene extends Scene {
         zone.bindZones(zone1, zone2);
         zone.setScrollTick(10);
         zone.addScrollCompleteHandler(() -> {
-            System.out.println("CS");
-            if ( firstLoad ) {
-//                firstLoad = false;
-            } else {
+            if ( !firstLoad ) {
                 sceneManager.advanceScene();
             }
         });
 
         zone1.clearAllMessages();
         zone2.clearAllMessages();
-        zone1.addMessage("{yellow}LightBoard {green}online");
-        zone2.addMessage("at {green}" + props.getIp());
+
+        messages.add("Test\nMessage");
 
         registerZones(zone);
 
@@ -63,14 +60,12 @@ public class MessagesScene extends Scene {
 
     private boolean firstLoad = true;
 
-
     private List<String> messages = new ArrayList<>();
     private Iterator<String> messageIterator;
 
     @Override
     public void resume() {
         super.resume();
-        System.out.println("R");
         if ( firstLoad ) {
             zone1.addMessage("{yellow}LightBoard {green}online");
             zone2.addMessage("at {green}" + props.getIp());

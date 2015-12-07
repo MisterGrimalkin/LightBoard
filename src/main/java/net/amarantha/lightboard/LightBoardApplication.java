@@ -22,11 +22,9 @@ public class LightBoardApplication {
 
     @Inject private WebServiceMessageScene webServiceMessageScene;
     @Inject private TravelInformationScene travelInformationScene;
-    @Inject private ShowerTicketsScene showerTicketsScene;
     @Inject private MessagesScene messagesScene;
 
     private Scene imageBanner;
-    //@Inject private FireAndIceBannerScene imageScene;
 
     @Inject private WebService service;
 
@@ -47,7 +45,6 @@ public class LightBoardApplication {
         sceneManager.addScene(1, imageBanner, null, true);
         sceneManager.addScene(2, messagesScene, null, true);
         sceneManager.addScene(3, travelInformationScene, bannerInterval, true);
-//        sceneManager.addScene(3, showerTicketsScene, 3000, true);
 
         sceneManager.startScenes();
         sceneManager.cycleScenes();
