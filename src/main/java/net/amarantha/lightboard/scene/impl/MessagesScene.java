@@ -33,16 +33,16 @@ public class MessagesScene extends Scene {
 
         zone1
             .scrollLeft()
-            .setScrollTick(10)
+            .setRestDuration(props.getInt("message1Pause", 1000))
             .setRegion(5, 0, getCols() - 10, getRows() / 2);
 
         zone2
             .scrollRight()
-            .setScrollTick(10)
+            .setRestDuration(props.getInt("message2Pause", 18900))
             .setRegion(5, getRows() / 2, getCols() - 10, getRows() / 2);
 
         zone.bindZones(zone1, zone2);
-        zone.setScrollTick(10);
+        zone.setScrollTick(props.getInt("messageScrollTick", 20));
         zone.addScrollCompleteHandler(() -> {
             if ( !firstLoad ) {
                 sceneManager.advanceScene();
@@ -52,13 +52,15 @@ public class MessagesScene extends Scene {
         zone1.clearAllMessages();
         zone2.clearAllMessages();
 
-        messages.add("Have yourselves\na lovely day!");
+        messages.add(props.getString("message1", "{red}Our lovely housemates....            {yellow}Ben, Sarah, Dan, Barri, Gilles, Lewis, Gaby, Manu, Lauren, Jonny, Eli, Annabel, Maddie, Chris, Zorana, Adas, Mischa, Nes, Becca, Kim, Josh, Grace and Rough Keith.... {red}Thank you all, you wonderful people xxxx")
+                +"\n"
+                +props.getString("message2", "{green}Wolsely Road Crew 2010-2016"));
 
         registerZones(zone);
 
     }
 
-    private boolean firstLoad = true;
+    private boolean firstLoad = false;
 
     private List<String> messages = new ArrayList<>();
     private Iterator<String> messageIterator;
