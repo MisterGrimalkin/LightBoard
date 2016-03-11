@@ -52,7 +52,7 @@ public class MessagesScene extends Scene {
         zone1.clearAllMessages();
         zone2.clearAllMessages();
 
-        messages.add("Test\nMessage");
+        messages.add("Have yourselves\na lovely day!");
 
         registerZones(zone);
 

@@ -1,12 +1,13 @@
 package net.amarantha.lightboard;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
-import net.amarantha.lightboard.scene.impl.*;
+import net.amarantha.lightboard.scene.impl.ImageBanner;
+import net.amarantha.lightboard.scene.impl.MessagesScene;
+import net.amarantha.lightboard.scene.impl.TravelInformationScene;
+import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;

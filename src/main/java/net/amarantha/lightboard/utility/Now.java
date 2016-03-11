@@ -12,6 +12,7 @@ public class Now {
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat LONG_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public Date now() {
@@ -24,6 +25,10 @@ public class Now {
 
     public Date time() {
         return timeOnly(now());
+    }
+
+    public Date longTime() {
+        return longTimeOnly(now());
     }
 
 
@@ -67,6 +72,13 @@ public class Now {
     public static Date timeOnly(Date d) {
         try {
             return TIME_FORMAT.parse(TIME_FORMAT.format(d));
+        } catch (ParseException e) {}
+        return null;
+    }
+
+    public static Date longTimeOnly(Date d) {
+        try {
+            return LONG_TIME_FORMAT.parse(LONG_TIME_FORMAT.format(d));
         } catch (ParseException e) {}
         return null;
     }
