@@ -78,7 +78,7 @@ public class TravelInformationSceneTest {
 
     void given_the_lighboard() {
         sync.init();
-        surface.init();
+        surface.init(32, 192);
 
         scene.build();
         scene.testMode();

@@ -8,48 +8,29 @@ import javax.inject.Inject;
 
 public class CLightBoard implements LightBoard {
 
-    private int rows;
-    private int cols;
-
-    @Inject
-    public CLightBoard(@Rows int rows, @Cols int cols) {
-        this.rows = rows;
-        this.cols = cols;
-    }
-
     static {
         System.loadLibrary("lightboard");
     }
 
     @Override
-    public native void init();
+    public native void init(int rows, int cols);
 
     @Override
     public native void update(double[][][] data);
 
     @Override
-    public Long getUpdateInterval() {
-        return 10L;
-    }
+    public native Long getUpdateInterval();
 
     @Override
-    public int getRows() {
-        return rows;
-    }
+    public native int getRows();
 
     @Override
-    public int getCols() {
-        return cols;
-    }
+    public native int getCols();
 
     @Override
-    public void sleep() {
-
-    }
+    public native void sleep();
 
     @Override
-    public void wake() {
-
-    }
+    public native void wake();
 
 }

@@ -130,9 +130,9 @@ public class CompositeSurface extends LightBoardSurface {
     }
 
     @Override
-    public LightBoardSurface init() {
+    public LightBoardSurface init(int rows, int cols) {
         for ( InnerSurface s : innerSurfaces ) {
-            s.surface.init();
+            s.surface.init(rows, cols);
         }
         return this;
     }

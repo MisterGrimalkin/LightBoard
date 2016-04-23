@@ -9,7 +9,7 @@ import net.amarantha.lightboard.scene.impl.MessagesScene;
 import net.amarantha.lightboard.scene.impl.TravelInformationScene;
 import net.amarantha.lightboard.scene.impl.WebServiceMessageScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.utility.PropertyManager;
+import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
@@ -17,7 +17,7 @@ public class LightBoardApplication {
 
     @Inject private LightBoardSurface surface;
 
-    @Inject private PropertyManager props;
+    @Inject private LightBoardProperties props;
 
     @Inject private SceneManager sceneManager;
 
@@ -36,11 +36,11 @@ public class LightBoardApplication {
 
     public void startApplication(boolean withServer) {
 
-        surface.init();
+        surface.init(props.getBoardRows(), props.getBoardCols());
 
-        int bannerInterval = props.getInt("bannerInterval", 60) * 1000;
+        int bannerInterval = props.getBannerIntervalSeconds() * 1000;
 
-        imageBanner = (Scene)injector.getInstance(getImageBannerClass());
+        imageBanner = (Scene)injector.getInstance(props.getImageBannerClass());
 
         sceneManager.addScene(0, webServiceMessageScene, null, false);
         sceneManager.addScene(1, imageBanner, null, true);
@@ -57,16 +57,6 @@ public class LightBoardApplication {
 
         sync.startSyncThread();
 
-    }
-
-    private Class getImageBannerClass() {
-        String className = props.getString("imageBannerClass", "net.amarantha.lightboard.scene.impl.ImageBanner");
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found: " + className);
-        }
-        return ImageBanner.class;
     }
 
 }

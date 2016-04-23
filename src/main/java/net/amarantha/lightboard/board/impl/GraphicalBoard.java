@@ -30,8 +30,8 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
     private final static String BLACK_BACKGROUND = "-fx-background-color: black;";
 
-    private final int rows;
-    private final int cols;
+    private int rows;
+    private int cols;
 
     private Circle[][] leds;
 
@@ -57,13 +57,11 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 //    @Inject private WebService webService;
 
     @Inject
-    public GraphicalBoard(@Rows int rows, @Cols int cols, Sync sync, Stage stage) {
-        this(rows, cols, sync, stage, "LightBoard Simulation", 3, 0);
+    public GraphicalBoard(Sync sync, Stage stage) {
+        this(sync, stage, "LightBoard Simulation", 3, 0);
     }
 
-    public GraphicalBoard(int rows, int cols, Sync sync, Stage stage, String title, int ledRadius, int spacer) {
-        this.rows = rows;
-        this.cols = cols;
+    public GraphicalBoard(Sync sync, Stage stage, String title, int ledRadius, int spacer) {
         this.sync = sync;
         this.stage = stage;
         this.title = title;
@@ -72,9 +70,12 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     }
 
     @Override
-    public void init() {
+    public void init(int rows, int cols) {
 
         System.out.println("Starting UI Simulation LightBoard....");
+
+        this.rows = rows;
+        this.cols = cols;
 
         leds = new Circle[rows][cols];
         d = ledRadius * 2;
@@ -149,13 +150,13 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
             if ( e.getButton()==MouseButton.SECONDARY ) {
                 stage.hide();
                 stage = new Stage();
-                init();
+                init(rows, cols);
             } else {
                 if (e.isControlDown() && e.isAltDown()) {
                     if (e.isShiftDown()) {
                         stage.hide();
                         stage = new Stage();
-                        init();
+                        init(rows, cols);
                     } else {
                         dumpToDebug = true;
                     }

@@ -24,24 +24,20 @@ public class LightBoardSurface {
     public LightBoardSurface(LightBoard board, Sync sync) {
         this.board = board;
         this.sync = sync;
-
-        rows = board.getRows();
-        cols = board.getCols();
-
-        ledState = new double[3][rows][cols];
-
-        boardRegion = safeRegion(0, 0, cols, rows);
-
     }
-
 
     ///////////////////
     // Light Control //
     ///////////////////
 
-    public LightBoardSurface init() {
+    public LightBoardSurface init(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        board.init(rows, cols);
         ledState = new double[3][rows][cols];
-        board.init();
+
+        boardRegion = safeRegion(0, 0, cols, rows);
+
         System.out.println("Starting LightBoardSurface....");
         sync.addTask(new Sync.Task(board.getUpdateInterval()) {
             @Override

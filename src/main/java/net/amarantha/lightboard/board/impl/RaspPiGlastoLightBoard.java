@@ -22,8 +22,8 @@ import static net.amarantha.lightboard.entity.Colour.*;
  */
 public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
 
-    private final int rows;
-    private final int cols;
+    private int rows;
+    private int cols;
 
     // wiringPi pin numbers
     private int clock = 0;
@@ -41,13 +41,6 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     private double[][][] currentFrame;
     private double[][][] nextFrame;
 
-    @Inject
-    public RaspPiGlastoLightBoard(@Rows int rows, @Cols int cols) {
-        this.rows = rows;
-        this.cols = cols;
-        pushTestPattern();
-    }
-
     private void pushTestPattern() {
         currentFrame = new double[3][rows][cols];
         nextFrame = currentFrame;
@@ -63,8 +56,12 @@ public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
     }
 
     @Override
-    public void init() {
+    public void init(int rows, int cols) {
         System.out.println("Starting Raspberry Pi LightBoard, Greenpeace style....");
+
+        this.rows = rows;
+        this.cols = cols;
+        pushTestPattern();
 
         // IMPORTANT:
         // It is necessary to set the pins up via the GpioFactory so that subsequent calls

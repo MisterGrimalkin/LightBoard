@@ -16,21 +16,8 @@ import java.io.PrintStream;
 
 public class ApplicationTestModule extends AbstractModule {
 
-    private int rows;
-    private int cols;
-
-    public ApplicationTestModule() {
-//        rows = 64;
-//        cols = 32;
-        rows = 32;
-        cols = 192;
-    }
-
     @Override
     protected void configure() {
-
-        bindConstant().annotatedWith(Rows.class).to(rows);
-        bindConstant().annotatedWith(Cols.class).to(cols);
 
         bind(LightBoard.class).to(MockBoard.class)
                 .in(Singleton.class);

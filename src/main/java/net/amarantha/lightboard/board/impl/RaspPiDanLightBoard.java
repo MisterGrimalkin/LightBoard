@@ -39,15 +39,11 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
     private GpioPinDigitalOutput outputEnable1Pin;
     private GpioPinDigitalOutput outputEnable2Pin;
 
-    @Inject
-    public RaspPiDanLightBoard(@Rows int rows, @Cols int cols) {
+    @Override
+    public void init(int rows, int cols) {
+        System.out.println("Starting Raspberry Pi LightBoard....");
         this.rows = rows;
         this.cols = cols;
-    }
-
-    @Override
-    public void init() {
-        System.out.println("Starting Raspberry Pi LightBoard....");
         GpioController gpio = GpioFactory.getInstance();
         MCP23017GpioProvider gpioProvider = null;
         try {

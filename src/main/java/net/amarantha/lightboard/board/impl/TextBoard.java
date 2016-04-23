@@ -12,20 +12,20 @@ import java.io.PrintStream;
  */
 public class TextBoard implements LightBoard {
 
-    private final int rows;
-    private final int cols;
+    private int rows;
+    private int cols;
     private final PrintStream out;
 
     @Inject
-    public TextBoard(@Rows int rows, @Cols int cols, PrintStream out) {
-        this.rows = rows;
-        this.cols = cols;
+    public TextBoard(PrintStream out) {
         this.out = out;
     }
 
     @Override
-    public void init() {
-        System.out.println("Text Board Ready");
+    public void init(int rows, int cols) {
+        System.out.println("Starting TextBoard...");
+        this.rows = rows;
+        this.cols = cols;
     }
 
     @Override

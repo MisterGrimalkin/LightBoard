@@ -8,7 +8,7 @@ public interface LightBoard {
     /**
      * Set up the board
      */
-    void init();
+    void init(int rows, int cols);
 
     /**
      * Push the supplied RGB data to the physical display

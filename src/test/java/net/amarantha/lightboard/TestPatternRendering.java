@@ -60,7 +60,7 @@ public class TestPatternRendering {
 
     void given_a_lightboard() {
         sync.init();
-        surface.init();
+        surface.init(32, 192);
         sync.startSyncThread();
     }
 
