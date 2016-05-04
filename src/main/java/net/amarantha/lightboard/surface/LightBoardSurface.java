@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.utility.Sync;
 
@@ -31,10 +32,18 @@ public class LightBoardSurface {
     ///////////////////
 
     public LightBoardSurface init(int rows, int cols) {
+        return init(rows, cols, false);
+    }
+
+    public LightBoardSurface init(int rows, int cols, boolean loadTestPattern) {
         this.rows = rows;
         this.cols = cols;
         board.init(rows, cols);
         ledState = new double[3][rows][cols];
+
+        if ( loadTestPattern ) {
+            initTestPattern(0);
+        }
 
         boardRegion = safeRegion(0, 0, cols, rows);
 
@@ -47,6 +56,40 @@ public class LightBoardSurface {
         });
         System.out.println("Surface Active");
         return this;
+    }
+
+    private int testPatternSize = 4;
+    private int testPatternOffset = 0;
+
+    public void testMode() {
+        System.out.println("LightBoard in TEST MODE");
+        sync.addTask(new Sync.Task(100L) {
+            @Override
+            public void runTask() {
+                clearSurface();
+                if ( testPatternOffset++ >= (testPatternSize*3) ) {
+                    testPatternOffset = 1;
+                }
+                initTestPattern(testPatternOffset - (testPatternSize*3));
+            }
+        });
+
+    }
+
+    private void initTestPattern(int xOffset) {
+        for ( int x = 0; x<(cols+(testPatternSize*3)); x+=(testPatternSize*3) ) {
+            for ( int y = 0; y<rows; y+=(testPatternSize*3) ) {
+                if ( x+xOffset < cols ) {
+                    fillRegion(safeRegion(x+xOffset, y, testPatternSize, testPatternSize), new Colour(1.0, 0.0, 0.0));
+                    if (x+xOffset + testPatternSize < cols && y + testPatternSize < rows) {
+                        fillRegion(safeRegion(x+xOffset + testPatternSize, y + testPatternSize, testPatternSize, testPatternSize), new Colour(0.0, 1.0, 0.0));
+                        if (x+xOffset + (testPatternSize * 2) < cols && y + (testPatternSize * 2) < rows) {
+                            fillRegion(safeRegion(x+xOffset + (testPatternSize * 2), y + (testPatternSize * 2), testPatternSize, testPatternSize), new Colour(1.0, 1.0, 0.0));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public boolean isOn(int x, int y) {
@@ -152,6 +195,16 @@ public class LightBoardSurface {
         for ( int x=0; x<r.width; x++ ) {
             for ( int y=0; y<r.height; y++ ) {
                 changed |= drawPoint(r.left + x, r.top + y, r);
+            }
+        }
+        return changed;
+    }
+
+    public synchronized boolean fillRegion(Region r, Colour c) {
+        boolean changed = false;
+        for ( int x=0; x<r.width; x++ ) {
+            for ( int y=0; y<r.height; y++ ) {
+                changed |= drawPoint(r.left + x, r.top + y, c.getRed(), c.getGreen(), c.getBlue(), r);
             }
         }
         return changed;

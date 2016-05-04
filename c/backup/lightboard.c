@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <wiringPi.h>
-// #include <jni.h>
+#include <jni.h>
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
@@ -23,12 +23,10 @@ double currentFrame[3][32][192];
 double nextFrame[3][32][192];
 
 void pushTestPattern() {
-    printf("Pushing Test Pattern....");
     int r;
     int c;
     for ( r=0; r<rows; r++ ) {
         for ( c=0; c<cols; c++ ) {
-//            printf("ROW %d, COL %d\n", r, c);
             if ( c%4==0 || r%4==0 ) {
                 currentFrame[0][r][c] = 1.0;
                 currentFrame[1][r][c] = 1.0;
@@ -40,7 +38,6 @@ void pushTestPattern() {
             }
         }
     }
-    printf("OK\n");
 }
 
 void dump(double data[3][32][192]) {
@@ -103,17 +100,11 @@ void push() {
     }
 }
 
-void init(int r, int c) {
+void init() {
 
-    rows = r;
-    cols = c;
+    printf("Starting C RaspPi LightBoard....\n");
 
-//    printf("Starting C RaspPi LightBoard....\n");
-
-
-    printf("Initialised\n");
     pushTestPattern();
-    printf("And more\n");
 
     wiringPiSetup() ;
 
@@ -137,12 +128,17 @@ void init(int r, int c) {
 
 int main (void) {
 
-    printf("Hello\n\n\n");
-
-    init(32, 192);
-
-    printf("Goodbye\n");
-
-    return 0;
+    init();
 
 }
+
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_init
+(JNIEnv * env, jobject obj) {
+    init();
+}
+
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_impl_CLightBoard_update
+(JNIEnv * env, jobject obj, jobjectArray arr) {
+    printf("update");
+}
+

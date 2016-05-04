@@ -2,6 +2,7 @@ package net.amarantha.lightboard;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.scene.impl.ImageBanner;
@@ -33,11 +34,28 @@ public class LightBoardApplication {
 
     @Inject private Injector injector;
 
+    @Inject private LightBoard board;
 
-    public void startApplication(boolean withServer) {
 
-        surface.init(props.getBoardRows(), props.getBoardCols());
+    public void startApplication(boolean withServer, boolean testMode) {
 
+        surface.init(props.getBoardRows(), props.getBoardCols(), true);
+
+        if ( testMode ) {
+            surface.testMode();
+        } else {
+            buildScenes();
+        }
+
+        if ( withServer ) {
+            service.startWebService();
+        }
+
+        sync.startSyncThread();
+
+    }
+
+    private void buildScenes() {
         int bannerInterval = props.getBannerIntervalSeconds() * 1000;
 
         imageBanner = (Scene)injector.getInstance(props.getImageBannerClass());
@@ -50,13 +68,6 @@ public class LightBoardApplication {
         sceneManager.startScenes();
         sceneManager.cycleScenes();
         sceneManager.loadScene(1);
-
-        if ( withServer ) {
-            service.startWebService();
-        }
-
-        sync.startSyncThread();
-
     }
 
 }

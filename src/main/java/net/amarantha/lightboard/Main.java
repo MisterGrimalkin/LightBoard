@@ -15,11 +15,13 @@ public class Main extends Application {
 
     private static boolean simulationMode;
     private static boolean withServer;
+    private static boolean testMode;
 
     public static void main(String[] args) {
 
         List<String> params = Arrays.asList(args);
         simulationMode = params.contains("simulation");
+        testMode = params.contains("test");
         withServer = !params.contains("noserver");
 
         if ( simulationMode ) {
@@ -27,7 +29,7 @@ public class Main extends Application {
         } else {
             Guice.createInjector(new ApplicationModule())
                 .getInstance(LightBoardApplication.class)
-                    .startApplication(withServer);
+                    .startApplication(withServer, testMode);
         }
 
     }
@@ -39,7 +41,7 @@ public class Main extends Application {
                     .with(new SimulationModule(primaryStage))
             )
             .getInstance(LightBoardApplication.class)
-                .startApplication(withServer);
+                .startApplication(withServer, testMode);
     }
 
 }
