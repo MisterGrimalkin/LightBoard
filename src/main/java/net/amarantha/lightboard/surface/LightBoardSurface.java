@@ -38,7 +38,9 @@ public class LightBoardSurface {
     public LightBoardSurface init(int rows, int cols, boolean loadTestPattern) {
         this.rows = rows;
         this.cols = cols;
-        board.init(rows, cols);
+
+        new Thread(() -> board.init(rows, cols)).start();
+
         ledState = new double[3][rows][cols];
 
         if ( loadTestPattern ) {

@@ -20,7 +20,7 @@ import static net.amarantha.lightboard.entity.Colour.*;
 /**
  * Second implementation using RaspPi - this one for the Greenpeace field at Glastonbury 2015
  */
-public class RaspPiGlastoLightBoard implements LightBoard, ColourSwitcher {
+public class JavaLightBoard implements LightBoard, ColourSwitcher {
 
     private int rows;
     private int cols;

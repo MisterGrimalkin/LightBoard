@@ -1,10 +1,4 @@
-package net.amarantha.lightboard.board.impl;
-
-import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.module.Cols;
-import net.amarantha.lightboard.module.Rows;
-
-import javax.inject.Inject;
+package net.amarantha.lightboard.board;
 
 public class CLightBoard implements LightBoard {
 
@@ -19,18 +13,22 @@ public class CLightBoard implements LightBoard {
     public native void update(double[][][] data);
 
     @Override
-    public native Long getUpdateInterval();
+    public Long getUpdateInterval() { return null; }
 
     @Override
-    public native int getRows();
+    public int getRows() { return 16; }
 
     @Override
-    public native int getCols();
+    public int getCols() { return 192; }
 
     @Override
     public native void sleep();
 
     @Override
     public native void wake();
+
+    public static void main(String[] args) {
+        new Thread(() -> new CLightBoard().init(32, 192)).start();
+    }
 
 }
