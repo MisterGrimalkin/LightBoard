@@ -8,13 +8,24 @@ public class RainDown extends AbstractTransition {
         delay = getDuration() / zone.getPattern().getHeight();
         currentRow = zone.getPattern().getHeight() - 1;
         lastDrawn = System.currentTimeMillis();
+        randomLimit = 0.6;
+        minRandomLimit = 0.0;
+        fallStart = 0;
+        fallStartDelta = (zone.getRestY() / zone.getPattern().getHeight()) * 0.6;
+        randomLimitDelta = ((randomLimit - minRandomLimit) / (zone.getPattern().getHeight())) * 1.1 ;
     }
 
     private long delay;
     private int currentRow ;
 
+    private double fallStart;
+    private double fallStartDelta;
+
     private long lastDrawn;
 
+    private double randomLimit;
+    private double minRandomLimit;
+    private double randomLimitDelta;
 
     @Override
     public void tick() {
@@ -23,10 +34,16 @@ public class RainDown extends AbstractTransition {
             complete();
         } else if ( System.currentTimeMillis() - lastDrawn >= delay ) {
             zone.clear();
-            for (int r = 0; r < zone.getRestY()+zone.getPattern().getHeight(); r++ ) {
-                if ( r < (zone.getRestY()+currentRow) ) {
+            for (int r = (int)fallStart; r < zone.getRestY()+zone.getPattern().getHeight() + 10; r++ ) {
+                if ( r >= zone.getRestY()+zone.getPattern().getHeight() ) {
                     for (int c = 0; c < zone.getPattern().getWidth(); c++) {
-                        if ( Math.random() <= 0.3 ) {
+                        if ( Math.random() <= randomLimit) {
+                            surface.drawPoint(c + zone.getRestX(), r, zone.getPattern().getColourPoint(0, c), zone.getRegion());
+                        }
+                    }
+                } else if ( r < (zone.getRestY()+currentRow) ) {
+                    for (int c = 0; c < zone.getPattern().getWidth(); c++) {
+                        if ( Math.random() <= randomLimit) {
                             surface.drawPoint(c + zone.getRestX(), r, zone.getPattern().getColourPoint(currentRow, c), zone.getRegion());
                         }
                     }
@@ -37,7 +54,11 @@ public class RainDown extends AbstractTransition {
                 }
             }
             lastDrawn = System.currentTimeMillis();
+            if ( randomLimit >= minRandomLimit ) {
+                randomLimit -= randomLimitDelta;
+            }
             currentRow--;
+            fallStart += fallStartDelta;
         }
     }
 }

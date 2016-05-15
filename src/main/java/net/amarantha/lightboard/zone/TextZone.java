@@ -36,4 +36,8 @@ public class TextZone extends AbstractZone {
         return null;
     }
 
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
 }

@@ -95,7 +95,7 @@ public abstract class AbstractZone {
     }
 
     public void start() {
-            paused = false;
+        paused = false;
     }
 
     public void stop() {
@@ -119,10 +119,16 @@ public abstract class AbstractZone {
         }
     }
 
-    private boolean autoAdvance = true;
+    private boolean autoOut = true;
 
-    public void setAutoAdvance(boolean autoAdvance) {
-        this.autoAdvance = autoAdvance;
+    public void setAutoOut(boolean autoOut) {
+        this.autoOut = autoOut;
+    }
+
+    private boolean autoNext = true;
+
+    public void setAutoNext(boolean autoNext) {
+        this.autoNext = autoNext;
     }
 
     private void doTick() {
@@ -135,9 +141,9 @@ public abstract class AbstractZone {
             if (startTime != null && System.currentTimeMillis() - startTime > displayTime) {
                 startTime = null;
                 if ( displayCompleteCallback!=null ) {
-                    displayCompleteCallback.displayComplete();
+                    displayCompleteCallback.onDisplayComplete();
                 }
-                if ( autoAdvance ) {
+                if (autoOut) {
                     out();
                 }
             }
@@ -146,13 +152,22 @@ public abstract class AbstractZone {
 
     private DisplayCompleteCallback displayCompleteCallback;
 
-
     public void onDisplayComplete(DisplayCompleteCallback callback) {
         this.displayCompleteCallback = callback;
     }
 
     public interface DisplayCompleteCallback {
-        void displayComplete();
+        void onDisplayComplete();
+    }
+
+    public interface OutCompleteCallback {
+        void onOutComplete();
+    }
+
+    private OutCompleteCallback outCompleteCallback;
+
+    public void onOutComplete(OutCompleteCallback callback) {
+        this.outCompleteCallback = callback;
     }
 
 
@@ -166,12 +181,16 @@ public abstract class AbstractZone {
     private AbstractTransition outTransition;
 
     public void in() {
-        surface.clearRegion(region);
-        if ( inTransition!=null ) {
-            inTransition.transition(this, this::display);
-            direction = Transitioning.IN;
+        if ( paused ) {
+            start();
         } else {
-            display();
+            surface.clearRegion(region);
+            if (inTransition != null) {
+                inTransition.transition(this, this::display);
+                direction = Transitioning.IN;
+            } else {
+                display();
+            }
         }
     }
 
@@ -197,20 +216,23 @@ public abstract class AbstractZone {
         }
     }
 
-    private int repeats = 1;
-    private int currentRepeat = 1;
 
     private void end() {
         surface.clearRegion(region);
         direction = Transitioning.NONE;
+        if ( outCompleteCallback!=null ) {
+            outCompleteCallback.onOutComplete();
+        }
         pattern = getNextPattern();
-        if ( pattern!=null ) {
-            in();
+        if ( autoNext ) {
+            if (pattern != null) {
+                in();
+            }
         }
     }
 
     private enum Transitioning {
-        IN, NONE, OUT;
+        IN, NONE, OUT
     }
 
     public void setInTransition(AbstractTransition inTransition) {

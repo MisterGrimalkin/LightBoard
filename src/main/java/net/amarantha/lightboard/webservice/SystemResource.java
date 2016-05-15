@@ -1,8 +1,12 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.entity.Pattern;
+import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.OldSceneManager;
+import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
+import net.amarantha.lightboard.utility.Sync;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,14 +26,18 @@ public class SystemResource {
 
     private static OldSceneManager sceneManager;
     private static PropertyManager props;
+    private static LightBoardSurface surface;
+    private static Sync sync;
 
     public SystemResource() {
     }
 
     @Inject
-    public SystemResource(OldSceneManager sceneManager, PropertyManager props) {
+    public SystemResource(Sync sync, LightBoardSurface surface, OldSceneManager sceneManager, PropertyManager props) {
         SystemResource.sceneManager = sceneManager;
         SystemResource.props = props;
+        SystemResource.surface = surface;
+        SystemResource.sync = sync;
     }
 
     private static String name = null;
@@ -151,9 +159,14 @@ public class SystemResource {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
+                surface.clearSurface();
                 System.exit(0);
             }
         }, 2000);
+        surface.clearSurface();
+        Pattern shutdownPattern = new SmallFont().renderString("SHUTTING DOWN");
+        surface.drawPattern((surface.getCols() - shutdownPattern.getWidth()) / 2, (surface.getRows() - shutdownPattern.getHeight())/2, shutdownPattern);
+//        sync.stopSyncThread();
         System.out.println("System Shutting Down");
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")

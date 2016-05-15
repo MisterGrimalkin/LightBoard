@@ -6,7 +6,7 @@ public abstract class Explode extends AbstractTransition {
 
     protected int spacing = 0;
 
-    protected int maxSpacing = 20;
+    protected int maxSpacing = 30;
 
     private long delay;
 
@@ -24,8 +24,9 @@ public abstract class Explode extends AbstractTransition {
             complete();
         } else if ( System.currentTimeMillis() - lastDrawn >= delay ) {
             int xSpacing = spacing;
-            int ySpacing = spacing / 2;
-            Pattern exploded = new Pattern(zone.getPattern().getHeight() * (ySpacing + 1), zone.getPattern().getWidth() * (xSpacing + 1));            for ( int r=0; r<zone.getPattern().getHeight(); r++ ) {
+            int ySpacing = spacing;
+            Pattern exploded = new Pattern(zone.getPattern().getHeight() * (ySpacing + 1), zone.getPattern().getWidth() * (xSpacing + 1));
+            for ( int r=0; r<zone.getPattern().getHeight(); r++ ) {
                 for ( int c=0; c<zone.getPattern().getWidth(); c++ ) {
                     int xJitter = 0;//(int)Math.round((Math.random()-0.5) * (spacing/3));
                     int yJitter = 0;//(int)Math.round((Math.random()-0.5) * (spacing/3));

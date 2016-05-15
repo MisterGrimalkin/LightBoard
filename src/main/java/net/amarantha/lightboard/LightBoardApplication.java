@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
+import net.amarantha.lightboard.entity.Edge;
+import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.impl.MessagesScene;
@@ -63,8 +65,11 @@ public class LightBoardApplication {
 
 //    private TextZone zone;
 
-    @Inject private TextZone textZone;
+    @Inject private TextZone textZone1;
+    @Inject private TextZone textZone2;
+
     @Inject private MessageResource messageResource;
+
     @Inject private ScrollIn scrollIn;
     @Inject private ScrollOut scrollOut;
     @Inject private RainDown rainDown;
@@ -73,33 +78,60 @@ public class LightBoardApplication {
 
     private void buildScenes() {
 
-        explodeIn.setDuration(200);
+        explodeIn.setDuration(300);
         explodeOut.setDuration(300);
 
-        rainDown.setDuration(700);
+        rainDown.setDuration(600);
 
-//        scrollIn.setDuration(700);
-//        scrollIn.setEdge(Edge.LEFT);
+        scrollOut.setDuration(500);
+        scrollOut.setEdge(Edge.TOP);
 
-//        scrollOut.setDuration(1000);
-//        scrollOut.setEdge(Edge.LEFT);
+        textZone1.setRegion(surface.safeRegion(0,0,192,32));
+        textZone2.setRegion(surface.safeRegion(0,0,192,32));
 
-        textZone.setRegion(surface.safeRegion(0,0,192,32));
-        textZone.setDisplayTime(4000);
-        textZone.setAutoAdvance(true);
-        textZone.setAlignH(AlignH.CENTRE);
-        textZone.setAlignV(AlignV.MIDDLE);
-        textZone.setTick(25);
-        textZone.init();
-        textZone.setInTransition(rainDown);
-        textZone.setOutTransition(explodeOut);
+        textZone1.setDisplayTime(600);
+        textZone2.setDisplayTime(600);
 
-        textZone.addMessage("You {red}want the truth?\nYou can't handle the truth!");
-        textZone.addMessage("Whether {green}I will turn out to be\nthe hero or the villain of my own life\nthese pages must tell");
+        textZone1.setAutoOut(true);
+        textZone2.setAutoOut(true);
 
-        messageResource.setZone(textZone);
+        textZone1.setAlignH(AlignH.CENTRE);
+        textZone1.setAlignV(AlignV.BOTTOM);
+        textZone2.setAlignH(AlignH.CENTRE);
+        textZone2.setAlignV(AlignV.TOP);
 
-        textZone.start();
+        textZone1.setTick(25);
+        textZone2.setTick(25);
+
+        textZone1.setFont(new LargeFont());
+        textZone2.setFont(new LargeFont());
+
+        textZone1.setInTransition(rainDown);
+        textZone1.setOutTransition(explodeOut);
+        textZone2.setInTransition(explodeIn);
+        textZone2.setOutTransition(scrollOut);
+
+        textZone1.setAutoNext(false);
+        textZone2.setAutoNext(false);
+
+        textZone1.init();
+        textZone2.init();
+
+        textZone1.addMessage("9 9 9 9 9");
+        textZone2.addMessage("8 8 8 8 8");
+        textZone1.addMessage("7 7 7 7 7");
+        textZone2.addMessage("6 6 6 6 6");
+        textZone1.addMessage("5 5 5 5 5");
+        textZone2.addMessage("4 4 4 4 4");
+        textZone1.addMessage("3 3 3 3 3");
+        textZone2.addMessage("2 2 2 2 2");
+        textZone1.addMessage("1 1 1 1 1");
+        textZone2.addMessage("0 0 0 0 0");
+
+        textZone1.onOutComplete(()->textZone2.in());
+        textZone2.onOutComplete(()->textZone1.in());
+
+        textZone1.in();
 
 
 
