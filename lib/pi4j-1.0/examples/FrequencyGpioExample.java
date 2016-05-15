@@ -29,8 +29,6 @@
  */
 
 
-import com.pi4j.io.gpio.*;
-
 /**
  * This example code provides a continuous GPIO pin state 
  * changes on the Raspberry Pi to allow measurement of

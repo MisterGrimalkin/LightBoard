@@ -1,8 +1,8 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
-import net.amarantha.lightboard.scene.SceneManager;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -14,13 +14,13 @@ import java.util.Map;
 @Path("scene")
 public class SceneResource {
 
-    private static SceneManager sceneManager;
+    private static OldSceneManager sceneManager;
 
     public SceneResource() {
     }
 
     @Inject
-    public SceneResource(SceneManager sceneManager) {
+    public SceneResource(OldSceneManager sceneManager) {
         SceneResource.sceneManager = sceneManager;
     }
 

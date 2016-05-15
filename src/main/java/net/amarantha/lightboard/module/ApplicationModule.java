@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.utility.LightBoardProperties;
-import net.amarantha.lightboard.utility.PropertyManager;
 
 import java.io.PrintStream;
 

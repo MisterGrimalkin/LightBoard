@@ -1,13 +1,11 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.entity.AlignH;
-import net.amarantha.lightboard.entity.AlignV;
+import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
-import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,13 +14,13 @@ import java.util.List;
 
 public class MessagesScene extends Scene {
 
-    @Inject private SceneManager sceneManager;
+    @Inject private OldSceneManager sceneManager;
 
     @Inject private LightBoardProperties props;
 
     @Inject private CompositeZone zone;
-    @Inject private TextZone zone1;
-    @Inject private TextZone zone2;
+    @Inject private TextZone_Old zone1;
+    @Inject private TextZone_Old zone2;
 
     public MessagesScene() {
         super("Messages");

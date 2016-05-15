@@ -29,8 +29,6 @@
  */
 
 
-import com.pi4j.io.serial.*;
-
 import java.util.Date;
 
 /**

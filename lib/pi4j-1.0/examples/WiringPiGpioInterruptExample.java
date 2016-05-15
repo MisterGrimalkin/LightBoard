@@ -26,8 +26,6 @@
  * #L%
  */
 
-import com.pi4j.wiringpi.*;
-
 public class WiringPiGpioInterruptExample {
     
     public static void main(String args[]) throws InterruptedException {

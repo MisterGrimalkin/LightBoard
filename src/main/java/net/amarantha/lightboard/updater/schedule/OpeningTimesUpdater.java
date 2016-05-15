@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.impl.OpeningTimes;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import static net.amarantha.lightboard.scene.impl.OpeningTimes.getLocalOpeningTi
 
 public class OpeningTimesUpdater extends Updater {
 
-    private TextZone zone;
+    private TextZone_Old zone;
 
     @Inject
     public OpeningTimesUpdater(Sync sync) {
@@ -20,7 +20,7 @@ public class OpeningTimesUpdater extends Updater {
         System.out.println("Opening Times Updater Ready....");
     }
 
-    public OpeningTimesUpdater setZone(TextZone zone) {
+    public OpeningTimesUpdater setZone(TextZone_Old zone) {
         this.zone = zone;
         return this;
     }

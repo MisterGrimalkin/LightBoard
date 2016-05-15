@@ -11,10 +11,10 @@ import net.amarantha.lightboard.utility.Sync;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ClockZone extends TextZone {
+public class ClockZoneOld extends TextZone_Old {
 
     @Inject
-    public ClockZone(LightBoardSurface surface, Sync sync) {
+    public ClockZoneOld(LightBoardSurface surface, Sync sync) {
         super(surface, sync);
         setScrollTick(500);
         setRestDuration(0);
@@ -40,8 +40,8 @@ public class ClockZone extends TextZone {
         Pattern timePattern = getFont().renderString(time);
         Pattern dayPattern = getFont().renderString(day);
 
-        int timeX = (region.width-timePattern.getCols())/2;
-        int dayX = (region.width-dayPattern.getCols())/2;
+        int timeX = (region.width-timePattern.getWidth())/2;
+        int dayX = (region.width-dayPattern.getWidth())/2;
 
 
         drawn |= drawPattern(timeX, 0, timePattern, true);

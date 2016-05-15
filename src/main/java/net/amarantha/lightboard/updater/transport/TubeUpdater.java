@@ -3,9 +3,8 @@ package net.amarantha.lightboard.updater.transport;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.LightBoardProperties;
-import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 import org.javalite.http.Http;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,8 +24,8 @@ public class TubeUpdater extends Updater {
 
     private final static String TFL_TS_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
 
-    private TextZone detailZone;
-    private TextZone summaryZone;
+    private TextZone_Old detailZone;
+    private TextZone_Old summaryZone;
 
     @Inject private LightBoardProperties props;
 
@@ -35,7 +34,7 @@ public class TubeUpdater extends Updater {
         super(sync);
     }
 
-    public TubeUpdater setZones(TextZone detailZone, TextZone summaryZone) {
+    public TubeUpdater setZones(TextZone_Old detailZone, TextZone_Old summaryZone) {
         this.detailZone = detailZone;
         this.summaryZone = summaryZone;
         return this;

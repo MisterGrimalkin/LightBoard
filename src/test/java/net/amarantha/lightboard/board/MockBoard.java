@@ -1,9 +1,6 @@
 package net.amarantha.lightboard.board;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.amarantha.lightboard.module.Cols;
-import net.amarantha.lightboard.module.Rows;
 
 @Singleton
 public class MockBoard implements LightBoard {

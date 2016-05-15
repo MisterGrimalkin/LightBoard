@@ -1,8 +1,6 @@
 package net.amarantha.lightboard.board.impl;
 
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.module.Cols;
-import net.amarantha.lightboard.module.Rows;
 
 import javax.inject.Inject;
 import java.io.PrintStream;

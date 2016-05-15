@@ -2,7 +2,7 @@ package net.amarantha.lightboard.zone;
 
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 public class Zones {
 
@@ -35,7 +35,7 @@ public class Zones {
         return null;
     }
 
-    public static TextZone startTelePrompter(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
+    public static TextZone_Old startTelePrompter(LightBoardSurface surface, int x, int y, int width, int height, String... messages) {
 //        TextZone zone = TextZone.scrollUp(surface);
 //        zone.setRegion(x, y, width, height);
 //

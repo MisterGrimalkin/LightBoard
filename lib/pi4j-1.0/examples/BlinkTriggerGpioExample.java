@@ -28,7 +28,6 @@
  * #L%
  */
 
-import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.trigger.GpioBlinkStateTrigger;
 import com.pi4j.io.gpio.trigger.GpioBlinkStopStateTrigger;
 

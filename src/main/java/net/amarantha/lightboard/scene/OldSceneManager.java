@@ -14,7 +14,7 @@ import java.util.*;
 import static net.amarantha.lightboard.utility.Now.timeOnly;
 
 @Singleton
-public class SceneManager {
+public class OldSceneManager {
 
     @Inject private Now now;
     @Inject private PropertyManager props;

@@ -7,11 +7,10 @@ import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
 import net.amarantha.lightboard.utility.LightBoardProperties;
-import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.webservice.ColourResource;
-import net.amarantha.lightboard.zone.impl.ClockZone;
+import net.amarantha.lightboard.zone.impl.ClockZoneOld;
 import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import javax.inject.Inject;
 
@@ -19,17 +18,17 @@ import javax.inject.Inject;
 @Singleton
 public class TravelInformationScene extends Scene {
 
-    @Inject private ClockZone clock;
+    @Inject private ClockZoneOld clock;
 
     @Inject private CompositeZone busComposite;
-    @Inject private TextZone busNumber;
-    @Inject private TextZone busDestinationLeft;
-    @Inject private TextZone busTimesLeft;
-    @Inject private TextZone busDestinationRight;
-    @Inject private TextZone busTimesRight;
+    @Inject private TextZone_Old busNumber;
+    @Inject private TextZone_Old busDestinationLeft;
+    @Inject private TextZone_Old busTimesLeft;
+    @Inject private TextZone_Old busDestinationRight;
+    @Inject private TextZone_Old busTimesRight;
 
-    @Inject private TextZone tubeSummary;
-    @Inject private TextZone tubeDetail;
+    @Inject private TextZone_Old tubeSummary;
+    @Inject private TextZone_Old tubeDetail;
 
     @Inject private BusUpdater busUpdater;
     @Inject private TubeUpdater tubeUpdater;
@@ -141,7 +140,7 @@ public class TravelInformationScene extends Scene {
         return tubeUpdater;
     }
 
-    public ClockZone getClock() {
+    public ClockZoneOld getClock() {
         return clock;
     }
 
@@ -149,31 +148,31 @@ public class TravelInformationScene extends Scene {
         return busComposite;
     }
 
-    public TextZone getBusNumber() {
+    public TextZone_Old getBusNumber() {
         return busNumber;
     }
 
-    public TextZone getBusDestinationLeft() {
+    public TextZone_Old getBusDestinationLeft() {
         return busDestinationLeft;
     }
 
-    public TextZone getBusTimesLeft() {
+    public TextZone_Old getBusTimesLeft() {
         return busTimesLeft;
     }
 
-    public TextZone getBusDestinationRight() {
+    public TextZone_Old getBusDestinationRight() {
         return busDestinationRight;
     }
 
-    public TextZone getBusTimesRight() {
+    public TextZone_Old getBusTimesRight() {
         return busTimesRight;
     }
 
-    public TextZone getTubeSummary() {
+    public TextZone_Old getTubeSummary() {
         return tubeSummary;
     }
 
-    public TextZone getTubeDetail() {
+    public TextZone_Old getTubeDetail() {
         return tubeDetail;
     }
 

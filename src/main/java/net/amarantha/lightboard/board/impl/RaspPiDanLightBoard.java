@@ -6,10 +6,7 @@ import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.module.Cols;
-import net.amarantha.lightboard.module.Rows;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;

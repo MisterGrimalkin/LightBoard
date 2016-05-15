@@ -29,7 +29,6 @@
  */
 
 
-import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.trigger.GpioCallbackTrigger;
 import com.pi4j.io.gpio.trigger.GpioPulseStateTrigger;
 import com.pi4j.io.gpio.trigger.GpioSetStateTrigger;

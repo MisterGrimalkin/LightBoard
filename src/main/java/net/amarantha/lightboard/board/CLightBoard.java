@@ -13,7 +13,7 @@ public class CLightBoard implements LightBoard {
     public native void update(double[][][] data);
 
     @Override
-    public Long getUpdateInterval() { return null; }
+    public Long getUpdateInterval() { return 50L; }
 
     @Override
     public int getRows() { return 16; }

@@ -20,7 +20,7 @@ import static net.amarantha.lightboard.utility.MessageQueue.DEFAULT_MESSAGE;
 public class TravelInformationSceneTest {
 
     @Inject private LightBoardSurface surface;
-    @Inject private SceneManager sceneManager;
+    @Inject private OldSceneManager sceneManager;
     @Inject private TravelInformationScene scene;
     @Inject private Sync sync;
 

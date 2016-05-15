@@ -3,7 +3,7 @@ package net.amarantha.lightboard.updater.transport;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 import org.javalite.http.Http;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -135,7 +135,7 @@ public class BusUpdater extends Updater {
 
     private int currentSource = 0;
 
-    public void updateZones(TextZone busNumberZone, TextZone leftDestinationZone, TextZone leftTimesZone, TextZone rightDestinationZone, TextZone rightTimesZone) {
+    public void updateZones(TextZone_Old busNumberZone, TextZone_Old leftDestinationZone, TextZone_Old leftTimesZone, TextZone_Old rightDestinationZone, TextZone_Old rightTimesZone) {
 
         busNumberZone.clearAllMessages();
         leftDestinationZone.clearAllMessages();

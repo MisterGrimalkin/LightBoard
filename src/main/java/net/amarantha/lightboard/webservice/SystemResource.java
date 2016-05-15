@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.scene.SceneManager;
+import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.utility.PropertyManager;
 
 import javax.ws.rs.GET;
@@ -20,14 +20,14 @@ import java.util.TimerTask;
 @Path("system")
 public class SystemResource {
 
-    private static SceneManager sceneManager;
+    private static OldSceneManager sceneManager;
     private static PropertyManager props;
 
     public SystemResource() {
     }
 
     @Inject
-    public SystemResource(SceneManager sceneManager, PropertyManager props) {
+    public SystemResource(OldSceneManager sceneManager, PropertyManager props) {
         SystemResource.sceneManager = sceneManager;
         SystemResource.props = props;
     }

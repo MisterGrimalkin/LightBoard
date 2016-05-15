@@ -4,9 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.font.SimpleFont;
-import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.Now;
 import net.amarantha.lightboard.utility.Sync;
@@ -15,12 +13,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CountdownZone extends TextZone {
+public class CountdownZoneOld extends TextZone_Old {
 
     @Inject private Now now;
 
     @Inject
-    public CountdownZone(LightBoardSurface surface, Sync sync) {
+    public CountdownZoneOld(LightBoardSurface surface, Sync sync) {
         super(surface, sync);
         setScrollTick(500);
         setRestDuration(0);
@@ -54,7 +52,7 @@ public class CountdownZone extends TextZone {
                 }
             }
             Pattern text = getFont().renderString(message, AlignH.CENTRE);
-            return drawPattern((region.width - text.getCols()) / 2, (region.height - text.getRows()) / 2, text);
+            return drawPattern((region.width - text.getWidth()) / 2, (region.height - text.getHeight()) / 2, text);
 
         }
         return false;

@@ -160,7 +160,6 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_init
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_update
   (JNIEnv *env, jobject o, jintArray arr) {
-    update(arr);
   }
 
 JNIEXPORT jobject JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getUpdateInterval

@@ -1,6 +1,6 @@
 package net.amarantha.lightboard.webservice;
 
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,13 +12,13 @@ import java.util.TimerTask;
 @Path("ticket")
 public class ShowerTicketResource {
 
-    private static TextZone femaleTextZone;
-    private static TextZone maleTextZone;
+    private static TextZone_Old femaleTextZone;
+    private static TextZone_Old maleTextZone;
 
     private static Integer lastFemale;
     private static Integer lastMale;
 
-    public static void setTextZones(TextZone femaleTextZone, TextZone maleTextZone) {
+    public static void setTextZones(TextZone_Old femaleTextZone, TextZone_Old maleTextZone) {
         ShowerTicketResource.femaleTextZone = femaleTextZone;
         ShowerTicketResource.maleTextZone = maleTextZone;
     }

@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.utility.Sync;
@@ -39,7 +40,11 @@ public class LightBoardSurface {
         this.rows = rows;
         this.cols = cols;
 
-        new Thread(() -> board.init(rows, cols)).start();
+        if ( board instanceof GraphicalBoard ) {
+            board.init(rows, cols);
+        } else {
+            new Thread(() -> board.init(rows, cols)).start();
+        }
 
         ledState = new double[3][rows][cols];
 
@@ -114,6 +119,10 @@ public class LightBoardSurface {
 
     public boolean drawPoint(int x, int y, Region r) {
         return drawPoint(x, y, 1.0, 1.0, 1.0, r);
+    }
+
+    public boolean drawPoint(int x, int y, Colour colour, Region r) {
+        return drawPoint(x, y, colour.getRed(), colour.getGreen(), colour.getBlue(), r);
     }
 
     public boolean clearPoint(int x, int y, Region r) {

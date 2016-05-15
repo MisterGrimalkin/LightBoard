@@ -72,20 +72,24 @@ public class Pattern {
     }
 
     public void drawPoint(int row, int col, boolean value) {
-        if ( row < getRows() && col < getCols() ) {
-            binaryValues[row][col] = value;
-            colourValues[0][row][col] = (value ? penColour.getRed() : 0);
-            colourValues[1][row][col] = (value ? penColour.getGreen() : 0);
-            colourValues[2][row][col] = (value ? penColour.getBlue() : 0);
+        if ( row >= 0 && row < getHeight() && col >= 0 && col < getWidth() ) {
+            if (row < getHeight() && col < getWidth()) {
+                binaryValues[row][col] = value;
+                colourValues[0][row][col] = (value ? penColour.getRed() : 0);
+                colourValues[1][row][col] = (value ? penColour.getGreen() : 0);
+                colourValues[2][row][col] = (value ? penColour.getBlue() : 0);
+            }
         }
     }
 
     public void drawPoint(int row, int col, Colour colour) {
-        if ( row < getRows() && col < getCols() ) {
-            binaryValues[row][col] = (colour.getRed()>=0.5 || colour.getGreen()>=0.5 || colour.getBlue()>=0.5);
-            colourValues[0][row][col] = colour.getRed();
-            colourValues[1][row][col] = colour.getGreen();
-            colourValues[2][row][col] = colour.getBlue();
+        if ( row >= 0 && row < getHeight() && col >= 0 && col < getWidth() ) {
+            if (row < getHeight() && col < getWidth()) {
+                binaryValues[row][col] = (colour.getRed() >= 0.5 || colour.getGreen() >= 0.5 || colour.getBlue() >= 0.5);
+                colourValues[0][row][col] = colour.getRed();
+                colourValues[1][row][col] = colour.getGreen();
+                colourValues[2][row][col] = colour.getBlue();
+            }
         }
     }
 
@@ -97,11 +101,11 @@ public class Pattern {
         return new Colour(colourValues[0][row][col], colourValues[1][row][col], colourValues[2][row][col]);
     }
 
-    public int getRows() {
+    public int getHeight() {
         return binaryValues.length;
     }
 
-    public int getCols() {
+    public int getWidth() {
         return binaryValues[0].length;
     }
 

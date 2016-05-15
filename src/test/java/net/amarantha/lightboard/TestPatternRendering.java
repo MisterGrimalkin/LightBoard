@@ -95,8 +95,8 @@ public class TestPatternRendering {
     }
 
     void then_board_state_contains(Pattern pattern) {
-        for ( int r=0; r<pattern.getRows(); r++ ) {
-            for ( int c=0; c<pattern.getCols(); c++ ) {
+        for (int r = 0; r<pattern.getHeight(); r++ ) {
+            for (int c = 0; c<pattern.getWidth(); c++ ) {
                 for ( int p=0; p<3; p++ ) {
                     assertEquals(
                             pattern.getColourValues()[p][r][c],

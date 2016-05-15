@@ -3,7 +3,7 @@ package net.amarantha.lightboard.updater.schedule;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +12,7 @@ public class DateTimeUpdater extends Updater {
 
     private String[] formats;
     private int formatIndex = 0;
-    private TextZone zone;
+    private TextZone_Old zone;
 
     @Inject
     public DateTimeUpdater(Sync sync) {
@@ -20,7 +20,7 @@ public class DateTimeUpdater extends Updater {
         System.out.println("Date/Time Updater Ready....");
     }
 
-    public DateTimeUpdater setZone(TextZone zone) {
+    public DateTimeUpdater setZone(TextZone_Old zone) {
         this.zone = zone;
         return this;
     }

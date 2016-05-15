@@ -2,7 +2,7 @@ package net.amarantha.lightboard.updater;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.javalite.http.Http;
@@ -12,17 +12,17 @@ import java.util.*;
 
 public class ShowerTicketUpdater extends Updater {
 
-    private TextZone name1;
-    private TextZone name2;
-    private TextZone tickets1;
-    private TextZone tickets2;
+    private TextZone_Old name1;
+    private TextZone_Old name2;
+    private TextZone_Old tickets1;
+    private TextZone_Old tickets2;
 
     @Inject
     public ShowerTicketUpdater(Sync sync) {
         super(sync);
     }
 
-    public ShowerTicketUpdater setZones(TextZone name1, TextZone name2, TextZone tickets1, TextZone tickets2) {
+    public ShowerTicketUpdater setZones(TextZone_Old name1, TextZone_Old name2, TextZone_Old tickets1, TextZone_Old tickets2) {
         this.name1 = name1;
         this.name2 = name2;
         this.tickets1 = tickets1;

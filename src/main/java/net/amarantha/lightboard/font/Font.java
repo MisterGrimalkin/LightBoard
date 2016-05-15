@@ -32,7 +32,7 @@ public class Font {
     public final int getHeight(char key) {
         Pattern c = getPattern(key);
         if ( c!=null ) {
-            return c.getRows();
+            return c.getHeight();
         }
         return 0;
     }
@@ -40,7 +40,7 @@ public class Font {
     public final int getWidth(char key) {
         Pattern c = getPattern(key);
         if ( c!=null ) {
-            return c.getCols();
+            return c.getWidth();
         }
         return 0;
     }
@@ -145,8 +145,8 @@ public class Font {
                     } else {
                         Pattern pattern = getPattern(chr);
                         if (pattern != null) {
-                            for (int row = 0; row < pattern.getRows(); row++) {
-                                for (int col = 0; col < pattern.getCols(); col++) {
+                            for (int row = 0; row < pattern.getHeight(); row++) {
+                                for (int col = 0; col < pattern.getWidth(); col++) {
                                     if ( penMode ) {
                                         result.drawPoint(row, col + cursorX, pattern.getBinaryPoint(row, col));
                                     } else {
@@ -171,8 +171,8 @@ public class Font {
                 }
                 int lineHeight = getStringHeight(line);
                 Pattern pattern = renderString(line);
-                for ( int row=0; row<pattern.getRows(); row++ ) {
-                    for ( int col=0; col<pattern.getCols(); col++ ) {
+                for (int row = 0; row<pattern.getHeight(); row++ ) {
+                    for (int col = 0; col<pattern.getWidth(); col++ ) {
                         result.drawPoint(row + cursorY, col + cursorX, pattern.getColourPoint(row, col));
                     }
                 }

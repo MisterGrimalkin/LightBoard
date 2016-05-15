@@ -1,51 +1,63 @@
 package net.amarantha.lightboard.webservice;
 
-import net.amarantha.lightboard.entity.MessageBundle;
-import net.amarantha.lightboard.zone.impl.TextZone;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import net.amarantha.lightboard.scene.OldSceneManager;
+import net.amarantha.lightboard.zone.TextZone;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import java.util.Iterator;
-import java.util.Map;
 
+@Singleton
 @Path("messages")
-public class MessageResource {
+public class MessageResource extends Resource {
 
-    private static TextZone messageZone;
+    private static OldSceneManager sceneManager;
 
-    public static void setMessageZone(TextZone messageZone) {
-        MessageResource.messageZone = messageZone;
+    public MessageResource() {}
+
+    @Inject
+    public MessageResource(OldSceneManager sceneManager) {
+        MessageResource.sceneManager = sceneManager;
+    }
+
+    private static TextZone zone;
+
+    public void setZone(TextZone zone) {
+        MessageResource.zone = zone;
     }
 
     @POST
-    public static Response postMessages(String text) {
-        JSONObject json = JSONObject.fromObject(text);
-        JSONArray ja = json.getJSONArray("bundles");
-        MessageBundle.Wrapper wrapper = new MessageBundle.Wrapper();
-
-        Iterator<JSONObject> iter = ja.iterator();
-        while ( iter.hasNext() ) {
-            JSONObject obj = iter.next();
-            MessageBundle bundle = (MessageBundle)JSONObject.toBean(obj, MessageBundle.class);
-            wrapper.addBundle(bundle);
+    @Path("add")
+    public void putMessage(String message) {
+        if ( zone!=null ) {
+            zone.addMessage(message);
         }
+    }
 
-        for ( int i=0; i<wrapper.getBundles().size(); i++ ) {
-            MessageBundle bundle = wrapper.getBundles().get(i);
-            messageZone.clearMessages(i);
-            messageZone.setMaxMessagesPerSource(i, bundle.getMaxMessages());
-            for (Map.Entry<String, String> entry : bundle.getMessages().entrySet() ) {
-                messageZone.addMessage(i, "{"+bundle.getDefaultColour()+"}"+entry.getValue() );
-            }
+    @POST
+    @Path("clear")
+    public void clearMessages() {
+        if ( zone!=null ) {
+            zone.clearMessages();
         }
+    }
 
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity("Post Messages")
-                .build();
+    @POST
+    @Path("next")
+    public void nextMessage() {
+        if ( zone!=null ) {
+            zone.out();
+        }
+    }
+
+
+    public void setMessage(String sceneId, String zoneId) {
+
+    }
+
+    public void getMessage(String sceneId, String zoneId) {
+
     }
 
 

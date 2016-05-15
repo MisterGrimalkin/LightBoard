@@ -4,7 +4,7 @@ package net.amarantha.lightboard.updater;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.MessageBundle;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ public class MessageUpdater extends Updater {
 
     private MessageBundle.Wrapper wrapper;
 
-    private TextZone zone;
+    private TextZone_Old zone;
 
     @Inject
     public MessageUpdater(Sync sync) {
@@ -25,7 +25,7 @@ public class MessageUpdater extends Updater {
 
     }
 
-    public MessageUpdater setZone(TextZone zone) {
+    public MessageUpdater setZone(TextZone_Old zone) {
         this.zone = zone;
         return this;
     }

@@ -1,5 +1,5 @@
 package net.amarantha.lightboard.entity;
 
 public enum Edge {
-    TOP, LEFT, BOTTOM, RIGHT, NO_SCROLL
+    LEFT, RIGHT, TOP, BOTTOM, NO_SCROLL
 }

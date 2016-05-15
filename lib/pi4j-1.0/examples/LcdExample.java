@@ -28,7 +28,6 @@
 
 import com.pi4j.component.lcd.LCDTextAlignment;
 import com.pi4j.component.lcd.impl.GpioLcdDisplay;
-import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 

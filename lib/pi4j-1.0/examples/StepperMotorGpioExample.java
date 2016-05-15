@@ -26,7 +26,6 @@
  */
 
 import com.pi4j.component.motor.impl.GpioStepperMotorComponent;
-import com.pi4j.io.gpio.*;
 
 /**
  * This example code demonstrates how to control a stepper motor

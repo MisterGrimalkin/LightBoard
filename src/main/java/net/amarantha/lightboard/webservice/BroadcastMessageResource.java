@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.scene.SceneManager;
+import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.updater.schedule.PostMessageUpdater;
 
 import javax.ws.rs.POST;
@@ -13,13 +13,13 @@ import javax.ws.rs.core.Response;
 @Path("message")
 public class BroadcastMessageResource {
 
-    @Inject private static SceneManager sceneManager;
+    @Inject private static OldSceneManager sceneManager;
 
     public BroadcastMessageResource() {
     }
 
     @Inject
-    public BroadcastMessageResource(SceneManager sceneManager) {
+    public BroadcastMessageResource(OldSceneManager sceneManager) {
         BroadcastMessageResource.sceneManager = sceneManager;
     }
 

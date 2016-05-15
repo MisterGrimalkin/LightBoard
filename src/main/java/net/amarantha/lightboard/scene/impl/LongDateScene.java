@@ -1,18 +1,18 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
-import net.amarantha.lightboard.scene.SceneManager;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 
 public class LongDateScene extends Scene {
 
-    @Inject private SceneManager sceneManager;
+    @Inject private OldSceneManager sceneManager;
 
-    @Inject private TextZone dateZone;
+    @Inject private TextZone_Old dateZone;
 
     @Inject private DateTimeUpdater dateUpdater;
 

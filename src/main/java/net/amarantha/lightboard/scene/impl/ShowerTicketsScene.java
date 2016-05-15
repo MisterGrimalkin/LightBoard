@@ -7,19 +7,18 @@ import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.webservice.MessageResource;
 import net.amarantha.lightboard.webservice.ShowerTicketResource;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 public class ShowerTicketsScene extends Scene {
 
     private static final int LABEL_WIDTH = 54;
     private static final int MESSAGE_HEIGHT = 9;
 
-    @Inject private TextZone messageZone;
-    @Inject private TextZone label;
-    @Inject private TextZone female;
-    @Inject private TextZone male;
+    @Inject private TextZone_Old messageZone;
+    @Inject private TextZone_Old label;
+    @Inject private TextZone_Old female;
+    @Inject private TextZone_Old male;
 
     @Inject
     public ShowerTicketsScene(LightBoardSurface surface) {
@@ -83,7 +82,7 @@ public class ShowerTicketsScene extends Scene {
                 .setRestDuration(2000)
         ;
 
-        MessageResource.setMessageZone(messageZone);
+//        MessageResource.setMessageZone(messageZone);
 
         registerZones(female, male, messageZone, label);
 

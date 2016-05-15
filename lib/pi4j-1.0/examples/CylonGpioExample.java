@@ -29,8 +29,6 @@
  */
 
 
-import com.pi4j.io.gpio.*;
-
 /**
  * This example code demonstrates how to perform a blinking cycle 
  * (cylon effect) of a series of GPIO pins on the Raspberry Pi.  

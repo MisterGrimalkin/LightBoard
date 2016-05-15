@@ -30,7 +30,6 @@
 
 import com.pi4j.gpio.extension.olimex.OlimexAVRIOGpioProvider;
 import com.pi4j.gpio.extension.olimex.OlimexAVRIOPin;
-import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.io.gpio.trigger.GpioPulseStateTrigger;

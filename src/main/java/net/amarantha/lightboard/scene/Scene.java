@@ -4,7 +4,7 @@ import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.zone.LightBoardZone;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -54,8 +54,8 @@ public abstract class Scene {
             zone.setScrollTick(0);
             zone.setRestDuration(0);
             zone.setDontPauseIfContentTooWide(false);
-            if ( zone instanceof TextZone ) {
-                ((TextZone)zone).clearAllMessages();
+            if ( zone instanceof TextZone_Old) {
+                ((TextZone_Old)zone).clearAllMessages();
             }
         }
     }

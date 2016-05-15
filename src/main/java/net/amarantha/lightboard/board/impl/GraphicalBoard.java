@@ -11,9 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.amarantha.lightboard.board.ColourSwitcher;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.module.Cols;
 import net.amarantha.lightboard.module.Debug;
-import net.amarantha.lightboard.module.Rows;
 import net.amarantha.lightboard.utility.Sync;
 
 import java.util.ArrayList;

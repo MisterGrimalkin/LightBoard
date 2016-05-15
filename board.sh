@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-java \
--Djava.library.path=native/libpi4j.so \
+sudo java \
+-Djava.library.path=/home/pi/lightboard/c \
 -client \
 -Xms1g \
 -Xmx1g \

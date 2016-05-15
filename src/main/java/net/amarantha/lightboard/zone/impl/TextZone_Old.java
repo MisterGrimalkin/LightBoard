@@ -9,17 +9,17 @@ import net.amarantha.lightboard.utility.MessageQueue;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.LightBoardZone;
 
-public class TextZone extends LightBoardZone {
+public class TextZone_Old extends LightBoardZone {
 
     private Font font;
 
     @Inject
-    public TextZone(LightBoardSurface surface, Sync sync) {
+    public TextZone_Old(LightBoardSurface surface, Sync sync) {
         super(surface, sync);
         setDefaults();
         addScrollCompleteHandler(() -> {
             if (override) {
-                TextZone.this.clearOverride();
+                TextZone_Old.this.clearOverride();
             }
             advanceMessage();
         });
@@ -91,36 +91,36 @@ public class TextZone extends LightBoardZone {
         return overrideMessage==null?messageQueue.getCurrentMessage():overrideMessage;
     }
 
-    public TextZone clearAllMessages() {
+    public TextZone_Old clearAllMessages() {
         messageQueue.clearAllMessages();
         return this;
     }
 
-    public TextZone replaceMessage(String message) {
+    public TextZone_Old replaceMessage(String message) {
         clearMessages();
         addMessage(message);
         return this;
     }
 
-    public TextZone clearMessages() {
+    public TextZone_Old clearMessages() {
         messageQueue.clearMessages(0);
         return this;
     }
 
-    public TextZone clearMessages(int id) {
+    public TextZone_Old clearMessages(int id) {
         messageQueue.clearMessages(id);
         return this;
     }
 
-    public TextZone addMessage(String message) {
+    public TextZone_Old addMessage(String message) {
         return addMessage(0, wrap(message));
     }
 
-    public TextZone addMessage(int id, String message) {
+    public TextZone_Old addMessage(int id, String message) {
         return addMessage(id, wrap(message));
     }
 
-    public TextZone addMessage(int id, MessageWrapper message) {
+    public TextZone_Old addMessage(int id, MessageWrapper message) {
         messageQueue.addMessage(id, message);
         return this;
     }
@@ -133,7 +133,7 @@ public class TextZone extends LightBoardZone {
         messageQueue.setMaxMessages(id, max);
     }
 
-    public TextZone setFont(Font font) {
+    public TextZone_Old setFont(Font font) {
         this.font = font;
         return this;
     }

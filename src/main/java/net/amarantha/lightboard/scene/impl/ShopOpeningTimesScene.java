@@ -5,15 +5,15 @@ import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
 import net.amarantha.lightboard.updater.schedule.OpeningTimesUpdater;
-import net.amarantha.lightboard.zone.impl.TextZone;
+import net.amarantha.lightboard.zone.impl.TextZone_Old;
 
 import static net.amarantha.lightboard.entity.AlignH.LEFT;
 import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 
 public class ShopOpeningTimesScene extends Scene {
 
-    @Inject private TextZone dateZone;
-    @Inject private TextZone openingTimesZone;
+    @Inject private TextZone_Old dateZone;
+    @Inject private TextZone_Old openingTimesZone;
 
     @Inject private DateTimeUpdater dateTimeUpdater;
     @Inject private OpeningTimesUpdater openingTimesUpdater;
