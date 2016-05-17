@@ -3,10 +3,10 @@ package net.amarantha.lightboard;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.entity.AlignH;
-import net.amarantha.lightboard.entity.AlignV;
-import net.amarantha.lightboard.entity.Edge;
+import net.amarantha.lightboard.entity.*;
 import net.amarantha.lightboard.font.LargeFont;
+import net.amarantha.lightboard.font.SimpleFont;
+import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.scene.impl.MessagesScene;
@@ -54,6 +54,14 @@ public class LightBoardApplication {
         }
 
         surface.clearSurface();
+//        Pattern p = new Pattern(5, 5);
+//        p.drawPoint(2, 2, new Colour(1.0,0.0,1.0));
+//        p.drawPoint(3, 3, new Colour(1.0,1.0,1.0));
+//        p.drawPoint(4, 4, new Colour(0.0,1.0,1.0));
+//        surface.drawPattern(0, 0, p);
+
+
+        System.out.println("IP = " + props.getIp());
 
         if ( withServer ) {
             service.startWebService();
@@ -67,71 +75,153 @@ public class LightBoardApplication {
 
     @Inject private TextZone textZone1;
     @Inject private TextZone textZone2;
+    @Inject private TextZone textZone3;
+    @Inject private TextZone textZone4;
 
     @Inject private MessageResource messageResource;
 
-    @Inject private ScrollIn scrollIn;
-    @Inject private ScrollOut scrollOut;
-    @Inject private RainDown rainDown;
-    @Inject private ExplodeOut explodeOut;
-    @Inject private ExplodeIn explodeIn;
-
     private void buildScenes() {
 
-        explodeIn.setDuration(300);
-        explodeOut.setDuration(300);
+        int typingSpeed = 900;
+        int explodeSpeed = 1100;
 
-        rainDown.setDuration(600);
+        textZone1
+            .setFont(new SmallFont())
+            .setRegion(0, 0, 192, 32)
+            .setDisplayTime(300)
+            .setOffset(0, -9)
+            .setAutoOut(false)
+            .setAutoNext(false)
+            .setAlignV(AlignV.MIDDLE)
+            .setInTransition(new TypeIn().setDuration(typingSpeed))
+            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setCanvasLayer(2)
+            .init();
 
-        scrollOut.setDuration(500);
-        scrollOut.setEdge(Edge.TOP);
+        textZone2
+            .setFont(new SimpleFont())
+            .setRegion(0, 0, 192, 32)
+            .setDisplayTime(300)
+            .setAutoOut(false)
+            .setAutoNext(false)
+            .setAlignV(AlignV.MIDDLE)
+            .setInTransition(new TypeIn().setDuration(typingSpeed))
+            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setCanvasLayer(3)
+            .init();
+
+        textZone3
+            .setFont(new SmallFont())
+            .setRegion(0, 0, 192, 32)
+            .setDisplayTime(2000)
+            .setOffset(0, 9)
+            .setAutoOut(false)
+            .setAutoNext(false)
+            .setAlignV(AlignV.MIDDLE)
+            .setInTransition(new TypeIn().setDuration(typingSpeed))
+            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setCanvasLayer(4)
+            .init();
+
+        textZone4
+            .setFont(new SmallFont())
+            .setRegion(0, 0, 192, 32)
+            .setDisplayTime(4000)
+            .setAutoOut(true)
+            .setAutoNext(false)
+            .setAlignV(AlignV.MIDDLE)
+            .setInTransition(new ExplodeIn().setDuration(explodeSpeed))
+            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setCanvasLayer(5)
+            .init();
+
+        textZone1.addMessage("{red}Bailes + Light");
+        textZone2.addMessage("{yellow}LightBoard Display System");
+        textZone3.addMessage("{green}Version 2.0");
+        textZone4.addMessage("{red}Web Service online at {yellow}" + props.getIp());
+
+        textZone1.onDisplayComplete(()->textZone2.in());
+        textZone2.onDisplayComplete(()->textZone3.in());
+        textZone3.onDisplayComplete(()->{
+            textZone1.out();
+            textZone2.out();
+            textZone3.out();
+        });
+        textZone3.onOutComplete(() -> textZone4.in());
+        textZone4.onOutComplete(() -> textZone1.in());
+
+        textZone1.in();
+
+    }
+
+    private void old() {
 
         textZone1.setRegion(surface.safeRegion(0,0,192,32));
         textZone2.setRegion(surface.safeRegion(0,0,192,32));
+        textZone3.setRegion(surface.safeRegion(0,23,192,9));
+//        textZone3.setOutline(new Colour(1,1,1));
 
-        textZone1.setDisplayTime(600);
-        textZone2.setDisplayTime(600);
+        textZone1.setOffset(-40, -5);
+        textZone2.setOffset(40, -5);
+
+//        textZone1.setOutline(new Colour(1,0,0));
+//        textZone2.setOutline(new Colour(0,1,0));
+
+        textZone1.setDisplayTime(9000);
+        textZone2.setDisplayTime(6000);
+        textZone3.setDisplayTime(0);
 
         textZone1.setAutoOut(true);
         textZone2.setAutoOut(true);
 
         textZone1.setAlignH(AlignH.CENTRE);
-        textZone1.setAlignV(AlignV.BOTTOM);
+        textZone1.setAlignV(AlignV.MIDDLE);
         textZone2.setAlignH(AlignH.CENTRE);
-        textZone2.setAlignV(AlignV.TOP);
+        textZone2.setAlignV(AlignV.MIDDLE);
 
         textZone1.setTick(25);
         textZone2.setTick(25);
+        textZone3.setTick(25);
 
         textZone1.setFont(new LargeFont());
         textZone2.setFont(new LargeFont());
+        textZone3.setFont(new SimpleFont());
 
-        textZone1.setInTransition(rainDown);
-        textZone1.setOutTransition(explodeOut);
-        textZone2.setInTransition(explodeIn);
-        textZone2.setOutTransition(scrollOut);
+        textZone1.setInTransition(new RainDown().setDuration(500));
+        textZone1.setOutTransition(new ExplodeOut().setDuration(100));
+        textZone2.setInTransition(new RainDown().setDuration(500));
+        textZone2.setOutTransition(new ExplodeOut().setDuration(100));
+        textZone3.setInTransition(new ScrollIn().setEdge(Edge.RIGHT).setDuration(7000));
+        textZone3.setOutTransition(new ScrollOut().setEdge(Edge.LEFT).setDuration(7000));
 
-        textZone1.setAutoNext(false);
-        textZone2.setAutoNext(false);
+        textZone1.setAutoNext(true);
+        textZone2.setAutoNext(true);
+        textZone3.setAutoNext(true);
+
+        textZone1.setCanvasLayer(3);
+        textZone2.setCanvasLayer(2);
+        textZone3.setCanvasLayer(1);
 
         textZone1.init();
         textZone2.init();
+        textZone3.init();
 
-        textZone1.addMessage("9 9 9 9 9");
-        textZone2.addMessage("8 8 8 8 8");
-        textZone1.addMessage("7 7 7 7 7");
-        textZone2.addMessage("6 6 6 6 6");
-        textZone1.addMessage("5 5 5 5 5");
-        textZone2.addMessage("4 4 4 4 4");
-        textZone1.addMessage("3 3 3 3 3");
-        textZone2.addMessage("2 2 2 2 2");
-        textZone1.addMessage("1 1 1 1 1");
-        textZone2.addMessage("0 0 0 0 0");
+        textZone1.addMessage("103");
+        textZone1.addMessage("104");
+        textZone1.addMessage("105");
+        textZone1.addMessage("106");
+        textZone2.addMessage("98");
+        textZone2.addMessage("99");
+        textZone2.addMessage("100");
+        textZone2.addMessage("101");
+        textZone3.addMessage("{green}Another Shower {red}is Possible!");
 
-        textZone1.onOutComplete(()->textZone2.in());
-        textZone2.onOutComplete(()->textZone1.in());
+//        textZone1.onDisplayComplete(() -> textZone2.in());
+//        textZone2.onDisplayComplete(() -> textZone1.in());
 
         textZone1.in();
+        textZone2.in();
+        textZone3.in();
 
 
 

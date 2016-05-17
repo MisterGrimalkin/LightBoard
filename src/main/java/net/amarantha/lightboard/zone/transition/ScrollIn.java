@@ -1,40 +1,38 @@
 package net.amarantha.lightboard.zone.transition;
 
-public class ScrollIn extends ScrollTransition {
+public class ScrollIn extends Scroll {
 
     @Override
     public void reset() {
-        System.out.println("Steps="+getSteps());
+        long steps = getDuration() / zone.getTick();
         switch (edge) {
             case LEFT:
-                x = zone.getRegion().left - zone.getPattern().getWidth();
+                x = -zone.getPattern().getWidth();
                 y = zone.getRestY();
-                deltaX = (zone.getRestX() - x) / getSteps();
+                deltaX = Math.ceil((zone.getRestX() - x) / steps);
                 deltaY = 0;
                 break;
             case RIGHT:
-                x = zone.getRegion().right;
+                x = zone.getWidth();
                 y = zone.getRestY();
-                deltaX = -1 * ((x - zone.getRestX()) / getSteps());
+                deltaX = Math.floor((x - zone.getRestX()) / -steps);
                 deltaY = 0;
                 break;
             case TOP:
                 x = zone.getRestX();
-                y = zone.getRegion().top - zone.getPattern().getHeight();
+                y = -zone.getPattern().getHeight();
                 deltaX = 0;
-                deltaY = (zone.getRestY() - y) / getSteps();
+                deltaY = Math.ceil((zone.getRestY() - y) / steps);
                 break;
             case BOTTOM:
                 x = zone.getRestX();
-                y = zone.getRegion().bottom;
+                y = zone.getHeight();
                 deltaX = 0;
-                deltaY = -1 * ((y - zone.getRestY()) / getSteps());
+                deltaY = Math.floor((y - zone.getRestY()) / -steps);
                 break;
             case NO_SCROLL:
                 break;
         }
-        deltaX = Math.round(deltaX);
-        deltaY = Math.round(deltaY);
     }
 
     @Override

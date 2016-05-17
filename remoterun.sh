@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-ip=18
+ip=10
 echo
 echo "Shutting down LightBoard..."
 echo

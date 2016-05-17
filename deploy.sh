@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-ip=18
+ip=10
 echo
 echo "Deploying LightBoard application to 192.168.0.$ip"
 if [ "$1" != "skipjava" ]

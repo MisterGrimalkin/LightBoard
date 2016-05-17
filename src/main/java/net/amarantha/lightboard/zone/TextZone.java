@@ -30,14 +30,14 @@ public class TextZone extends AbstractZone {
             if ( cycleMessages ) {
                 messageQueue.offer(nextMessage);
             }
-            System.out.println(nextMessage);
             return font.renderString(nextMessage, getAlignH());
         }
         return null;
     }
 
-    public void setFont(Font font) {
+    public TextZone setFont(Font font) {
         this.font = font;
+        return this;
     }
 
 }

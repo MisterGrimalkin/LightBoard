@@ -5,6 +5,11 @@ import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.impl.ImageBanner;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 @Singleton
 public class LightBoardProperties extends PropertyManager {
 
@@ -18,8 +23,28 @@ public class LightBoardProperties extends PropertyManager {
         return props.getString("showTubeFullDetails", "true").equals("true");
     }
 
+    String ip = null;
+
     public String getIp() {
-        return props.getString("ip", "127.0.0.1");
+        if ( ip==null ) {
+            StringBuilder output = new StringBuilder();
+
+            Process p;
+            try {
+                p = Runtime.getRuntime().exec("sh getip.sh");
+                p.waitFor();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line = "";
+                while ((line = reader.readLine())!= null) {
+                    output.append(line).append("\n");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ip = output.toString();
+        }
+        return ip;
     }
 
     public int getBoardRows() {

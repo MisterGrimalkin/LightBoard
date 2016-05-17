@@ -209,10 +209,10 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
     @Override
     public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add(RED);
-        result.add(GREEN);
-        result.add(YELLOW);
-        result.add(MULTI);
+        result.add(RED_STR);
+        result.add(GREEN_STR);
+        result.add(YELLOW_STR);
+        result.add(MULTI_STR);
         return result;
     }
 
@@ -225,17 +225,17 @@ public class RaspPiDanLightBoard implements LightBoard, ColourSwitcher {
 
     @Override
     public void setColour(String colourName) {
-        if (RED.equals(colourName)) {
+        if (RED_STR.equals(colourName)) {
             cycleColours = false;
             colour = RED_MODE;
             data1PinG.low();
             data2PinG.low();
-        } else if (GREEN.equals(colourName)) {
+        } else if (GREEN_STR.equals(colourName)) {
             cycleColours = false;
             colour = GREEN_MODE;
             data1PinR.low();
             data2PinR.low();
-        } else if (YELLOW.equals(colourName)) {
+        } else if (YELLOW_STR.equals(colourName)) {
             cycleColours = false;
             colour = YELLOW_MODE;
         }

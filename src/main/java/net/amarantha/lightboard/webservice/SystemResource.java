@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.OldSceneManager;
@@ -163,15 +164,21 @@ public class SystemResource {
                 System.exit(0);
             }
         }, 2000);
-        surface.clearSurface();
-        Pattern shutdownPattern = new SmallFont().renderString("SHUTTING DOWN");
-        surface.drawPattern((surface.getCols() - shutdownPattern.getWidth()) / 2, (surface.getRows() - shutdownPattern.getHeight())/2, shutdownPattern);
-//        sync.stopSyncThread();
+        displayShutdownMessage();
         System.out.println("System Shutting Down");
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("So long and thanks for all the fish")
                 .build();
+    }
+
+    private static void displayShutdownMessage() {
+        surface.clearSurface();
+        Pattern shutdownPattern = new SmallFont().renderString("{red}SHUTTING DOWN");
+        int x = (surface.getCols() - shutdownPattern.getWidth()) / 2;
+        int y =(surface.getRows() - shutdownPattern.getHeight()) / 2;
+        surface.outlineRegion(LightBoardSurface.LAYERS-1, Colour.RED, surface.safeRegion(x-2, y-2, shutdownPattern.getWidth()+4, shutdownPattern.getHeight()+4));
+        surface.drawPattern(LightBoardSurface.LAYERS-1, x, y, shutdownPattern);
     }
 
     @POST

@@ -253,11 +253,11 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     @Override
     public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add(RED);
-        result.add(GREEN);
-        result.add(YELLOW);
-        result.add(BLUE);
-        result.add(MULTI);
+        result.add(RED_STR);
+        result.add(GREEN_STR);
+        result.add(YELLOW_STR);
+        result.add(BLUE_STR);
+        result.add(MULTI_STR);
         return result;
     }
 
@@ -266,7 +266,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
     @Override
     public void setColour(String colour) {
         this.colour = colour;
-        if (RED.equals(colour)) {
+        if (RED_STR.equals(colour)) {
             colourOverride = true;
             redMin = 0.05;
             redMax = 1.0;
@@ -274,7 +274,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
             greenMax = 0;
             blueMin = 0;
             blueMax = 0;
-        } else if (GREEN.equals(colour)) {
+        } else if (GREEN_STR.equals(colour)) {
             colourOverride = true;
             redMin = 0;
             redMax = 0;
@@ -282,7 +282,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
             greenMax = 1.0;
             blueMin = 0;
             blueMax = 0;
-        } else if (YELLOW.equals(colour)) {
+        } else if (YELLOW_STR.equals(colour)) {
             colourOverride = true;
             redMin = 0.05;
             redMax = 1.0;
@@ -290,7 +290,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
             greenMax = 1.0;
             blueMin = 0;
             blueMax = 0;
-        } else if (BLUE.equals(colour)) {
+        } else if (BLUE_STR.equals(colour)) {
             colourOverride = true;
             redMin = 0;
             redMax = 0;
@@ -298,7 +298,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
             greenMax = 0;
             blueMin = 0.05;
             blueMax = 1.0;
-        } else if (MULTI.equals(colour)) {
+        } else if (MULTI_STR.equals(colour)) {
             colourOverride = false;
             redMin = 0.05;
             redMax = 1.0;

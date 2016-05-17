@@ -1,33 +1,32 @@
 package net.amarantha.lightboard.zone.transition;
 
-public class ScrollOut extends ScrollTransition {
+public class ScrollOut extends Scroll {
 
     @Override
     public void reset() {
+        long steps = getDuration() / zone.getTick();
         x = zone.getRestX();
         y = zone.getRestY();
         switch (edge) {
             case LEFT:
-                deltaX = -1 * ((x + zone.getPattern().getWidth()) / getSteps());
+                deltaX = Math.floor((x + zone.getPattern().getWidth()) / -steps);
                 deltaY = 0;
                 break;
             case RIGHT:
-                deltaX = (zone.getRegion().right - x) / getSteps();
+                deltaX = Math.ceil((zone.getWidth() - x) / steps);
                 deltaY = 0;
                 break;
             case TOP:
                 deltaX = 0;
-                deltaY = -1 * ((y + zone.getPattern().getHeight()) / getSteps());
+                deltaY = Math.floor((y + zone.getPattern().getHeight()) / -steps);
                 break;
             case BOTTOM:
                 deltaX = 0;
-                deltaY = (zone.getRegion().bottom - y) / getSteps();
+                deltaY = Math.ceil((y + zone.getPattern().getHeight()) / steps);
                 break;
             case NO_SCROLL:
                 break;
         }
-        deltaX = Math.round(deltaX);
-        deltaY = Math.round(deltaY);
     }
 
     @Override
@@ -36,11 +35,11 @@ public class ScrollOut extends ScrollTransition {
             case LEFT:
                 return x <= -1 * zone.getPattern().getWidth();
             case RIGHT:
-                return x >= zone.getRegion().right;
+                return x >= zone.getRight();
             case TOP:
                 return y <= -1 * zone.getPattern().getHeight();
             case BOTTOM:
-                return y >= zone.getRegion().bottom;
+                return y >= zone.getBottom();
             case NO_SCROLL:
                 break;
         }

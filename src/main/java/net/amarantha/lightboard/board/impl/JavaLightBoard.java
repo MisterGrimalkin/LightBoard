@@ -243,10 +243,10 @@ public class JavaLightBoard implements LightBoard, ColourSwitcher {
     @Override
     public List<String> getSupportedColours() {
         List<String> result = new ArrayList<>();
-        result.add(RED);
-        result.add(GREEN);
-        result.add(YELLOW);
-        result.add(MULTI);
+        result.add(RED_STR);
+        result.add(GREEN_STR);
+        result.add(YELLOW_STR);
+        result.add(MULTI_STR);
         return result;
     }
 
@@ -260,17 +260,17 @@ public class JavaLightBoard implements LightBoard, ColourSwitcher {
     @Override
     public void setColour(String colourName) {
         this.colourName = colourName;
-        if (RED.equals(colourName)) {
+        if (RED_STR.equals(colourName)) {
             colour = RED_MODE;
             digitalWrite(data1G, true);
             digitalWrite(data2G, true);
-        } else if (GREEN.equals(colourName)) {
+        } else if (GREEN_STR.equals(colourName)) {
             colour = GREEN_MODE;
             digitalWrite(data1R, true);
             digitalWrite(data2R, true);
-        } else if (YELLOW.equals(colourName)) {
+        } else if (YELLOW_STR.equals(colourName)) {
             colour = YELLOW_MODE;
-        } else if (MULTI.equals(colourName)) {
+        } else if (MULTI_STR.equals(colourName)) {
             colour = MULTI_MODE;
         }
     }

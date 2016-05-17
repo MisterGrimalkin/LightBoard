@@ -2,7 +2,6 @@ package net.amarantha.lightboard.zone.transition;
 
 public class RainDown extends AbstractTransition {
 
-
     @Override
     public void reset() {
         delay = getDuration() / zone.getPattern().getHeight();
@@ -34,22 +33,16 @@ public class RainDown extends AbstractTransition {
             complete();
         } else if ( System.currentTimeMillis() - lastDrawn >= delay ) {
             zone.clear();
-            for (int r = (int)fallStart; r < zone.getRestY()+zone.getPattern().getHeight() + 10; r++ ) {
-                if ( r >= zone.getRestY()+zone.getPattern().getHeight() ) {
+            for (int r = (int)fallStart; r < zone.getRestY()+zone.getPattern().getHeight(); r++ ) {
+                if ( r < (zone.getRestY()+currentRow) ) {
                     for (int c = 0; c < zone.getPattern().getWidth(); c++) {
                         if ( Math.random() <= randomLimit) {
-                            surface.drawPoint(c + zone.getRestX(), r, zone.getPattern().getColourPoint(0, c), zone.getRegion());
-                        }
-                    }
-                } else if ( r < (zone.getRestY()+currentRow) ) {
-                    for (int c = 0; c < zone.getPattern().getWidth(); c++) {
-                        if ( Math.random() <= randomLimit) {
-                            surface.drawPoint(c + zone.getRestX(), r, zone.getPattern().getColourPoint(currentRow, c), zone.getRegion());
+                            zone.drawPoint(c + zone.getRestX(), r, zone.getPattern().getColourPoint(currentRow, c));
                         }
                     }
                 } else {
                     for (int c = 0; c < zone.getPattern().getWidth(); c++) {
-                        surface.drawPoint(c+zone.getRestX(), r, zone.getPattern().getColourPoint(r-zone.getRestY(), c), zone.getRegion());
+                        zone.drawPoint(c+zone.getRestX(), r, zone.getPattern().getColourPoint(r-zone.getRestY(), c));
                     }
                 }
             }
@@ -61,4 +54,5 @@ public class RainDown extends AbstractTransition {
             fallStart += fallStartDelta;
         }
     }
+
 }

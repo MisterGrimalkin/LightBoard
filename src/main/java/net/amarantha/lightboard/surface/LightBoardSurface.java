@@ -15,7 +15,9 @@ public class LightBoardSurface {
     private int rows;
     private int cols;
 
-    private double[][][] ledState;
+    private double[][][][] ledState;
+
+    public static final int LAYERS = 10;
 
     private final LightBoard board;
     private final Sync sync;
@@ -40,15 +42,15 @@ public class LightBoardSurface {
         this.rows = rows;
         this.cols = cols;
 
-        if ( board instanceof GraphicalBoard ) {
+        if (board instanceof GraphicalBoard) {
             board.init(rows, cols);
         } else {
             new Thread(() -> board.init(rows, cols)).start();
         }
 
-        ledState = new double[3][rows][cols];
+        ledState = new double[LAYERS][3][rows][cols];
 
-        if ( loadTestPattern ) {
+        if (loadTestPattern) {
             initTestPattern(0);
         }
 
@@ -58,11 +60,37 @@ public class LightBoardSurface {
         sync.addTask(new Sync.Task(board.getUpdateInterval()) {
             @Override
             public void runTask() {
-                board.update(ledState);
+                updateBoard();
             }
         });
         System.out.println("Surface Active");
         return this;
+    }
+
+
+
+    private void updateBoard() {
+        double[][][] compositeState = new double[3][rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                compositeState[0][r][c] = ledState[0][0][r][c];
+                compositeState[1][r][c] = ledState[0][1][r][c];
+                compositeState[2][r][c] = ledState[0][2][r][c];
+                for (int l = 1; l < LAYERS; l++) {
+                    if (ledState[l][0][r][c] > 0) {
+                        compositeState[0][r][c] = ledState[l][0][r][c];
+                    }
+                    if (ledState[l][1][r][c] > 0) {
+                        compositeState[1][r][c] = ledState[l][1][r][c];
+                    }
+                    if (ledState[l][2][r][c] > 0) {
+                        compositeState[2][r][c] = ledState[l][2][r][c];
+                    }
+                }
+            }
+        }
+
+        board.update(compositeState);
     }
 
     private int testPatternSize = 4;
@@ -74,24 +102,24 @@ public class LightBoardSurface {
             @Override
             public void runTask() {
                 clearSurface();
-                if ( testPatternOffset++ >= (testPatternSize*3) ) {
+                if (testPatternOffset++ >= (testPatternSize * 3)) {
                     testPatternOffset = 1;
                 }
-                initTestPattern(testPatternOffset - (testPatternSize*3));
+                initTestPattern(testPatternOffset - (testPatternSize * 3));
             }
         });
 
     }
 
     private void initTestPattern(int xOffset) {
-        for ( int x = 0; x<(cols+(testPatternSize*3)); x+=(testPatternSize*3) ) {
-            for ( int y = 0; y<rows; y+=(testPatternSize*3) ) {
-                if ( x+xOffset < cols ) {
-                    fillRegion(safeRegion(x+xOffset, y, testPatternSize, testPatternSize), new Colour(1.0, 0.0, 0.0));
-                    if (x+xOffset + testPatternSize < cols && y + testPatternSize < rows) {
-                        fillRegion(safeRegion(x+xOffset + testPatternSize, y + testPatternSize, testPatternSize, testPatternSize), new Colour(0.0, 1.0, 0.0));
-                        if (x+xOffset + (testPatternSize * 2) < cols && y + (testPatternSize * 2) < rows) {
-                            fillRegion(safeRegion(x+xOffset + (testPatternSize * 2), y + (testPatternSize * 2), testPatternSize, testPatternSize), new Colour(1.0, 1.0, 0.0));
+        for (int x = 0; x < (cols + (testPatternSize * 3)); x += (testPatternSize * 3)) {
+            for (int y = 0; y < rows; y += (testPatternSize * 3)) {
+                if (x + xOffset < cols) {
+                    fillRegion(safeRegion(x + xOffset, y, testPatternSize, testPatternSize), new Colour(1.0, 0.0, 0.0));
+                    if (x + xOffset + testPatternSize < cols && y + testPatternSize < rows) {
+                        fillRegion(safeRegion(x + xOffset + testPatternSize, y + testPatternSize, testPatternSize, testPatternSize), new Colour(0.0, 1.0, 0.0));
+                        if (x + xOffset + (testPatternSize * 2) < cols && y + (testPatternSize * 2) < rows) {
+                            fillRegion(safeRegion(x + xOffset + (testPatternSize * 2), y + (testPatternSize * 2), testPatternSize, testPatternSize), new Colour(1.0, 1.0, 0.0));
                         }
                     }
                 }
@@ -99,55 +127,108 @@ public class LightBoardSurface {
         }
     }
 
+    /////////////////
+    // Point Query //
+    /////////////////
+
     public boolean isOn(int x, int y) {
+        return isOn(0, x, y);
+    }
+
+    public boolean isOn(int layer, int x, int y) {
         return pointInRegion(x, y, boardRegion)
                 && (
-                           ledState[0][y][x] >= 0.5
-                        || ledState[1][y][x] >= 0.5
-                        || ledState[2][y][x] >= 0.5
-                )
-        ;
+                ledState[layer][0][y][x] >= 0.5
+                        || ledState[layer][1][y][x] >= 0.5
+                        || ledState[layer][2][y][x] >= 0.5
+        )
+                ;
     }
 
-    public boolean drawPoint(int x, int y) {
-        return drawPoint(x, y, 1.0, 1.0, 1.0, boardRegion);
+    ////////////////
+    // Draw Point //
+    ////////////////
+
+    public boolean drawPoint(int layer, int x, int y, double red, double green, double blue, Region r) {
+        if (pointInRegion(x, y, r)) {
+            ledState[layer][0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
+            ledState[layer][1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
+            ledState[layer][2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
+            return true;
+        } else {
+            return false;
+        }
     }
+    public boolean drawPoint(int layer, int x, int y, Colour colour, Region r) {
+        return drawPoint(layer, x, y, colour.getRed(), colour.getGreen(), colour.getBlue(), r);
+    }
+    public boolean drawPoint(int layer, int x, int y, Colour colour) {
+        return drawPoint(layer, x, y, colour.getRed(), colour.getGreen(), colour.getBlue(), boardRegion);
+    }
+
+
+    // Using Default Layer (0)
+    public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
+        return drawPoint(0, x, y, red, green, blue, r);
+    }
+    public boolean drawPoint(int x, int y, Colour colour, Region r) {
+        return drawPoint(0, x, y, colour, r);
+    }
+    public boolean drawPoint(int x, int y, Colour colour) {
+        return drawPoint(0, x, y, colour, boardRegion);
+    }
+
+    // Boolean
+
+    public boolean drawPoint(int layer, int x, int y, Region r) {
+        return drawPoint(layer, x, y, 1.0, 1.0, 1.0, r);
+    }
+    public boolean drawPoint(int x, int y, Region r) {
+        return drawPoint(0, x, y, 1.0, 1.0, 1.0, r);
+    }
+    public boolean drawPoint(int x, int y) {
+        return drawPoint(0, x, y, 1.0, 1.0, 1.0, boardRegion);
+    }
+
+
+    /////////////////
+    // Clear Point //
+    /////////////////
 
     public boolean clearPoint(int x, int y) {
-        return drawPoint(x, y, 0.0, 0.0, 0.0, boardRegion);
+        return clearPoint(x, y, 0);
     }
 
-    public boolean drawPoint(int x, int y, Region r) {
-        return drawPoint(x, y, 1.0, 1.0, 1.0, r);
-    }
-
-    public boolean drawPoint(int x, int y, Colour colour, Region r) {
-        return drawPoint(x, y, colour.getRed(), colour.getGreen(), colour.getBlue(), r);
+    public boolean clearPoint(int layer, int x, int y) {
+        return drawPoint(layer, x, y, 0.0, 0.0, 0.0, boardRegion);
     }
 
     public boolean clearPoint(int x, int y, Region r) {
         return drawPoint(x, y, 0.0, 0.0, 0.0, r);
     }
 
-    public boolean drawPoint(int x, int y, double red, double green, double blue, Region r) {
-        if ( pointInRegion(x, y, r) ) {
-            ledState[0][y][x] = Math.max(Math.min(red, 1.0), 0.0);
-            ledState[1][y][x] = Math.max(Math.min(green, 1.0), 0.0);
-            ledState[2][y][x] = Math.max(Math.min(blue, 1.0), 0.0);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    /////////////
+    // Pattern //
+    /////////////
 
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern) {
         return drawPattern(xPos, yPos, pattern, boardRegion);
     }
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, Region r) {
-        return drawPattern(xPos, yPos, pattern, false, r);
+        return drawPattern(0, xPos, yPos, pattern, r);
+    }
+    public synchronized boolean drawPattern(int layer, int xPos, int yPos, Pattern pattern) {
+        return drawPattern(layer, xPos, yPos, pattern, boardRegion);
     }
 
+    public synchronized boolean drawPattern(int layer, int xPos, int yPos, Pattern pattern, Region r) {
+        return drawPattern(layer, xPos, yPos, pattern, false, r);
+    }
     public synchronized boolean drawPattern(int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
+        return drawPattern(0, xPos, yPos, pattern, clearBackground, r);
+    }
+
+    public synchronized boolean drawPattern(int layer, int xPos, int yPos, Pattern pattern, boolean clearBackground, Region r) {
         boolean changed = false;
         double[][][] chr = pattern.getColourValues();
         if ( chr.length>=3 && chr[0].length>0 && chr[0][0].length> 0 ) {
@@ -159,8 +240,8 @@ public class LightBoardSurface {
                         double red = chr[0][imgRow][imgCol];
                         double green = chr[1][imgRow][imgCol];
                         double blue = chr[2][imgRow][imgCol];
-                        if ( clearBackground || (red>0.0 && green>0.0 && blue>0.0) ) {
-                            changed |= drawPoint(x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
+                        if ( clearBackground || red>0.0 || green>0.0 || blue>0.0 ) {
+                            changed |= drawPoint(layer, x, y, chr[0][imgRow][imgCol], chr[1][imgRow][imgCol], chr[2][imgRow][imgCol], r);
                         }
                     }
                 }
@@ -192,33 +273,35 @@ public class LightBoardSurface {
     }
 
     public synchronized boolean clearRegion(Region r) {
+        return clearRegion(0, r);
+    }
+
+    public synchronized boolean clearRegion(int layer, Region r) {
         boolean changed = false;
         for ( int x=0; x<r.width; x++ ) {
             for ( int y=0; y<r.height; y++ ) {
-                changed |= clearPoint(r.left+x, r.top+y);
+                changed |= clearPoint(layer, r.left+x, r.top+y);
             }
         }
         return changed;
     }
 
     public synchronized boolean fillRegion(Region r) {
+        return fillRegion(0, r, new Colour(1,1,1));
+    }
+
+    public synchronized boolean fillRegion(int layer, Region r, Colour colour) {
         boolean changed = false;
         for ( int x=0; x<r.width; x++ ) {
             for ( int y=0; y<r.height; y++ ) {
-                changed |= drawPoint(r.left + x, r.top + y, r);
+                changed |= drawPoint(layer, r.left + x, r.top + y, colour, r);
             }
         }
         return changed;
     }
 
     public synchronized boolean fillRegion(Region r, Colour c) {
-        boolean changed = false;
-        for ( int x=0; x<r.width; x++ ) {
-            for ( int y=0; y<r.height; y++ ) {
-                changed |= drawPoint(r.left + x, r.top + y, c.getRed(), c.getGreen(), c.getBlue(), r);
-            }
-        }
-        return changed;
+        return fillRegion(0, r, c);
     }
 
     public synchronized boolean invertRegion(Region r) {
@@ -238,15 +321,23 @@ public class LightBoardSurface {
     }
 
     public synchronized boolean outlineRegion(Region r) {
+        return outlineRegion(0, r);
+    }
+
+    public synchronized boolean outlineRegion(int layer, Region r) {
+        return outlineRegion(layer, new Colour(1.0, 1.0, 1.0), r);
+    }
+
+    public synchronized boolean outlineRegion(int layer, Colour colour, Region r) {
         boolean changed = false;
         for ( int x=0; x<r.width; x++ ) {
             if ( x==0 || x==r.width-1 ) {
                 for ( int y=0; y<r.height; y++ ) {
-                    changed |= drawPoint(r.left+x, r.top+y, r);
+                    changed |= drawPoint(layer, r.left+x, r.top+y, colour, r);
                 }
             } else {
-                changed |= drawPoint(r.left+x, r.top, r);
-                changed |= drawPoint(r.left+x, r.bottom, r);
+                changed |= drawPoint(layer, r.left+x, r.top, colour, r);
+                changed |= drawPoint(layer, r.left+x, r.bottom, colour, r);
             }
         }
         return changed;

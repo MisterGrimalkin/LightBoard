@@ -75,8 +75,10 @@ public class SmallFont extends Font {
         registerPattern(':', COLON);
         registerPattern(' ', SPACE);
         registerPattern('&', PLUS);
+        registerPattern('+', PLUS);
         registerPattern('*', ASTERISK);
         registerPattern('|', PIPE);
+        registerPattern('.', FULL_STOP);
     }
 
     private final static boolean[][] A =
@@ -366,4 +368,11 @@ public class SmallFont extends Font {
             { i},
             { o},
             { o}};
+
+    private final static boolean[][] FULL_STOP =
+            {{o},
+            { o},
+            { o},
+            { o},
+            { i}};
 }

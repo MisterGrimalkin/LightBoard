@@ -3,6 +3,7 @@ package net.amarantha.lightboard.zone;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
+import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.Region;
@@ -15,18 +16,17 @@ public abstract class AbstractZone {
     @Inject private LightBoardSurface surface;
 
     private Pattern pattern;
-
+    private int canvasLayer;
     private long displayTime = 1000;
+    private long tick = 25;
+    private Region region;
 
     public abstract Pattern getNextPattern();
 
-    private long tick = 25;
 
-    private Region region;
-
-    public Region getRegion() {
-        return region;
-    }
+    /////////////
+    // Getters //
+    /////////////
 
     public int getLeft() {
         return region.left;
@@ -52,8 +52,25 @@ public abstract class AbstractZone {
         return region.height;
     }
 
+    private int xOffset = 0;
+    private int yOffset = 0;
+
+    public AbstractZone setOffset(int xOffset, int yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        return this;
+    }
+
+    public void setxOffset(int xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    public void setyOffset(int yOffset) {
+        this.yOffset = yOffset;
+    }
+
     public void clear() {
-        surface.clearRegion(region);
+        surface.clearRegion(canvasLayer, region);
     }
 
     private boolean initialised = false;
@@ -82,12 +99,18 @@ public abstract class AbstractZone {
         return tick;
     }
 
-    public void setDisplayTime(long displayTime) {
+    public AbstractZone setDisplayTime(long displayTime) {
         this.displayTime = displayTime;
+        return this;
     }
 
-    public void setRegion(Region region) {
+    public AbstractZone setRegion(int left, int top, int width, int height) {
+        return setRegion(surface.safeRegion(left, top, width, height));
+    }
+
+    public AbstractZone setRegion(Region region) {
         this.region = region;
+        return this;
     }
 
     public Pattern getPattern() {
@@ -100,7 +123,7 @@ public abstract class AbstractZone {
 
     public void stop() {
         paused = true;
-        surface.clearRegion(region);
+        surface.clearRegion(canvasLayer, region);
     }
 
     private boolean paused;
@@ -117,18 +140,23 @@ public abstract class AbstractZone {
                 outTransition.tick();
                 break;
         }
+        if ( outline!=null ) {
+            surface.outlineRegion(canvasLayer, outline, region);
+        }
     }
 
     private boolean autoOut = true;
 
-    public void setAutoOut(boolean autoOut) {
+    public AbstractZone setAutoOut(boolean autoOut) {
         this.autoOut = autoOut;
+        return this;
     }
 
     private boolean autoNext = true;
 
-    public void setAutoNext(boolean autoNext) {
+    public AbstractZone setAutoNext(boolean autoNext) {
         this.autoNext = autoNext;
+        return this;
     }
 
     private void doTick() {
@@ -184,7 +212,7 @@ public abstract class AbstractZone {
         if ( paused ) {
             start();
         } else {
-            surface.clearRegion(region);
+            surface.clearRegion(canvasLayer, region);
             if (inTransition != null) {
                 inTransition.transition(this, this::display);
                 direction = Transitioning.IN;
@@ -198,13 +226,28 @@ public abstract class AbstractZone {
 
     private void display() {
         if ( displayTime==0 ) {
-            surface.drawPattern(getRestX(), getRestY(), pattern);
+            drawPattern(getRestX(), getRestY(), pattern);
             out();
         } else {
             startTime = System.currentTimeMillis();
             direction = Transitioning.NONE;
-            surface.drawPattern(getRestX(), getRestY(), pattern, region);
+            drawPattern(getRestX(), getRestY(), pattern);
         }
+    }
+
+    private Colour outline = null;
+
+    public AbstractZone setOutline(Colour outline) {
+        this.outline = outline;
+        return this;
+    }
+
+    public void drawPoint(int x, int y, Colour colour) {
+        surface.drawPoint(canvasLayer, x+region.left+xOffset, y+region.top+yOffset, colour, region);
+    }
+
+    public void drawPattern(int x, int y, Pattern pattern) {
+        surface.drawPattern(canvasLayer, x+region.left+xOffset, y+region.top+yOffset, pattern, region);
     }
 
     public void out() {
@@ -218,7 +261,7 @@ public abstract class AbstractZone {
 
 
     private void end() {
-        surface.clearRegion(region);
+        surface.clearRegion(canvasLayer, region);
         direction = Transitioning.NONE;
         if ( outCompleteCallback!=null ) {
             outCompleteCallback.onOutComplete();
@@ -235,13 +278,21 @@ public abstract class AbstractZone {
         IN, NONE, OUT
     }
 
-    public void setInTransition(AbstractTransition inTransition) {
+    public AbstractZone setInTransition(AbstractTransition inTransition) {
         this.inTransition = inTransition;
+        return this;
     }
 
-    public void setOutTransition(AbstractTransition outTransition) {
+    public AbstractZone setOutTransition(AbstractTransition outTransition) {
         this.outTransition = outTransition;
+        return this;
     }
+
+    public AbstractZone setCanvasLayer(int canvasLayer) {
+        this.canvasLayer = canvasLayer;
+        return this;
+    }
+
 
     ///////////////
     // Alignment //
@@ -258,12 +309,14 @@ public abstract class AbstractZone {
         return alignV;
     }
 
-    public void setAlignV(AlignV alignV) {
+    public AbstractZone setAlignV(AlignV alignV) {
         this.alignV = alignV;
+        return this;
     }
 
-    public void setAlignH(AlignH alignH) {
+    public AbstractZone setAlignH(AlignH alignH) {
         this.alignH = alignH;
+        return this;
     }
 
     public int getRestX() {

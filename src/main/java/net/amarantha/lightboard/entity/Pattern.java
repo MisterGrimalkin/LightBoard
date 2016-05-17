@@ -129,4 +129,14 @@ public class Pattern {
 
         return sb.toString();
     }
+
+    public Pattern subPattern(int xStart, int yStart, int subWidth, int subHeight) {
+        Pattern result = new Pattern(subHeight, subWidth);
+        for ( int x=xStart; x<(xStart+subWidth); x++ ) {
+            for ( int y=yStart; y<(yStart+subHeight); y++ ) {
+                result.drawPoint(y-yStart, x-xStart, getColourPoint(y, x));
+            }
+        }
+        return result;
+    }
 }
