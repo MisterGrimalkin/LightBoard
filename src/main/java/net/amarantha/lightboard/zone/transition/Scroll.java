@@ -5,16 +5,19 @@ import net.amarantha.lightboard.entity.Edge;
 public abstract class Scroll extends AbstractTransition {
 
     @Override
-    public void tick() {
+    public void animate(double progress) {
         zone.clear();
         x += deltaX;
         y += deltaY;
-        if ( isComplete() ) {
-            complete();
-        } else {
-            zone.drawPattern((int)Math.round(x), (int)Math.round(y), zone.getPattern());
-        }
+        zone.drawPattern((int)Math.round(x), (int)Math.round(y), zone.getPattern());
     }
+
+    @Override
+    public int getNumberOfSteps() {
+        return (int)(getDuration() / zone.getTick());
+    }
+
+    protected abstract boolean isComplete();
 
     protected double x;
     protected double y;
@@ -27,7 +30,5 @@ public abstract class Scroll extends AbstractTransition {
         this.edge = edge;
         return this;
     }
-
-    protected abstract boolean isComplete();
 
 }

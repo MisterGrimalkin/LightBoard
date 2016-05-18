@@ -1,4 +1,4 @@
-package net.amarantha.lightboard.zone.impl;
+package net.amarantha.lightboard.zone.old;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.*;
@@ -7,7 +7,6 @@ import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.MessageQueue;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.LightBoardZone;
 
 public class TextZone_Old extends LightBoardZone {
 

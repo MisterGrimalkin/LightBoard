@@ -1,4 +1,4 @@
-package net.amarantha.lightboard.zone;
+package net.amarantha.lightboard.zone.old;
 
 import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;

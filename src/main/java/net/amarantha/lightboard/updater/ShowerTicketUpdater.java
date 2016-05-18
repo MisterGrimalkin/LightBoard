@@ -2,7 +2,7 @@ package net.amarantha.lightboard.updater;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.javalite.http.Http;

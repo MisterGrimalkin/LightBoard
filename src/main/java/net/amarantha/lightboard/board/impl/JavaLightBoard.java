@@ -142,51 +142,51 @@ public class JavaLightBoard implements LightBoard, ColourSwitcher {
     private void sendSerialString(double[] red1, double[] green1, double[] red2, double[] green2) throws InterruptedException {
         for (int col = 0; col < cols ; col++) {
             digitalWrite(clock, false);
-            if ( colour==MULTI_MODE) {
-                if ( lastRed1==null || lastRed1!=red1[col]<0.5 ) {
+//            if ( colour==MULTI_MODE) {
+//                if ( lastRed1==null || lastRed1!=red1[col]<0.5 ) {
                     digitalWrite(data1R, lastRed1=red1[col]<0.5 );
-                }
-                if ( lastGreen1==null || lastGreen1!=green1[col]<0.5 ) {
+//                }
+//                if ( lastGreen1==null || lastGreen1!=green1[col]<0.5 ) {
                     digitalWrite(data1G, lastGreen1=green1[col]<0.5 );
-                }
-                if ( lastRed2==null || lastRed2!=red2[col]<0.5 ) {
+//                }
+//                if ( lastRed2==null || lastRed2!=red2[col]<0.5 ) {
                     digitalWrite(data2R, lastRed2=red2[col]<0.5 );
-                }
-                if ( lastGreen2==null || lastGreen2!=green2[col]<0.5 ) {
+//                }
+//                if ( lastGreen2==null || lastGreen2!=green2[col]<0.5 ) {
                     digitalWrite(data2G, lastGreen2=green2[col]<0.5 );
-                }
-            } else {
-                if ( red1[col] >= 0.5 || green1[col] >= 0.5) {
-                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data1G, false);
-                    }
-                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data1R, false);
-                    }
-                } else {
-                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data1G, true);
-                    }
-                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data1R, true);
-                    }
-                }
-                if ( red2[col] >= 0.5 || green2[col] >= 0.5) {
-                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data2G, false);
-                    }
-                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data2R, false);
-                    }
-                } else {
-                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data2G, true);
-                    }
-                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
-                        digitalWrite(data2R, true);
-                    }
-                }
-            }
+//                }
+//            } else {
+//                if ( red1[col] >= 0.5 || green1[col] >= 0.5) {
+//                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data1G, false);
+//                    }
+//                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data1R, false);
+//                    }
+//                } else {
+//                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data1G, true);
+//                    }
+//                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data1R, true);
+//                    }
+//                }
+//                if ( red2[col] >= 0.5 || green2[col] >= 0.5) {
+//                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data2G, false);
+//                    }
+//                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data2R, false);
+//                    }
+//                } else {
+//                    if ( colour==GREEN_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data2G, true);
+//                    }
+//                    if ( colour==RED_MODE || colour==YELLOW_MODE) {
+//                        digitalWrite(data2R, true);
+//                    }
+//                }
+//            }
             digitalWrite(clock, true);
         }
     }
@@ -196,18 +196,18 @@ public class JavaLightBoard implements LightBoard, ColourSwitcher {
         boolean address1 = BigInteger.valueOf(row).testBit(1);
         boolean address2 = BigInteger.valueOf(row).testBit(2);
         boolean address3 = BigInteger.valueOf(row).testBit(3);
-        if (lastAddress0 ==null || address0!= lastAddress0) {
-            digitalWrite(addr0, lastAddress0 = address0);
-        }
-        if (lastAddress1 ==null || address1!= lastAddress1) {
-            digitalWrite(addr1, lastAddress1 = address1);
-        }
-        if (lastAddress2 ==null || address2!= lastAddress2) {
-            digitalWrite(addr2, lastAddress2 = address2);
-        }
-        if (lastAddress3 ==null || address3!= lastAddress3) {
-            digitalWrite(addr3, lastAddress3 = address3);
-        }
+//        if (lastAddress0 ==null || address0!= lastAddress0) {
+            digitalWrite(addr0, address0);
+//        }
+//        if (lastAddress1 ==null || address1!= lastAddress1) {
+            digitalWrite(addr1, address1);
+//        }
+//        if (lastAddress2 ==null || address2!= lastAddress2) {
+            digitalWrite(addr2, address2);
+//        }
+//        if (lastAddress3 ==null || address3!= lastAddress3) {
+            digitalWrite(addr3, address3);
+//        }
     }
 
     private Boolean lastAddress0 = null;
@@ -217,7 +217,7 @@ public class JavaLightBoard implements LightBoard, ColourSwitcher {
 
     @Override
     public Long getUpdateInterval() {
-        return 10L;
+        return null;
     }
 
     @Override

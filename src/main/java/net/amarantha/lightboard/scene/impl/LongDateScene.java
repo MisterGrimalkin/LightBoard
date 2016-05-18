@@ -5,7 +5,7 @@ import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 
 public class LongDateScene extends Scene {

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.PropertyManager;
-import net.amarantha.lightboard.zone.impl.ImageZone;
+import net.amarantha.lightboard.zone.old.ImageZone_Old;
 
 public class ImageBanner extends Scene {
 
@@ -12,7 +12,7 @@ public class ImageBanner extends Scene {
 
     @Inject private OldSceneManager sceneManager;
 
-    @Inject private ImageZone zone;
+    @Inject private ImageZone_Old zone;
 
     @Inject private PropertyManager props;
 

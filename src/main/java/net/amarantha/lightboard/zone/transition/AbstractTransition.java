@@ -1,8 +1,17 @@
 package net.amarantha.lightboard.zone.transition;
 
+import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.zone.AbstractZone;
+import static net.amarantha.lightboard.zone.AbstractZone.ZoneCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractTransition {
+
+    private long delay;
+    private long lastDrawn;
+    private int currentStep;
 
     /**
      * Called when transition begins
@@ -10,31 +19,69 @@ public abstract class AbstractTransition {
     public abstract void reset();
 
     /**
-     * Called repeatedly by Sync when transition is active
+     * @return Number of steps required to complete animation
      */
-    public abstract void tick();
+    public abstract int getNumberOfSteps();
+
+    /**
+     * Called <code>numberOfSteps</code> times, during transition is active
+     */
+    public abstract void animate(double progress);
+
+    /**
+     * @return True when the animation is complete
+     */
+    protected boolean isComplete() {
+        return currentStep >= getNumberOfSteps();
+    }
+
+    public final void tick() {
+        if ( System.currentTimeMillis() - lastDrawn >= delay ) {
+            currentStep++;
+            if ( isComplete() ) {
+                zone.clear();
+                complete();
+            } else {
+                double progress = (double)currentStep / (double)getNumberOfSteps();
+                if ( !onAtFired && onAt!=null && progress >= onAtProgress ) {
+                    onAt.execute();
+                    onAtFired = true;
+                }
+                animate(progress);
+            }
+            lastDrawn = System.currentTimeMillis();
+        }
+    }
 
     /**
      * Activate transition
      * @param zone Zone
-     * @param callback To execute when transition is complete
+     * @param onComplete To execute when transition is complete
      */
-    public void transition(AbstractZone zone, TransitionCallback callback) {
+    public final void transition(AbstractZone zone, ZoneCallback onComplete, ZoneCallback onAt, double onAtProgress) {
         this.zone = zone;
-        this.callback = callback;
+        this.onComplete = onComplete;
+        this.onAt = onAt;
+        this.onAtProgress = onAtProgress;
+        onAtFired = false;
         reset();
+        delay = duration / getNumberOfSteps();
+        lastDrawn = System.currentTimeMillis();
+        currentStep = 0;
     }
 
     protected AbstractZone zone;
-    private TransitionCallback callback;
-
+    private ZoneCallback onComplete;
+    private ZoneCallback onAt;
+    private boolean onAtFired = false;
+    private double onAtProgress;
 
     /**
      * Pass control back to the Zone
      */
-    protected void complete() {
-        if ( callback!=null ) {
-            callback.onTransitionComplete();
+    protected final void complete() {
+        if ( onComplete !=null ) {
+            onComplete.execute();
         }
     }
 
@@ -54,11 +101,64 @@ public abstract class AbstractTransition {
 
     private long duration;
 
+
+    /////////////
+    // Utility //
+    /////////////
+
     /**
-     * Functional interface for transition completion
+     * Split the pattern horizontally into blocks (might be letters).
+     * This will not work for multi-line text.
+     * @return The pattern as a map of letters
      */
-    public interface TransitionCallback {
-        void onTransitionComplete();
+    protected Map<Integer, Letter> splitPattern() {
+
+        Pattern pattern = zone.getPattern();
+
+        Map<Integer, Letter> letters = new HashMap<>();
+
+        int letterCount = 0;
+
+        boolean inLetter = false;
+        int lastLetterStartX = 0;
+
+        for ( int x=0; x<pattern.getWidth(); x++ ) {
+
+            boolean isEmptyCol = true;
+
+            for ( int y=0; y<pattern.getHeight(); y++ ) {
+                if ( pattern.getBinaryPoint(y, x) ) {
+                    isEmptyCol = false;
+                    if ( !inLetter ) {
+                        inLetter = true;
+                        lastLetterStartX = x;
+                    }
+                    break;
+                }
+            }
+            if ( isEmptyCol ) {
+                inLetter = false;
+                letters.put(letterCount, new Letter(pattern.subPattern(lastLetterStartX, 0, x-lastLetterStartX, pattern.getHeight()), lastLetterStartX, 0));
+                letterCount++;
+            }
+        }
+
+        if ( inLetter ) {
+            letters.put(letterCount, new Letter(pattern.subPattern(lastLetterStartX, 0, pattern.getWidth()-lastLetterStartX, pattern.getHeight()), lastLetterStartX, 0));
+            letterCount++;
+        }
+        return letters;
+    }
+
+    protected static class Letter {
+        Pattern pattern;
+        int x;
+        int y;
+        public Letter(Pattern pattern, int x, int y) {
+            this.pattern = pattern;
+            this.x = x;
+            this.y = y;
+        }
     }
 
 }

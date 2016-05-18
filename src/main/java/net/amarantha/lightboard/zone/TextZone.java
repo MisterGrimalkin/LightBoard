@@ -9,20 +9,6 @@ import java.util.Queue;
 
 public class TextZone extends AbstractZone {
 
-    private Font font = new SimpleFont();
-
-    private boolean cycleMessages = true;
-
-    private Queue<String> messageQueue = new LinkedList<>();
-
-    public void addMessage(String message) {
-        messageQueue.offer(message);
-    }
-
-    public void clearMessages() {
-        messageQueue.clear();
-    }
-
     @Override
     public Pattern getNextPattern() {
         String nextMessage = messageQueue.poll();
@@ -34,6 +20,31 @@ public class TextZone extends AbstractZone {
         }
         return null;
     }
+
+
+    ///////////////////
+    // Message Queue //
+    ///////////////////
+
+    public TextZone addMessage(String message) {
+        messageQueue.offer(message);
+        return this;
+    }
+
+    public TextZone clearMessages() {
+        messageQueue.clear();
+        return this;
+    }
+
+    private Queue<String> messageQueue = new LinkedList<>();
+    private boolean cycleMessages = true;
+
+
+    //////////
+    // Font //
+    //////////
+
+    private Font font = new SimpleFont();
 
     public TextZone setFont(Font font) {
         this.font = font;

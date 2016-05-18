@@ -5,7 +5,7 @@ import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
 import net.amarantha.lightboard.updater.schedule.OpeningTimesUpdater;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import static net.amarantha.lightboard.entity.AlignH.LEFT;
 import static net.amarantha.lightboard.entity.AlignV.MIDDLE;

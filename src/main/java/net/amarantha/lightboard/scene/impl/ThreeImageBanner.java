@@ -5,13 +5,13 @@ import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.PropertyManager;
-import net.amarantha.lightboard.zone.impl.ImageZone;
+import net.amarantha.lightboard.zone.old.ImageZone_Old;
 
 public class ThreeImageBanner extends Scene {
 
-    @Inject private ImageZone leftZone;
-    @Inject private ImageZone middleZone;
-    @Inject private ImageZone rightZone;
+    @Inject private ImageZone_Old leftZone;
+    @Inject private ImageZone_Old middleZone;
+    @Inject private ImageZone_Old rightZone;
 
     @Inject private OldSceneManager sceneManager;
 

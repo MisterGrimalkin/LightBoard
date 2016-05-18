@@ -9,11 +9,6 @@ public class ExplodeOut extends Explode {
     }
 
     @Override
-    protected boolean isComplete() {
-        return spacing > maxSpacing;
-    }
-
-    @Override
     protected void updateSpacing() {
         spacing++;
     }

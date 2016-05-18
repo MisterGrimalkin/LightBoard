@@ -8,7 +8,7 @@ import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.webservice.ShowerTicketResource;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 public class ShowerTicketsScene extends Scene {
 

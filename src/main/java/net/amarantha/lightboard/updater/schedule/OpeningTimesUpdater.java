@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.impl.OpeningTimes;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.Sync;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import java.util.List;
 

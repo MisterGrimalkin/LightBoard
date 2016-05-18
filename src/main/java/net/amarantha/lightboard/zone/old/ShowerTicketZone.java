@@ -1,4 +1,4 @@
-package net.amarantha.lightboard.zone.impl;
+package net.amarantha.lightboard.zone.old;
 
 /**
  * Created by grimalkin on 12/06/15.

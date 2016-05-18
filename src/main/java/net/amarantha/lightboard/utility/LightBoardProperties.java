@@ -63,7 +63,7 @@ public class LightBoardProperties extends PropertyManager {
         if ( props==null ) {
             props = new PropertyManager();
         }
-        String className = props.getString("boardClass", "net.amarantha.lightboard.board.impl.TextBoard");
+        String className = props.getString("boardClass", "net.amarantha.lightboard.board.old.TextBoard");
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -74,7 +74,7 @@ public class LightBoardProperties extends PropertyManager {
     }
 
     public Class getImageBannerClass() {
-        String className = props.getString("imageBannerClass", "net.amarantha.lightboard.scene.impl.ImageBanner");
+        String className = props.getString("imageBannerClass", "net.amarantha.lightboard.scene.old.ImageBanner");
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {

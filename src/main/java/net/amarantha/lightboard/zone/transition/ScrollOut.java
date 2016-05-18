@@ -4,7 +4,7 @@ public class ScrollOut extends Scroll {
 
     @Override
     public void reset() {
-        long steps = getDuration() / zone.getTick();
+        long steps = getNumberOfSteps();
         x = zone.getRestX();
         y = zone.getRestY();
         switch (edge) {

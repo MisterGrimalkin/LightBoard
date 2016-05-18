@@ -1,8 +1,8 @@
-package net.amarantha.lightboard.zone;
+package net.amarantha.lightboard.zone.old;
 
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.CompositeZone;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 public class Zones {
 

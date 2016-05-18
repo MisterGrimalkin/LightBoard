@@ -8,9 +8,9 @@ import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.webservice.ColourResource;
-import net.amarantha.lightboard.zone.impl.ClockZoneOld;
-import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.ClockZoneOld;
+import net.amarantha.lightboard.zone.old.CompositeZone;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import javax.inject.Inject;
 

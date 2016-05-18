@@ -3,8 +3,8 @@ package net.amarantha.lightboard.scene;
 import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.Updater;
-import net.amarantha.lightboard.zone.LightBoardZone;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.LightBoardZone;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

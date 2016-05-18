@@ -1,4 +1,4 @@
-package net.amarantha.lightboard.zone.impl;
+package net.amarantha.lightboard.zone.old;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;

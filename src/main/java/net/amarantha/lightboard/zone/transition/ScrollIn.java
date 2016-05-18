@@ -4,7 +4,7 @@ public class ScrollIn extends Scroll {
 
     @Override
     public void reset() {
-        long steps = getDuration() / zone.getTick();
+        long steps = getNumberOfSteps();
         switch (edge) {
             case LEFT:
                 x = -zone.getPattern().getWidth();

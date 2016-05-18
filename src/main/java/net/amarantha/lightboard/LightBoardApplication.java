@@ -17,6 +17,7 @@ import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.MessageResource;
 import net.amarantha.lightboard.webservice.WebService;
+import net.amarantha.lightboard.zone.ImageZone;
 import net.amarantha.lightboard.zone.TextZone;
 import net.amarantha.lightboard.zone.transition.*;
 
@@ -78,12 +79,19 @@ public class LightBoardApplication {
     @Inject private TextZone textZone3;
     @Inject private TextZone textZone4;
 
+    @Inject private ImageZone imageZone;
+
     @Inject private MessageResource messageResource;
+
+    private void old() {
+
+        imageZone.in();
+    }
 
     private void buildScenes() {
 
-        int typingSpeed = 900;
-        int explodeSpeed = 1100;
+        int typingDuration = 1200;
+        int explodeDuration = 800;
 
         textZone1
             .setFont(new SmallFont())
@@ -93,8 +101,8 @@ public class LightBoardApplication {
             .setAutoOut(false)
             .setAutoNext(false)
             .setAlignV(AlignV.MIDDLE)
-            .setInTransition(new TypeIn().setDuration(typingSpeed))
-            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setInTransition(new TypeIn().setDuration(typingDuration))
+            .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
             .setCanvasLayer(2)
             .init();
 
@@ -105,8 +113,8 @@ public class LightBoardApplication {
             .setAutoOut(false)
             .setAutoNext(false)
             .setAlignV(AlignV.MIDDLE)
-            .setInTransition(new TypeIn().setDuration(typingSpeed))
-            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setInTransition(new TypeIn().setDuration(typingDuration))
+            .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
             .setCanvasLayer(3)
             .init();
 
@@ -118,8 +126,8 @@ public class LightBoardApplication {
             .setAutoOut(false)
             .setAutoNext(false)
             .setAlignV(AlignV.MIDDLE)
-            .setInTransition(new TypeIn().setDuration(typingSpeed))
-            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setInTransition(new TypeIn().setDuration(typingDuration))
+            .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
             .setCanvasLayer(4)
             .init();
 
@@ -130,8 +138,8 @@ public class LightBoardApplication {
             .setAutoOut(true)
             .setAutoNext(false)
             .setAlignV(AlignV.MIDDLE)
-            .setInTransition(new ExplodeIn().setDuration(explodeSpeed))
-            .setOutTransition(new ExplodeOut().setDuration(explodeSpeed))
+            .setInTransition(new ExplodeIn().setDuration(explodeDuration))
+            .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
             .setCanvasLayer(5)
             .init();
 
@@ -140,21 +148,31 @@ public class LightBoardApplication {
         textZone3.addMessage("{green}Version 2.0");
         textZone4.addMessage("{red}Web Service online at {yellow}" + props.getIp());
 
-        textZone1.onDisplayComplete(()->textZone2.in());
-        textZone2.onDisplayComplete(()->textZone3.in());
+        imageZone
+                .addImage("gp192x32.jpg")
+                .setAutoNext(false)
+                .setRegion(0, 0, 192, 32)
+                .setDisplayTime(4000)
+                .setInTransition(new RainDown().setDuration(2500))
+                .setOutTransition(new ScrollOut().setEdge(Edge.BOTTOM).setDuration(2000))
+                .init();
+
+        textZone1.onInComplete(()->textZone2.in());
+        textZone2.onInComplete(()->textZone3.in());
         textZone3.onDisplayComplete(()->{
             textZone1.out();
             textZone2.out();
             textZone3.out();
         });
-        textZone3.onOutComplete(() -> textZone4.in());
-        textZone4.onOutComplete(() -> textZone1.in());
+        textZone3.onOutAt(0.4, () -> textZone4.in());
+        textZone4.onOutComplete(() -> imageZone.in());
+        imageZone.onOutComplete(() -> textZone1.in());
 
         textZone1.in();
 
     }
 
-    private void old() {
+    private void older() {
 
         textZone1.setRegion(surface.safeRegion(0,0,192,32));
         textZone2.setRegion(surface.safeRegion(0,0,192,32));
@@ -216,8 +234,8 @@ public class LightBoardApplication {
         textZone2.addMessage("101");
         textZone3.addMessage("{green}Another Shower {red}is Possible!");
 
-//        textZone1.onDisplayComplete(() -> textZone2.in());
-//        textZone2.onDisplayComplete(() -> textZone1.in());
+//        textZone1.execute(() -> textZone2.in());
+//        textZone2.execute(() -> textZone1.in());
 
         textZone1.in();
         textZone2.in();

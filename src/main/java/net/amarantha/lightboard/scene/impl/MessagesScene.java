@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.LightBoardProperties;
-import net.amarantha.lightboard.zone.impl.CompositeZone;
-import net.amarantha.lightboard.zone.impl.TextZone_Old;
+import net.amarantha.lightboard.zone.old.CompositeZone;
+import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import java.util.ArrayList;
 import java.util.Collections;

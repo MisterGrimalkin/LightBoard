@@ -9,11 +9,6 @@ public class ExplodeIn extends Explode {
     }
 
     @Override
-    protected boolean isComplete() {
-        return spacing < 0;
-    }
-
-    @Override
     protected void updateSpacing() {
         spacing--;
     }
