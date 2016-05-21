@@ -3,7 +3,7 @@ package net.amarantha.lightboard.scene.impl;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.font.SmallFont;
-import net.amarantha.lightboard.scene.Scene;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 import net.amarantha.lightboard.updater.transport.TubeUpdater;
 import net.amarantha.lightboard.utility.LightBoardProperties;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 
 @Singleton
-public class TravelInformationScene extends Scene {
+public class TravelInformationOldScene extends OldScene {
 
     @Inject private ClockZoneOld clock;
 
@@ -37,7 +37,7 @@ public class TravelInformationScene extends Scene {
     @Inject private LightBoardProperties props;
 
     @Inject
-    public TravelInformationScene() {
+    public TravelInformationOldScene() {
         super("Travel Information");
     }
 

@@ -1,8 +1,8 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.zone.old.CompositeZone;
 import net.amarantha.lightboard.zone.old.TextZone_Old;
@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class MessagesScene extends Scene {
+public class MessagesOldScene extends OldScene {
 
     @Inject private OldSceneManager sceneManager;
 
@@ -22,7 +22,7 @@ public class MessagesScene extends Scene {
     @Inject private TextZone_Old zone1;
     @Inject private TextZone_Old zone2;
 
-    public MessagesScene() {
+    public MessagesOldScene() {
         super("Messages");
     }
 

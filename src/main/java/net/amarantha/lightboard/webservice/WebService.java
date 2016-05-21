@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Singleton;
-import net.amarantha.lightboard.utility.PropertyManager;
+import net.amarantha.lightboard.utility.LightBoardProperties;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -21,13 +21,13 @@ public class WebService {
     @Inject private SystemResource systemResource;
     @Inject private BusStopResource busStopResource;
 
-    @Inject private PropertyManager props;
+    @Inject private LightBoardProperties props;
 
     public HttpServer startWebService() {
 
         System.out.println("Starting Web Service....");
 
-        String fullUri = "http://"+props.getString("ip","127.0.0.1")+":8001/lightboard/";
+        String fullUri = "http://"+props.getIp().trim()+":8001/lightboard/";
         final ResourceConfig rc = new ResourceConfig().packages("net.amarantha.lightboard.webservice");
         rc.register(LoggingFilter.class);
 

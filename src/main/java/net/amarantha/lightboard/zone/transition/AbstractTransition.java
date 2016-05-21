@@ -2,10 +2,11 @@ package net.amarantha.lightboard.zone.transition;
 
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.zone.AbstractZone;
-import static net.amarantha.lightboard.zone.AbstractZone.ZoneCallback;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.amarantha.lightboard.zone.AbstractZone.ZoneCallback;
 
 public abstract class AbstractTransition {
 

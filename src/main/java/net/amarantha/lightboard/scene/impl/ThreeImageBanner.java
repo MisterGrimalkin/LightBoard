@@ -2,12 +2,12 @@ package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.Edge;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.zone.old.ImageZone_Old;
 
-public class ThreeImageBanner extends Scene {
+public class ThreeImageBanner extends OldScene {
 
     @Inject private ImageZone_Old leftZone;
     @Inject private ImageZone_Old middleZone;

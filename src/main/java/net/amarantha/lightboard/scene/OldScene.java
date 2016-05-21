@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Scene {
+public abstract class OldScene {
 
     @Inject private LightBoardSurface surface;
 
@@ -23,7 +23,7 @@ public abstract class Scene {
 
     private String name;
 
-    public Scene(String name) {
+    public OldScene(String name) {
         this.name = name;
     }
 

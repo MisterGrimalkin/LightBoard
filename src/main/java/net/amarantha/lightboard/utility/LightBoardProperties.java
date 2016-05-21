@@ -5,9 +5,7 @@ import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.impl.TextBoard;
 import net.amarantha.lightboard.scene.impl.ImageBanner;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 @Singleton

@@ -19,8 +19,8 @@ public class ImageZone extends AbstractZone {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void init(boolean standalone) {
+        super.init(standalone);
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File(filename));

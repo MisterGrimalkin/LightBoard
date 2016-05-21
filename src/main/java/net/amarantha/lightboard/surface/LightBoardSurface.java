@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.surface;
 
+import net.amarantha.lightboard.board.CLightBoard;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.board.impl.GraphicalBoard;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.utility.Sync;
@@ -42,10 +42,10 @@ public class LightBoardSurface {
         this.rows = rows;
         this.cols = cols;
 
-        if (board instanceof GraphicalBoard) {
-            board.init(rows, cols);
-        } else {
+        if (board instanceof CLightBoard) {
             new Thread(() -> board.init(rows, cols)).start();
+        } else {
+            board.init(rows, cols);
         }
 
         ledState = new double[LAYERS][3][rows][cols];

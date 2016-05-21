@@ -1,12 +1,12 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.zone.old.ImageZone_Old;
 
-public class ImageBanner extends Scene {
+public class ImageBanner extends OldScene {
 
     private String filename;
 

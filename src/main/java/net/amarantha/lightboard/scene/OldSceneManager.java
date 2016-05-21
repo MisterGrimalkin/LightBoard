@@ -24,27 +24,27 @@ public class OldSceneManager {
 
     private Integer scenePointer = null;
     private Integer currentSceneId = 0;
-    private Scene currentScene = null;
+    private OldScene currentOldScene = null;
 
     private Map<Integer, Integer> scenePointers = new HashMap<>();
-    private Map<Integer, Scene> scenes = new HashMap<>();
+    private Map<Integer, OldScene> scenes = new HashMap<>();
 
-    public void addScene(int id, Scene scene) {
-        addScene(id, scene, null, false);
+    public void addScene(int id, OldScene oldScene) {
+        addScene(id, oldScene, null, false);
     }
-    public void addScene(int id, Scene scene, Integer duration, boolean includeInCycle) {
+    public void addScene(int id, OldScene oldScene, Integer duration, boolean includeInCycle) {
         scenePointers.put(scenePointers.size(), id);
-        scenes.put(id, scene);
-        scene.setSceneDuration(duration);
-        scene.setIncludeInCycle(includeInCycle);
-        scene.build();
+        scenes.put(id, oldScene);
+        oldScene.setSceneDuration(duration);
+        oldScene.setIncludeInCycle(includeInCycle);
+        oldScene.build();
     }
 
     public Integer getCurrentSceneId() {
         return currentSceneId;
     }
 
-    public Map<Integer, Scene> getScenes() {
+    public Map<Integer, OldScene> getScenes() {
         return scenes;
     }
 
@@ -60,7 +60,7 @@ public class OldSceneManager {
             if (scenePointer == null) {
                 scenePointer = 1;
             }
-            if (currentScene == null || !currentScene.isBlocking()) {
+            if (currentOldScene == null || !currentOldScene.isBlocking()) {
                 scenePointer++;
                 if (scenePointer >= scenePointers.size()) {
                     scenePointer = 1;
@@ -75,17 +75,17 @@ public class OldSceneManager {
 
     public boolean loadScene(Integer id, boolean skipIfNotInCycle) {
         currentSceneId = id;
-        Scene newScene = scenes.get(id);
-        if ( newScene!=null ) {
+        OldScene newOldScene = scenes.get(id);
+        if ( newOldScene !=null ) {
 //            surface.clearSurface();
-            if ( skipIfNotInCycle && !newScene.isIncludeInCycle() ) {
+            if ( skipIfNotInCycle && !newOldScene.isIncludeInCycle() ) {
                 advanceScene();
             } else {
-                if (currentScene != null) {
-                    currentScene.pause();
+                if (currentOldScene != null) {
+                    currentOldScene.pause();
                 }
-                currentScene = newScene;
-                currentScene.resume();
+                currentOldScene = newOldScene;
+                currentOldScene.resume();
                 if (scenePointer == null) {
                     for (Map.Entry<Integer, Integer> entry : scenePointers.entrySet()) {
                         if (entry.getValue().equals(id)) {
@@ -107,9 +107,9 @@ public class OldSceneManager {
 
     public void startScenes() {
         loadTimes();
-        for ( Scene scene : scenes.values() ) {
-            scene.start();
-            scene.pause();
+        for ( OldScene oldScene : scenes.values() ) {
+            oldScene.start();
+            oldScene.pause();
         }
         advanceScene();
     }
@@ -151,8 +151,8 @@ public class OldSceneManager {
                     wake();
                 }
                 long now = System.currentTimeMillis();
-                if (currentScene != null && currentScene.getSceneDuration() != null
-                        && now - sceneLoaded >= currentScene.getSceneDuration() && !sleeping) {
+                if (currentOldScene != null && currentOldScene.getSceneDuration() != null
+                        && now - sceneLoaded >= currentOldScene.getSceneDuration() && !sleeping) {
                     advanceScene();
                 }
             }
@@ -164,7 +164,7 @@ public class OldSceneManager {
     public void sleep() {
         System.out.println("Sleep");
         board.sleep();
-        currentScene.pause();
+        currentOldScene.pause();
         sleeping = true;
     }
 
@@ -172,7 +172,7 @@ public class OldSceneManager {
         System.out.println("Wake");
         loadTimes();
         board.wake();
-        currentScene.resume();
+        currentOldScene.resume();
         sleeping = false;
     }
 }

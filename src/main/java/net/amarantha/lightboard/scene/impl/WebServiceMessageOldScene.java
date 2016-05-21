@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.PostMessageUpdater;
 import net.amarantha.lightboard.webservice.BroadcastMessageResource;
@@ -9,13 +9,13 @@ import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import javax.inject.Inject;
 
-public class WebServiceMessageScene extends Scene {
+public class WebServiceMessageOldScene extends OldScene {
 
     @Inject private OldSceneManager sceneManager;
     @Inject private PostMessageUpdater updater;
 
     @Inject
-    public WebServiceMessageScene(LightBoardSurface surface) {
+    public WebServiceMessageOldScene(LightBoardSurface surface) {
         super("Web Messages");
     }
 

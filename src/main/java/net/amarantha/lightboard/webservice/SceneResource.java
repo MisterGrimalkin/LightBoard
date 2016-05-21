@@ -1,8 +1,8 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -27,10 +27,10 @@ public class SceneResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenes() {
-        Map<Integer, Scene> scenes = sceneManager.getScenes();
+        Map<Integer, OldScene> scenes = sceneManager.getScenes();
         JSONObject json = new JSONObject();
         JSONArray ja = new JSONArray();
-        for (Map.Entry<Integer, Scene> scene : scenes.entrySet() ) {
+        for (Map.Entry<Integer, OldScene> scene : scenes.entrySet() ) {
             if ( scene.getKey()!=0 ) {
                 JSONObject jsonScene = new JSONObject();
                 jsonScene.put("sceneId", scene.getKey() + "");

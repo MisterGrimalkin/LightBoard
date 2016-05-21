@@ -5,12 +5,12 @@ import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.font.SmallFont;
-import net.amarantha.lightboard.scene.Scene;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.webservice.ShowerTicketResource;
 import net.amarantha.lightboard.zone.old.TextZone_Old;
 
-public class ShowerTicketsScene extends Scene {
+public class ShowerTicketsOldScene extends OldScene {
 
     private static final int LABEL_WIDTH = 54;
     private static final int MESSAGE_HEIGHT = 9;
@@ -21,7 +21,7 @@ public class ShowerTicketsScene extends Scene {
     @Inject private TextZone_Old male;
 
     @Inject
-    public ShowerTicketsScene(LightBoardSurface surface) {
+    public ShowerTicketsOldScene(LightBoardSurface surface) {
         super("Shower Tickets");
     }
 

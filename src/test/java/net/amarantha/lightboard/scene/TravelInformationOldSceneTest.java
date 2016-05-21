@@ -4,7 +4,7 @@ import com.googlecode.guicebehave.Modules;
 import com.googlecode.guicebehave.Story;
 import com.googlecode.guicebehave.StoryRunner;
 import net.amarantha.lightboard.module.ApplicationTestModule;
-import net.amarantha.lightboard.scene.impl.TravelInformationScene;
+import net.amarantha.lightboard.scene.impl.TravelInformationOldScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.MockSync;
 import net.amarantha.lightboard.utility.Sync;
@@ -17,11 +17,11 @@ import javax.inject.Inject;
 import static net.amarantha.lightboard.utility.MessageQueue.DEFAULT_MESSAGE;
 
 @RunWith(StoryRunner.class) @Modules(ApplicationTestModule.class)
-public class TravelInformationSceneTest {
+public class TravelInformationOldSceneTest {
 
     @Inject private LightBoardSurface surface;
     @Inject private OldSceneManager sceneManager;
-    @Inject private TravelInformationScene scene;
+    @Inject private TravelInformationOldScene scene;
     @Inject private Sync sync;
 
 

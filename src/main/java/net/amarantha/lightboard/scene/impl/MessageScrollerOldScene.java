@@ -1,14 +1,14 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.MessageUpdater;
 import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import javax.inject.Inject;
 
-public class MessageScrollerScene extends Scene {
+public class MessageScrollerOldScene extends OldScene {
 
     @Inject private OldSceneManager sceneManager;
 
@@ -16,7 +16,7 @@ public class MessageScrollerScene extends Scene {
 
     @Inject private MessageUpdater updater;
 
-    public MessageScrollerScene(LightBoardSurface surface) {
+    public MessageScrollerOldScene(LightBoardSurface surface) {
         super("Message Scroller");
     }
 

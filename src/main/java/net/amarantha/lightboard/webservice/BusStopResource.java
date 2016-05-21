@@ -2,7 +2,7 @@ package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.amarantha.lightboard.scene.impl.TravelInformationScene;
+import net.amarantha.lightboard.scene.impl.TravelInformationOldScene;
 import net.amarantha.lightboard.updater.transport.BusUpdater;
 
 import javax.ws.rs.*;
@@ -13,12 +13,12 @@ import javax.ws.rs.core.Response;
 @Path("bus")
 public class BusStopResource extends Resource {
 
-    private static TravelInformationScene travelInformationScene;
+    private static TravelInformationOldScene travelInformationScene;
 
     public BusStopResource() {    }
 
     @Inject
-    public BusStopResource(TravelInformationScene travelInformationScene) {
+    public BusStopResource(TravelInformationOldScene travelInformationScene) {
         BusStopResource.travelInformationScene = travelInformationScene;
     }
 

@@ -11,12 +11,12 @@ public class TextZone extends AbstractZone {
 
     @Override
     public Pattern getNextPattern() {
-        String nextMessage = messageQueue.poll();
+        Message nextMessage = messageQueue.poll();
         if ( nextMessage!=null ) {
             if ( cycleMessages ) {
                 messageQueue.offer(nextMessage);
             }
-            return font.renderString(nextMessage, getAlignH());
+            return font.renderString(nextMessage.getText(), getAlignH());
         }
         return null;
     }
@@ -27,6 +27,10 @@ public class TextZone extends AbstractZone {
     ///////////////////
 
     public TextZone addMessage(String message) {
+        return addMessage(new Message(message));
+    }
+
+    public TextZone addMessage(Message message) {
         messageQueue.offer(message);
         return this;
     }
@@ -36,7 +40,11 @@ public class TextZone extends AbstractZone {
         return this;
     }
 
-    private Queue<String> messageQueue = new LinkedList<>();
+    public void setCycleMessages(boolean cycleMessages) {
+        this.cycleMessages = cycleMessages;
+    }
+
+    private Queue<Message> messageQueue = new LinkedList<>();
     private boolean cycleMessages = true;
 
 
@@ -44,11 +52,11 @@ public class TextZone extends AbstractZone {
     // Font //
     //////////
 
-    private Font font = new SimpleFont();
-
     public TextZone setFont(Font font) {
         this.font = font;
         return this;
     }
+
+    private Font font = new SimpleFont();
 
 }

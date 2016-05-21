@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.scene.Scene;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.updater.schedule.DateTimeUpdater;
 import net.amarantha.lightboard.updater.schedule.OpeningTimesUpdater;
@@ -10,7 +10,7 @@ import net.amarantha.lightboard.zone.old.TextZone_Old;
 import static net.amarantha.lightboard.entity.AlignH.LEFT;
 import static net.amarantha.lightboard.entity.AlignV.MIDDLE;
 
-public class ShopOpeningTimesScene extends Scene {
+public class ShopOpeningTimesOldScene extends OldScene {
 
     @Inject private TextZone_Old dateZone;
     @Inject private TextZone_Old openingTimesZone;
@@ -18,7 +18,7 @@ public class ShopOpeningTimesScene extends Scene {
     @Inject private DateTimeUpdater dateTimeUpdater;
     @Inject private OpeningTimesUpdater openingTimesUpdater;
 
-    public ShopOpeningTimesScene(LightBoardSurface surface) {
+    public ShopOpeningTimesOldScene(LightBoardSurface surface) {
         super("Shop Hours");
         setSceneDuration(2000);
     }

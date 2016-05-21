@@ -1,13 +1,13 @@
 package net.amarantha.lightboard.scene.impl;
 
-import net.amarantha.lightboard.scene.Scene;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 
-public class WordSpinScene extends Scene {
+public class WordSpinOldScene extends OldScene {
 
     private final static String[] messages = { "Raspberry", "Pi", "Light", "Board" };
 
-    public WordSpinScene(LightBoardSurface surface) {
+    public WordSpinOldScene(LightBoardSurface surface) {
         super("Word Spin");
     }
 

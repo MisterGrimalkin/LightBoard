@@ -1,13 +1,13 @@
 package net.amarantha.lightboard.scene.impl;
 
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
-import net.amarantha.lightboard.scene.Scene;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.zone.old.TextZone_Old;
 
 import javax.inject.Inject;
 
-public class TeleprompterScene extends Scene {
+public class TeleprompterOldScene extends OldScene {
 
     @Inject private OldSceneManager sceneManager;
 
@@ -27,7 +27,7 @@ public class TeleprompterScene extends Scene {
             " "
             };
 
-    public TeleprompterScene(LightBoardSurface surface) {
+    public TeleprompterOldScene(LightBoardSurface surface) {
         super("Telepromter");
     }
 

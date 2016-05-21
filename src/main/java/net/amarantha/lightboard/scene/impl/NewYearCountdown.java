@@ -1,11 +1,11 @@
 package net.amarantha.lightboard.scene.impl;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.scene.Scene;
+import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.utility.Now;
 import net.amarantha.lightboard.zone.old.CountdownZoneOld;
 
-public class NewYearCountdown extends Scene {
+public class NewYearCountdown extends OldScene {
 
     @Inject private Now now;
 
