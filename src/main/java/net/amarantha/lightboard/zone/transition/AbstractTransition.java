@@ -66,7 +66,8 @@ public abstract class AbstractTransition {
         this.onAtProgress = onAtProgress;
         onAtFired = false;
         reset();
-        delay = duration / getNumberOfSteps();
+        int steps = ( getNumberOfSteps()==0 ? 1 : getNumberOfSteps() );
+        delay = duration / steps;
         lastDrawn = System.currentTimeMillis();
         currentStep = 0;
     }
@@ -123,24 +124,26 @@ public abstract class AbstractTransition {
         boolean inLetter = false;
         int lastLetterStartX = 0;
 
-        for ( int x=0; x<pattern.getWidth(); x++ ) {
+        if( pattern!=null ) {
+            for (int x = 0; x < pattern.getWidth(); x++) {
 
-            boolean isEmptyCol = true;
+                boolean isEmptyCol = true;
 
-            for ( int y=0; y<pattern.getHeight(); y++ ) {
-                if ( pattern.getBinaryPoint(y, x) ) {
-                    isEmptyCol = false;
-                    if ( !inLetter ) {
-                        inLetter = true;
-                        lastLetterStartX = x;
+                for (int y = 0; y < pattern.getHeight(); y++) {
+                    if (pattern.getBinaryPoint(y, x)) {
+                        isEmptyCol = false;
+                        if (!inLetter) {
+                            inLetter = true;
+                            lastLetterStartX = x;
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
-            if ( isEmptyCol ) {
-                inLetter = false;
-                letters.put(letterCount, new Letter(pattern.subPattern(lastLetterStartX, 0, x-lastLetterStartX, pattern.getHeight()), lastLetterStartX, 0));
-                letterCount++;
+                if (isEmptyCol) {
+                    inLetter = false;
+                    letters.put(letterCount, new Letter(pattern.subPattern(lastLetterStartX, 0, x - lastLetterStartX, pattern.getHeight()), lastLetterStartX, 0));
+                    letterCount++;
+                }
             }
         }
 
@@ -148,6 +151,7 @@ public abstract class AbstractTransition {
             letters.put(letterCount, new Letter(pattern.subPattern(lastLetterStartX, 0, pattern.getWidth()-lastLetterStartX, pattern.getHeight()), lastLetterStartX, 0));
             letterCount++;
         }
+
         return letters;
     }
 

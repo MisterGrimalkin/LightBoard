@@ -56,7 +56,7 @@ public class GraphicalBoard implements LightBoard, ColourSwitcher {
 
     @Inject
     public GraphicalBoard(Sync sync, Stage stage) {
-        this(sync, stage, "LightBoard Simulation", 3, 0);
+        this(sync, stage, "LightBoard Simulation", 2, 0);
     }
 
     public GraphicalBoard(Sync sync, Stage stage, String title, int ledRadius, int spacer) {

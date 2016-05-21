@@ -3,6 +3,7 @@ package net.amarantha.lightboard;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.amarantha.lightboard.board.LightBoard;
+import net.amarantha.lightboard.scene.BusStopScene;
 import net.amarantha.lightboard.scene.OldScene;
 import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.SplashScene;
@@ -37,6 +38,7 @@ public class LightBoardApplication {
     @Inject private LightBoard board;
 
     @Inject private SplashScene splashScene;
+    @Inject private BusStopScene busStopScene;
 
 
     public void startApplication(boolean withServer, boolean testMode) {
@@ -60,9 +62,13 @@ public class LightBoardApplication {
 
     private void buildScenes() {
 
-        splashScene.build();
-        splashScene.init();
-        splashScene.start();
+//        splashScene.build();
+//        splashScene.init();
+//        splashScene.start();
+
+        busStopScene.build();
+        busStopScene.init();
+        busStopScene.start();
 
     }
 

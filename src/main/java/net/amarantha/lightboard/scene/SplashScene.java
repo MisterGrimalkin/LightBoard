@@ -2,7 +2,6 @@ package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignV;
-import net.amarantha.lightboard.entity.Edge;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.utility.LightBoardProperties;
@@ -21,14 +20,19 @@ public class SplashScene extends AbstractScene {
 
     @Inject private LightBoardProperties props;
 
+
+
     @Override
     public void build() {
         int typingDuration = 1200;
         int explodeDuration = 800;
 
+        int width = props.getBoardCols();
+        int height = props.getBoardRows();
+
         textZone1
                 .setFont(new SmallFont())
-                .setRegion(0, 0, 192, 32)
+                .setRegion(0, 0, width, height)
                 .setDisplayTime(300)
                 .setOffset(0, -9)
                 .setAutoOut(false)
@@ -41,7 +45,7 @@ public class SplashScene extends AbstractScene {
 
         textZone2
                 .setFont(new SimpleFont())
-                .setRegion(0, 0, 192, 32)
+                .setRegion(0, 0, width, height)
                 .setDisplayTime(300)
                 .setAutoOut(false)
                 .setAutoNext(false)
@@ -52,7 +56,7 @@ public class SplashScene extends AbstractScene {
 
         textZone3
                 .setFont(new SmallFont())
-                .setRegion(0, 0, 192, 32)
+                .setRegion(0, 0, width, height)
                 .setDisplayTime(2000)
                 .setOffset(0, 9)
                 .setAutoOut(false)
@@ -64,8 +68,8 @@ public class SplashScene extends AbstractScene {
 
         textZone4
                 .setFont(new SmallFont())
-                .setRegion(0, 0, 192, 32)
-                .setDisplayTime(4000)
+                .setRegion(0, 0, width, height)
+                .setDisplayTime(5000)
                 .setAutoOut(true)
                 .setAutoNext(false)
                 .setAlignV(AlignV.MIDDLE)
@@ -77,7 +81,7 @@ public class SplashScene extends AbstractScene {
                 .addImage("gp192x32.jpg")
                 .setCanvasLayer(3)
                 .setAutoNext(false)
-                .setRegion(0, 0, 192, 32)
+                .setRegion(0, 0, width, height)
                 .setDisplayTime(4000)
                 .setInTransition(new RainDown().setDuration(2500))
                 .setOutTransition(new InterlaceOut().setDuration(300));
@@ -94,10 +98,17 @@ public class SplashScene extends AbstractScene {
 ////                .setOutTransition(new ScrollOut().setEdge(Edge.TOP).setDuration(2000));
 //                .setOutTransition(new InterlaceOut().setDuration(300));
 
+        String ip = props.getIp();
+        if ( ip==null || ip.isEmpty() ) {
+            ip = "{red}OFFLINE";
+        } else {
+            ip = "{green}ONLINE {red}at {yellow}" + ip;
+        }
+
         textZone1.addMessage("{red}Bailes + Light");
         textZone2.addMessage("{yellow}LightBoard Display System");
         textZone3.addMessage("{green}Version 2.0");
-        textZone4.addMessage("{red}Web Service online at {yellow}" + props.getIp());
+        textZone4.addMessage("{red}Web Service " + ip);
 
         textZone1.onInComplete(()->textZone2.in());
         textZone2.onInComplete(()->textZone3.in());
@@ -107,8 +118,8 @@ public class SplashScene extends AbstractScene {
             textZone3.out();
         });
         textZone3.onOutAt(0.4, () -> textZone4.in());
-        textZone4.onOutAt(0.2, () -> imageZone1.in());
-        imageZone1.onOutAt(0.3, () -> textZone1.in());
+        textZone4.onOutAt(0.6, () -> imageZone1.in());
+        imageZone1.onOutComplete(() -> textZone1.in());
 //        imageZone2.onOutComplete(() -> textZone1.in());
 
     }
