@@ -6,7 +6,6 @@ import org.imgscalr.Scalr;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class ImageZone extends AbstractZone {
 
@@ -19,18 +18,18 @@ public class ImageZone extends AbstractZone {
     }
 
     @Override
-    public void init(boolean standalone) {
-        super.init(standalone);
+    public void init() {
+        super.init();
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File(filename));
-        } catch (IOException e) {
-            e.printStackTrace();
+            convertImage(Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, getWidth(), getHeight()));
+        } catch (Exception e) {
+            System.out.println("WARNING: " + getId() + " could not read image '"+filename+"'\n"+e.getMessage());
         }
-        convertImage(Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, getWidth(), getHeight()));
     }
 
-    public ImageZone addImage(String filename) {
+    public ImageZone setImage(String filename) {
         this.filename = filename;
         return this;
     }

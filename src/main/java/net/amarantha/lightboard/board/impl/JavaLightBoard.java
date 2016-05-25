@@ -45,7 +45,7 @@ public class JavaLightBoard implements LightBoard {
     @Override
     public void init(int rows, int cols) {
 
-        System.out.println("Starting Raspberry Pi LightBoard, Greenpeace style....");
+        System.out.println("Starting Raspberry Pi Java LightBoard....");
 
         this.rows = rows;
         this.cols = cols;

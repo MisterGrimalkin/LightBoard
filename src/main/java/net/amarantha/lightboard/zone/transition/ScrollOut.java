@@ -9,20 +9,20 @@ public class ScrollOut extends Scroll {
         y = zone.getRestY();
         switch (edge) {
             case LEFT:
-                deltaX = Math.floor((x + zone.getPattern().getWidth()) / -steps);
+                deltaX = -1;//Math.floor((x + zone.getPattern().getWidth()) / -steps);
                 deltaY = 0;
                 break;
             case RIGHT:
-                deltaX = Math.ceil((zone.getWidth() - x) / steps);
+                deltaX = 1;//Math.ceil((zone.getWidth() - x) / steps);
                 deltaY = 0;
                 break;
             case TOP:
                 deltaX = 0;
-                deltaY = Math.floor((y + zone.getPattern().getHeight()) / -steps);
+                deltaY = -1;//Math.floor((y + zone.getPattern().getHeight()) / -steps);
                 break;
             case BOTTOM:
                 deltaX = 0;
-                deltaY = Math.ceil((y + zone.getPattern().getHeight()) / steps);
+                deltaY = 1;//Math.ceil((y + zone.getPattern().getHeight()) / steps);
                 break;
             case NO_SCROLL:
                 break;

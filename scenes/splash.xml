@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene id="splash" name="Splash Screen">
+
+    <textzone id="Company">
+        <font>SmallFont</font>
+        <offset x="0" y="-9"/>
+        <in-transition duration="1200">TypeIn</in-transition>
+        <out-transition duration="800">ExplodeOut</out-transition>
+        <display-time>3000</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <message>{red}Bailes + Light</message>
+    </textzone>
+
+    <textzone id="System">
+        <font>SimpleFont</font>
+        <in-transition duration="1200">TypeIn</in-transition>
+        <out-transition duration="800">ExplodeOut</out-transition>
+        <display-time>3000</display-time>
+        <canvas-layer>2</canvas-layer>
+        <message>{yellow}LightBoard Display System</message>
+    </textzone>
+
+    <textzone id="Version">
+        <font>SmallFont</font>
+        <offset x="0" y="9"/>
+        <in-transition duration="1200">TypeIn</in-transition>
+        <out-transition duration="800">ExplodeOut</out-transition>
+        <display-time>2000</display-time>
+        <canvas-layer>3</canvas-layer>
+        <message>{green}Version 2.0</message>
+    </textzone>
+
+    <textzone id="Status">
+        <font>SmallFont</font>
+        <in-transition duration="800">ExplodeIn</in-transition>
+        <out-transition duration="800">ExplodeOut</out-transition>
+        <display-time>5000</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-out/>
+        <message>:webStatus</message>
+    </textzone>
+
+    <imagezone id="Greenpeace" src="gp192x32.jpg">
+        <in-transition duration="2500">RainDown</in-transition>
+        <out-transition duration="300">InterlaceOut</out-transition>
+        <display-time>4000</display-time>
+        <canvas-layer>3</canvas-layer>
+        <auto-out/>
+    </imagezone>
+
+    <domino>
+        <trigger action="in">Company</trigger>
+        <target action="in">System</target>
+    </domino>
+    <domino>
+        <trigger action="in">System</trigger>
+        <target action="in">Version</target>
+    </domino>
+    <domino>
+        <trigger action="display">Version</trigger>
+        <target action="out">Company,System,Version</target>
+    </domino>
+    <domino>
+        <trigger action="out" progress="0.4">Version</trigger>
+        <target action="in">Status</target>
+    </domino>
+    <domino>
+        <trigger action="out" progress="0.6">Status</trigger>
+        <target action="in">Greenpeace</target>
+    </domino>
+    <domino>
+        <trigger action="out">Greenpeace</trigger>
+        <target action="in">Company</target>
+    </domino>
+
+</scene>

@@ -5,6 +5,7 @@ import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.scene.OldSceneManager;
+import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
 import net.amarantha.lightboard.utility.Sync;
@@ -28,17 +29,19 @@ public class SystemResource {
     private static OldSceneManager sceneManager;
     private static PropertyManager props;
     private static LightBoardSurface surface;
+    private static SceneLoader sceneLoader;
     private static Sync sync;
 
     public SystemResource() {
     }
 
     @Inject
-    public SystemResource(Sync sync, LightBoardSurface surface, OldSceneManager sceneManager, PropertyManager props) {
+    public SystemResource(Sync sync, LightBoardSurface surface, OldSceneManager sceneManager, PropertyManager props, SceneLoader sceneLoader) {
         SystemResource.sceneManager = sceneManager;
         SystemResource.props = props;
         SystemResource.surface = surface;
         SystemResource.sync = sync;
+        SystemResource.sceneLoader = sceneLoader;
     }
 
     private static String name = null;
@@ -173,6 +176,7 @@ public class SystemResource {
     }
 
     private static void displayShutdownMessage() {
+        sceneLoader.stop();
         surface.clearSurface();
         Pattern shutdownPattern = new SmallFont().renderString("{red}SHUTTING DOWN");
         int x = (surface.getCols() - shutdownPattern.getWidth()) / 2;

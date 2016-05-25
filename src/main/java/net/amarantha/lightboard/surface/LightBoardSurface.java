@@ -269,7 +269,10 @@ public class LightBoardSurface {
     }
 
     public synchronized boolean clearSurface() {
-        return clearRegion(boardRegion);
+        for ( int l=0; l<LAYERS; l++ ) {
+            clearRegion(l, boardRegion);
+        }
+        return true;
     }
 
     public synchronized boolean clearRegion(Region r) {
@@ -367,6 +370,10 @@ public class LightBoardSurface {
             region = safeRegion(0, 0, getRows(), getCols());
         }
         return ( x>=region.left && x<=region.right && y>=region.top && y<=region.bottom );
+    }
+
+    public Region getBoardRegion() {
+        return boardRegion;
     }
 
     public int getRows() {

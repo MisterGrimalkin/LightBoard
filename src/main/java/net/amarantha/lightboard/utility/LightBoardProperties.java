@@ -81,4 +81,12 @@ public class LightBoardProperties extends PropertyManager {
         return ImageBanner.class;
     }
 
+    public String getTransitionPackage() {
+        return getString("transitionPackage", "net.amarantha.lightboard.zone.transition");
+    }
+
+    public String getFontPackage() {
+        return getString("fontPackage", "net.amarantha.lightboard.font");
+    }
+
 }

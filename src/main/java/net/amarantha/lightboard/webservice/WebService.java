@@ -23,7 +23,9 @@ public class WebService {
 
     @Inject private LightBoardProperties props;
 
-    public HttpServer startWebService() {
+    private boolean running = false;
+
+    public HttpServer start() {
 
         System.out.println("Starting Web Service....");
 
@@ -34,6 +36,7 @@ public class WebService {
             rc.register(LoggingFilter.class);
             server = GrizzlyHttpServerFactory.createHttpServer(URI.create(fullUri), rc);
             System.out.println("Web Service Online @ " + fullUri);
+            running = true;
         } catch ( Exception e ) {
             System.out.println("Could not start Web Service!");
             e.printStackTrace();
@@ -49,5 +52,7 @@ public class WebService {
         }
     }
 
-
+    public boolean isRunning() {
+        return running;
+    }
 }

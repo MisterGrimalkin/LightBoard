@@ -2,14 +2,16 @@ package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.AlignH;
+import net.amarantha.lightboard.entity.AlignV;
 import net.amarantha.lightboard.entity.Edge;
-import net.amarantha.lightboard.font.LargeFont;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.zone.ImageZone;
 import net.amarantha.lightboard.zone.TextZone;
-import net.amarantha.lightboard.zone.transition.*;
+import net.amarantha.lightboard.zone.transition.InterlaceOut;
+import net.amarantha.lightboard.zone.transition.ScrollIn;
+import net.amarantha.lightboard.zone.transition.ScrollOut;
 
 public class BusStopScene extends AbstractScene {
 
@@ -17,60 +19,73 @@ public class BusStopScene extends AbstractScene {
     @Inject @Zone private TextZone messages;
     @Inject @Zone private TextZone label;
 
-    @Inject @Zone private ImageZone imageZone;
+    @Inject @Zone private ImageZone imageGreenpeace;
+    @Inject @Zone private ImageZone imageBL;
 
     @Inject private LightBoardProperties props;
 
     @Override
     public void build() {
 
-        int topBarHeight = 22;
+        int topBarHeight = 12;
         int whatWidth = 70;
 
         whatsOn
-            .setFont(new LargeFont())
-            .setAlignH(AlignH.LEFT)
-            .setInTransition(new ScrollIn().setEdge(Edge.BOTTOM).setDuration(200))
+                .setFont(new SimpleFont())
+                .setCanvasLayer(3)
+                .setAlignH(AlignH.LEFT)
+                .setInTransition(new ScrollIn().setEdge(Edge.BOTTOM).setDuration(200))
                 .setOutTransition(new ScrollOut().setEdge(Edge.TOP).setDuration(200))
                 .setDisplayTime(3000)
-            .setAutoStart(true)
+                .setAutoStart(true)
                 .setAutoOut(true)
                 .setAutoNext(true)
-            .setRegion(whatWidth, 0, props.getBoardCols() - whatWidth, topBarHeight);
+                .setRegion(whatWidth, 0, props.getBoardCols() - whatWidth, topBarHeight);
 
         label
-            .setFont(new SmallFont())
-            .setOffset(-4, 0)
+                .setFont(new SmallFont())
+                .setCanvasLayer(3)
+                .setOffset(-4, 0)
                 .setAlignH(AlignH.RIGHT)
-//            .setInTransition(new TypeIn().setDuration(3000))
                 .setAutoOut(false)
                 .setAutoNext(false)
                 .setAutoStart(true)
-//            .setAutoStart(true)
-            .setRegion(0, 0, whatWidth, topBarHeight);
+                .setRegion(0, 0, whatWidth, topBarHeight);
 
         messages
-            .setFont(new SimpleFont())
-            .setAlignH(AlignH.CENTRE)
-            .setInTransition(new ScrollIn().setEdge(Edge.RIGHT).setDuration(3500))
+                .setFont(new SimpleFont())
+                .setCanvasLayer(3)
+                .setAlignH(AlignH.CENTRE)
+                .setInTransition(new ScrollIn().setEdge(Edge.RIGHT).setDuration(3500))
                 .setOutTransition(new ScrollOut().setEdge(Edge.LEFT).setDuration(3500))
                 .setDisplayTime(0)
                 .setAutoOut(true)
                 .setAutoNext(true)
-            .setAutoStart(true)
-            .setRegion(0, props.getBoardRows() - 11, props.getBoardCols(), 11);
+                .setAutoStart(true)
+                .setRegion(0, props.getBoardRows() - 11, props.getBoardCols(), 11);
 
-        imageZone
-                .addImage("gp192x32.jpg")
-                .setCanvasLayer(3)
-                .setAutoNext(true)
+        imageGreenpeace
+                .setImage("gp192x32.jpg")
+                .setCanvasLayer(1)
+                .setAutoNext(false)
                 .setAutoOut(true)
                 .setAutoStart(true)
                 .setRegion(0, 0, props.getBoardCols(), props.getBoardRows())
                 .setDisplayTime(4000)
-//                .setInTransition(new InterlaceIn().setDuration(400))
                 .setInTransition(new ScrollIn().setEdge(Edge.RIGHT).setDuration(1200))
                 .setOutTransition(new InterlaceOut().setDuration(500));
+
+        imageBL
+                .setImage("bl.jpg")
+                .setCanvasLayer(1)
+                .setAutoNext(false)
+                .setAutoOut(true)
+                .setAutoStart(false)
+                .setAlignV(AlignV.TOP)
+                .setRegion(props.getBoardCols()-71, 0, props.getBoardCols(), props.getBoardRows())
+                .setDisplayTime(4000)
+                .setInTransition(new ScrollIn().setEdge(Edge.BOTTOM).setDuration(1200))
+                .setOutTransition(new ScrollOut().setEdge(Edge.TOP).setDuration(500));
 
 
         whatsOn.addMessage("1700: JAMES");
@@ -87,6 +102,9 @@ public class BusStopScene extends AbstractScene {
 
 
         label.addMessage("{red}COMING UP NEXT");
+
+        imageGreenpeace.onOutComplete(()->imageBL.in());
+        imageBL.onOutComplete(()-> imageGreenpeace.in());
 
 
 
