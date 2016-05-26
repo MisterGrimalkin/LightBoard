@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene id="splash" name="Splash Screen">
 
-    <textzone id="Company">
+    <define name="companyName">{red}Bailes + Light</define>
+    <define name="systemName">{yellow}LightBoard Display System</define>
+    <define name="version">{green}Version 2.0</define>
+
+    <define name="logoFilename">gp192x32.jpg</define>
+
+    <define name="typeInDuration">1200</define>
+    <define name="explodeOutDuration">800</define>
+
+    <textzone id="company">
         <font>SmallFont</font>
         <offset x="0" y="-9"/>
-        <in-transition duration="1200">TypeIn</in-transition>
-        <out-transition duration="800">ExplodeOut</out-transition>
+        <in-transition duration=":typeInDuration">TypeIn</in-transition>
+        <out-transition duration=":explodeOutDuration">ExplodeOut</out-transition>
         <display-time>3000</display-time>
         <canvas-layer>1</canvas-layer>
         <auto-start/>
-        <message>{red}Bailes + Light</message>
+        <message>:companyName</message>
     </textzone>
 
-    <textzone id="System">
+    <textzone id="system">
         <font>SimpleFont</font>
-        <in-transition duration="1200">TypeIn</in-transition>
-        <out-transition duration="800">ExplodeOut</out-transition>
+        <in-transition duration=":typeInDuration">TypeIn</in-transition>
+        <out-transition duration=":explodeOutDuration">ExplodeOut</out-transition>
         <display-time>3000</display-time>
         <canvas-layer>2</canvas-layer>
-        <message>{yellow}LightBoard Display System</message>
+        <message>:systemName</message>
     </textzone>
 
-    <textzone id="Version">
+    <textzone id="version">
         <font>SmallFont</font>
         <offset x="0" y="9"/>
-        <in-transition duration="1200">TypeIn</in-transition>
-        <out-transition duration="800">ExplodeOut</out-transition>
+        <in-transition duration=":typeInDuration">TypeIn</in-transition>
+        <out-transition duration=":explodeOutDuration">ExplodeOut</out-transition>
         <display-time>2000</display-time>
         <canvas-layer>3</canvas-layer>
-        <message>{green}Version 2.0</message>
+        <message>:version</message>
     </textzone>
 
-    <textzone id="Status">
+    <textzone id="webstatus">
         <font>SmallFont</font>
         <in-transition duration="800">ExplodeIn</in-transition>
         <out-transition duration="800">ExplodeOut</out-transition>
@@ -41,7 +50,7 @@
         <message>:webStatus</message>
     </textzone>
 
-    <imagezone id="Greenpeace" src="gp192x32.jpg">
+    <imagezone id="logo" src=":logoFilename">
         <in-transition duration="2500">RainDown</in-transition>
         <out-transition duration="300">InterlaceOut</out-transition>
         <display-time>4000</display-time>
@@ -50,28 +59,28 @@
     </imagezone>
 
     <domino>
-        <trigger action="in">Company</trigger>
-        <target action="in">System</target>
+        <trigger action="in">company</trigger>
+        <target action="in">system</target>
     </domino>
     <domino>
-        <trigger action="in">System</trigger>
-        <target action="in">Version</target>
+        <trigger action="in">system</trigger>
+        <target action="in">version</target>
     </domino>
     <domino>
-        <trigger action="display">Version</trigger>
-        <target action="out">Company,System,Version</target>
+        <trigger action="display">version</trigger>
+        <target action="out">company,system,version</target>
     </domino>
     <domino>
-        <trigger action="out" progress="0.4">Version</trigger>
-        <target action="in">Status</target>
+        <trigger action="out" progress="0.4">version</trigger>
+        <target action="in">webstatus</target>
     </domino>
     <domino>
-        <trigger action="out" progress="0.6">Status</trigger>
-        <target action="in">Greenpeace</target>
+        <trigger action="out" progress="0.6">webstatus</trigger>
+        <target action="in">logo</target>
     </domino>
     <domino>
-        <trigger action="out">Greenpeace</trigger>
-        <target action="in">Company</target>
+        <trigger action="out">logo</trigger>
+        <target action="in">company</target>
     </domino>
 
 </scene>

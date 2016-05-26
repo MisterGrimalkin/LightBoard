@@ -30,7 +30,7 @@ public class ScrollIn extends Scroll {
                 deltaX = 0;
                 deltaY = -1;//Math.floor((y - zone.getRestY()) / -steps);
                 break;
-            case NO_SCROLL:
+            case NONE:
                 break;
         }
     }
@@ -46,7 +46,7 @@ public class ScrollIn extends Scroll {
                 return y >= zone.getRestY();
             case BOTTOM:
                 return y <= zone.getRestY();
-            case NO_SCROLL:
+            case NONE:
                 break;
         }
         return true;

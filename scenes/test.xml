@@ -2,44 +2,44 @@
 <scene>
 
     <textzone id="1">
-        <in-transition duration="100">ExplodeIn</in-transition>
+        <in-transition duration="600">RainDown</in-transition>
         <out-transition duration="100">InterlaceOut</out-transition>
         <offset x="-30" y="-10"/>
-        <display-time>2500</display-time>
+        <display-time>4000</display-time>
         <canvas-layer>3</canvas-layer>
-        <auto-start/>
         <auto-out/>
-        <auto-next/>
     </textzone>
 
     <textzone id="2">
-        <font>LargeFont</font>
-        <in-transition duration="100">ExplodeIn</in-transition>
+        <!--<font>LargeFont</font>-->
+        <in-transition duration="600">RainDown</in-transition>
         <out-transition duration="100">InterlaceOut</out-transition>
-        <display-time>2500</display-time>
+        <display-time>4000</display-time>
         <offset x="0" y="0"/>
         <canvas-layer>2</canvas-layer>
         <auto-out/>
     </textzone>
 
     <textzone id="3">
-        <font>SmallFont</font>
-        <in-transition duration="100">ExplodeIn</in-transition>
+        <!--<font>SmallFont</font>-->
+        <in-transition duration="600">RainDown</in-transition>
         <out-transition duration="100">InterlaceOut</out-transition>
         <offset x="30" y="10"/>
-        <display-time>2500</display-time>
+        <display-time>4000</display-time>
         <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
         <auto-out/>
     </textzone>
 
     <domino>
-        <trigger action="in" progress="0.05">1</trigger>
+        <trigger action="in" progress="0.3">3</trigger>
         <target action="in">2</target>
     </domino>
 
     <domino>
-        <trigger action="in" progress="0.05">2</trigger>
-        <target action="in">3</target>
+        <trigger action="in" progress="0.3">2</trigger>
+        <target action="in">1</target>
     </domino>
 
 </scene>

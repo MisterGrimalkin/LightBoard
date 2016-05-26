@@ -9,15 +9,12 @@ import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.AbstractZone;
-import net.amarantha.lightboard.zone.AbstractZone.Domino;
 import net.amarantha.lightboard.zone.ImageZone;
 import net.amarantha.lightboard.zone.TextZone;
 import net.amarantha.lightboard.zone.transition.AbstractTransition;
 import net.amarantha.lightboard.zone.transition.Scroll;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,18 +23,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static net.amarantha.lightboard.entity.Tag.*;
 
 @Singleton
-public class SceneLoader {
+public class SceneLoader extends XMLParser {
 
     private AbstractScene currentScene;
+    private AbstractScene lastScene;
 
     @Inject private Sync sync;
     @Inject private Injector injector;
     @Inject private LightBoardProperties props;
     @Inject private LightBoardSurface surface;
+    @Inject private DominoFactory dominoFactory;
 
     public AbstractScene getCurrentScene() {
         return currentScene;
@@ -63,7 +63,15 @@ public class SceneLoader {
     }
 
     public void stop() {
-        currentScene.stop();
+        if ( currentScene!=null ) {
+            currentScene.stop();
+        }
+    }
+
+    public void skip() {
+        if ( lastScene!=null ) {
+            startScene(lastScene);
+        }
     }
 
     ////////////
@@ -76,25 +84,39 @@ public class SceneLoader {
             return false;
         } else {
             scene.setName(name);
-            if ( currentScene!=null ) {
-                currentScene.stop();
-            }
-            currentScene = scene;
-            surface.clearSurface();
-            currentScene.init();
-            currentScene.start();
+            startScene(scene);
             return true;
         }
     }
 
+    private void startScene(AbstractScene scene) {
+        if ( currentScene!=null ) {
+            currentScene.stop();
+        }
+        lastScene = currentScene;
+        currentScene = scene;
+        surface.clearSurface();
+        currentScene.init();
+        currentScene.start();
+    }
+
     private AbstractScene loadSceneFromFile(String filename) {
 
-        AbstractScene scene = injector.getInstance(AbstractScene.class);
+        AbstractScene scene = injector.getInstance(XMLScene.class);
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Element sceneElement = db.parse(filename).getDocumentElement();
+
+            iterateElements(sceneElement, DEFINE, (tag,node)->{
+                Node nameAttr = node.getAttributes().getNamedItem(NAME.getName());
+                if ( nameAttr!=null ) {
+                    String name = nameAttr.getTextContent();
+                    String value = node.getTextContent();
+                    setConstant(name, value);
+                }
+            });
 
             iterateElements(sceneElement, TEXT_ZONE, (tag, node)->{
                 TextZone zone = injector.getInstance(TextZone.class);
@@ -108,7 +130,7 @@ public class SceneLoader {
                 scene.registerZone(zone);
             });
 
-            iterateElements(sceneElement, DOMINO, (tag,node)-> setDomino(scene, node));
+            iterateElements(sceneElement, DOMINO, (tag,node)-> dominoFactory.apply(scene, node));
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             return null;
@@ -126,11 +148,11 @@ public class SceneLoader {
         iterateAttributes(zoneNode, (tag,node) -> {
             switch ( tag ) {
                 case ID:
-                    zone.setId(node.getTextContent());
+                    zone.setId(stringValue(node));
                     break;
                 case SRC:
                     if ( zone instanceof ImageZone ) {
-                        ((ImageZone)zone).setImage(node.getTextContent());
+                        ((ImageZone)zone).setImage(stringValue(node));
                     }
                     break;
             }
@@ -145,9 +167,7 @@ public class SceneLoader {
                     break;
                 case MESSAGE:
                     if ( zone instanceof TextZone ) {
-                        String message = node.getTextContent();
-                        message = applyVariables(message);
-                        ((TextZone)zone).addMessage(message);
+                        ((TextZone)zone).addMessage(stringValue(node));
                     }
                     break;
 
@@ -230,7 +250,7 @@ public class SceneLoader {
     }
 
     private void applyAlignH(AbstractZone zone, Node node) {
-        switch ( node.getTextContent() ) {
+        switch ( stringValue(node) ) {
             case "left":
                 zone.setAlignH(AlignH.LEFT);
                 break;
@@ -246,7 +266,7 @@ public class SceneLoader {
     }
 
     private void applyAlignV(AbstractZone zone, Node node) {
-        switch ( node.getTextContent() ) {
+        switch ( stringValue(node) ) {
             case "top":
                 zone.setAlignV(AlignV.TOP);
                 break;
@@ -262,7 +282,7 @@ public class SceneLoader {
     }
 
     private void applyOutline(AbstractZone zone, Node node) {
-        switch ( node.getTextContent() ) {
+        switch ( stringValue(node) ) {
             case Colour.RED_STR:
                 zone.setOutline(Colour.RED);
                 break;
@@ -275,22 +295,9 @@ public class SceneLoader {
         }
     }
 
-    private String applyVariables(String message) {
-        if ( message.contains(":webStatus") ) {
-            String ip = props.getIp();
-            if ( ip==null || ip.isEmpty() ) {
-                ip = "{red}WEB SERVICE OFFLINE";
-            } else {
-                ip = "{red}WEB SERVICE {green}ONLINE {red}at {yellow}" + ip;
-            }
-            message = message.replaceAll(":webStatus", ip);
-        }
-        return message;
-    }
-
     private void applyTransition(AbstractZone zone, Node transitionNode, boolean in) {
         Class<? extends AbstractTransition> transitionClass = null;
-        String className = props.getTransitionPackage()+"."+transitionNode.getTextContent();
+        String className = props.getTransitionPackage()+"."+stringValue(transitionNode);
         try {
             transitionClass = (Class<? extends AbstractTransition>) Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -358,152 +365,18 @@ public class SceneLoader {
         }
     }
 
-    ///////////////
-    // Iterators //
-    ///////////////
-
-    private void iterateAttributes(Node parentNode, Callback callback) {
-        NamedNodeMap attr = parentNode.getAttributes();
-        for ( int i=0; i<attr.getLength(); i++ ) {
-            Node node = attr.item(i);
-            String nodeName = node.getNodeName();
-            callback.call(Tag.getByName(nodeName), node);
-        }
-    }
-
-    private void iterateChildren(Node parentNode, Callback callback) {
-        NodeList children = parentNode.getChildNodes();
-        for ( int i=0; i<children.getLength(); i++ ) {
-            Node node = children.item(i);
-            String nodeName = node.getNodeName();
-            callback.call(Tag.getByName(nodeName), node);
-        }
-    }
-
-    private void iterateElements(Element parentElement, Tag tag, Callback callback) {
-        NodeList children = parentElement.getElementsByTagName(tag.getName());
-        for ( int i=0; i<children.getLength(); i++ ) {
-            Node node = children.item(i);
-            String nodeName = node.getNodeName();
-            callback.call(Tag.getByName(nodeName), node);
-        }
-    }
-
-    private interface Callback {
-        void call(Tag tag, Node node);
-    }
-
-    ///////////////
-    // Utilities //
-    ///////////////
-
-    private int integerValue(Node node) {
-        Integer result = 0;
-        try {
-            result = Integer.parseInt(node.getTextContent());
-        } catch (NumberFormatException e) {
-            result = 0;
-        }
-        return result;
-    }
-
-    private double doubleValue(Node node) {
-        Double result = 0.0;
-        try {
-            result = Double.parseDouble(node.getTextContent());
-        } catch (NumberFormatException e) {
-            result = 0.0;
-        }
-        return result;
-    }
-
-    //////////////
-    // Dominoes //
-    //////////////
-
-    private void setDomino(AbstractScene scene, Node dominoNode) {
-        final DominoConfig dominoConfig = new DominoConfig();
-        iterateChildren(dominoNode, (tag,node)->{
-            switch (tag) {
-                case TRIGGER:
-                    dominoConfig.triggerZoneId = node.getTextContent();
-                    iterateAttributes(node,(aTag,aNode)->{
-                        switch ( aTag ) {
-                            case ACTION:
-                                dominoConfig.triggerZoneAction = aNode.getTextContent();
-                                break;
-                            case PROGRESS:
-                                dominoConfig.triggerZoneProgress = doubleValue(aNode);
-                                break;
-                        }
-                    });
-                case TARGET:
-                    dominoConfig.setTargetZoneIds(node.getTextContent());
-                    iterateAttributes(node,(aTag,aNode)->{
-                        switch ( aTag ) {
-                            case ACTION:
-                                dominoConfig.targetZoneAction = aNode.getTextContent();
-                                break;
-                        }
-                    });
+    @Override
+    protected String applySpecialConstants(String value) {
+        if ( value.contains(":webStatus") ) {
+            String ip = props.getIp();
+            if ( ip==null || ip.isEmpty() ) {
+                ip = "{red}WEB SERVICE OFFLINE";
+            } else {
+                ip = "{red}WEB SERVICE {green}ONLINE {red}at {yellow}" + ip;
             }
-        });
-        if ( dominoConfig.isValid() ) {
-
-            AbstractZone triggerZone = scene.getZone(dominoConfig.triggerZoneId);
-            AbstractZone[] targetZones = new AbstractZone[dominoConfig.targetZoneIds.length];
-            for ( int i=0; i<targetZones.length; i++ ) {
-                targetZones[i] = scene.getZone(dominoConfig.targetZoneIds[i]);
-            }
-            Domino targetAction = dominoConfig.targetZoneAction.equals("in") ? Domino.IN : Domino.OUT;
-
-            switch ( dominoConfig.triggerZoneAction ) {
-                case "in":
-                    if ( dominoConfig.triggerZoneProgress==null ) {
-                        triggerZone.afterIn(targetAction, targetZones);
-                    } else {
-                        triggerZone.whenInAt(dominoConfig.triggerZoneProgress, targetAction, targetZones);
-                    }
-                    break;
-                case "display":
-                    triggerZone.afterDisplay(targetAction, targetZones);
-                    break;
-                case "out":
-                    if ( dominoConfig.triggerZoneProgress==null ) {
-                        triggerZone.afterOut(targetAction, targetZones);
-                    } else {
-                        triggerZone.whenOutAt(dominoConfig.triggerZoneProgress, targetAction, targetZones);
-                    }
-                    break;
-            }
+            value = value.replaceAll(":webStatus", ip);
         }
-
-    }
-
-    private static class DominoConfig {
-        String triggerZoneId;
-        String triggerZoneAction;
-        Double triggerZoneProgress;
-        String[] targetZoneIds;
-        String targetZoneAction;
-        void setTargetZoneIds(String ids) {
-            targetZoneIds = ids.split(",");
-        }
-        boolean isValid() {
-            return triggerZoneId!=null && triggerZoneAction!=null && !triggerZoneAction.isEmpty()
-                    && targetZoneIds!=null && targetZoneAction!=null && !targetZoneAction.isEmpty();
-        }
-
-        @Override
-        public String toString() {
-            return "DominoConfig{" +
-                    "triggerZoneId=" + triggerZoneId +
-                    ", triggerZoneAction='" + triggerZoneAction + '\'' +
-                    ", triggerZoneProgress=" + triggerZoneProgress +
-                    ", targetZoneIds=" + targetZoneIds +
-                    ", targetZoneAction='" + targetZoneAction + '\'' +
-                    '}';
-        }
+        return value;
     }
 
 }

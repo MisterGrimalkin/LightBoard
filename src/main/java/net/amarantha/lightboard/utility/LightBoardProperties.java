@@ -2,14 +2,39 @@ package net.amarantha.lightboard.utility;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.amarantha.lightboard.board.impl.TextBoard;
-import net.amarantha.lightboard.scene.impl.ImageBanner;
+import net.amarantha.lightboard.board.TextBoard;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 @Singleton
 public class LightBoardProperties extends PropertyManager {
+
+    private static boolean simulationMode;
+    private static boolean withServer;
+    private static boolean testMode;
+
+    // static stuff for command line params
+    public static void processArgs(String[] args) {
+        List<String> params = Arrays.asList(args);
+        simulationMode = params.contains("simulation");
+        testMode = params.contains("test");
+        withServer = !params.contains("noserver");
+    }
+
+    public static boolean isSimulationMode() {
+        return simulationMode;
+    }
+
+    public static boolean isWithServer() {
+        return withServer;
+    }
+
+    public static boolean isTestMode() {
+        return testMode;
+    }
 
     @Inject PropertyManager props;
 
@@ -69,16 +94,6 @@ public class LightBoardProperties extends PropertyManager {
         }
         return TextBoard.class;
 
-    }
-
-    public Class getImageBannerClass() {
-        String className = props.getString("imageBannerClass", "net.amarantha.lightboard.scene.old.ImageBanner");
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found: " + className);
-        }
-        return ImageBanner.class;
     }
 
     public String getTransitionPackage() {

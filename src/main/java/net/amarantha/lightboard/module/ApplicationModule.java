@@ -3,7 +3,7 @@ package net.amarantha.lightboard.module;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
-import net.amarantha.lightboard.board.impl.TextBoard;
+import net.amarantha.lightboard.board.TextBoard;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 
 import java.io.PrintStream;

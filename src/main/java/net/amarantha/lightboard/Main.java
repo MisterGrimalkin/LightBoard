@@ -6,42 +6,31 @@ import javafx.stage.Stage;
 import net.amarantha.lightboard.module.ApplicationModule;
 import net.amarantha.lightboard.module.SimulationModule;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static com.google.inject.util.Modules.override;
+import static net.amarantha.lightboard.utility.LightBoardProperties.isSimulationMode;
+import static net.amarantha.lightboard.utility.LightBoardProperties.processArgs;
 
 public class Main extends Application {
 
-    private static boolean simulationMode;
-    private static boolean withServer;
-    private static boolean testMode;
-
     public static void main(String[] args) {
-
-        List<String> params = Arrays.asList(args);
-        simulationMode = params.contains("simulation");
-        testMode = params.contains("test");
-        withServer = !params.contains("noserver");
-
-        if ( simulationMode ) {
+        processArgs(args);
+        if ( isSimulationMode() ) {
             launch(args);
         } else {
             Guice.createInjector(new ApplicationModule())
                 .getInstance(LightBoardApplication.class)
-                    .startApplication(withServer, testMode);
+                    .startApplication();
         }
-
     }
 
     @Override
     public void start(Stage primaryStage) {
         Guice.createInjector(
             override(new ApplicationModule())
-                    .with(new SimulationModule(primaryStage))
+                .with(new SimulationModule(primaryStage))
             )
             .getInstance(LightBoardApplication.class)
-                .startApplication(withServer, testMode);
+                .startApplication();
     }
 
 }

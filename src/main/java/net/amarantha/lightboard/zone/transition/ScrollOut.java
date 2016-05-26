@@ -24,7 +24,7 @@ public class ScrollOut extends Scroll {
                 deltaX = 0;
                 deltaY = 1;//Math.ceil((y + zone.getPattern().getHeight()) / steps);
                 break;
-            case NO_SCROLL:
+            case NONE:
                 break;
         }
     }
@@ -40,7 +40,7 @@ public class ScrollOut extends Scroll {
                 return y <= -1 * zone.getPattern().getHeight();
             case BOTTOM:
                 return y >= zone.getBottom();
-            case NO_SCROLL:
+            case NONE:
                 break;
         }
         return true;

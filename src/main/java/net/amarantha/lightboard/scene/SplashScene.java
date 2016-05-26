@@ -1,15 +1,17 @@
 package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.entity.Domino;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.font.SmallFont;
+import net.amarantha.lightboard.module.Zone;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.zone.ImageZone;
 import net.amarantha.lightboard.zone.TextZone;
 import net.amarantha.lightboard.zone.transition.*;
 
-import static net.amarantha.lightboard.zone.AbstractZone.Domino.IN;
-import static net.amarantha.lightboard.zone.AbstractZone.Domino.OUT;
+import static net.amarantha.lightboard.entity.Domino.IN;
+import static net.amarantha.lightboard.entity.Domino.OUT;
 
 public class SplashScene extends AbstractScene {
 
@@ -87,7 +89,5 @@ public class SplashScene extends AbstractScene {
                                 .afterOut(IN, textZone1))))));
 
     }
-
-
 
 }

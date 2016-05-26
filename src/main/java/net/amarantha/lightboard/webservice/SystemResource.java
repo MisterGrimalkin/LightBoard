@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.font.SmallFont;
-import net.amarantha.lightboard.scene.OldSceneManager;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
@@ -26,7 +25,6 @@ import java.util.TimerTask;
 @Path("system")
 public class SystemResource {
 
-    private static OldSceneManager sceneManager;
     private static PropertyManager props;
     private static LightBoardSurface surface;
     private static SceneLoader sceneLoader;
@@ -36,8 +34,7 @@ public class SystemResource {
     }
 
     @Inject
-    public SystemResource(Sync sync, LightBoardSurface surface, OldSceneManager sceneManager, PropertyManager props, SceneLoader sceneLoader) {
-        SystemResource.sceneManager = sceneManager;
+    public SystemResource(Sync sync, LightBoardSurface surface, PropertyManager props, SceneLoader sceneLoader) {
         SystemResource.props = props;
         SystemResource.surface = surface;
         SystemResource.sync = sync;
@@ -189,7 +186,6 @@ public class SystemResource {
     @Path("sleep")
     @Produces(MediaType.TEXT_PLAIN)
     public Response sleep() {
-        sceneManager.sleep();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Board has gone to sleep")
@@ -200,7 +196,6 @@ public class SystemResource {
     @Path("wake")
     @Produces(MediaType.TEXT_PLAIN)
     public Response wake() {
-        sceneManager.wake();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Board has woken up")

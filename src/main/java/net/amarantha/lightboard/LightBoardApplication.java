@@ -7,32 +7,35 @@ import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.WebService;
 
-public class LightBoardApplication {
+import static net.amarantha.lightboard.utility.LightBoardProperties.isTestMode;
+import static net.amarantha.lightboard.utility.LightBoardProperties.isWithServer;
 
-    @Inject private LightBoardSurface surface;
+public class LightBoardApplication {
 
     @Inject private LightBoardProperties props;
 
+    @Inject private LightBoardSurface surface;
+
     @Inject private SceneLoader sceneLoader;
     @Inject private WebService webService;
-
     @Inject private Sync sync;
 
-    public void startApplication(boolean withServer, boolean testMode) {
+    public void startApplication() {
 
         surface.init(props.getBoardRows(), props.getBoardCols(), true);
 
-        if ( testMode ) {
+        if ( isTestMode() ) {
             surface.testMode();
         } else {
+            surface.clearSurface();
             sceneLoader.start();
         }
 
-        if ( withServer ) {
+        sync.startSyncThread();
+
+        if ( isWithServer() ) {
             webService.start();
         }
-
-        sync.startSyncThread();
 
     }
 

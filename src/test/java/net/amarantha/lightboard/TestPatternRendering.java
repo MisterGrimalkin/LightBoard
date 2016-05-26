@@ -11,6 +11,7 @@ import net.amarantha.lightboard.module.ApplicationTestModule;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.MockSync;
 import net.amarantha.lightboard.utility.Sync;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +26,7 @@ public class TestPatternRendering {
     @Inject private Sync sync;
 
     @Story
-//    @Ignore
+    @Ignore
     public void testPatternRendering() {
 
         given_a_lightboard();

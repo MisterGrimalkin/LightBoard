@@ -15,11 +15,8 @@ public class WebService {
 
     private HttpServer server;
 
-    @Inject private BroadcastMessageResource broadcastMessageResource;
-    @Inject private ColourResource colourResource;
     @Inject private SceneResource sceneResource;
     @Inject private SystemResource systemResource;
-    @Inject private BusStopResource busStopResource;
 
     @Inject private LightBoardProperties props;
 

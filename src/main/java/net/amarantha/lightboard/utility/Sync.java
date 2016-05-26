@@ -31,7 +31,11 @@ public class Sync {
             System.out.println("Sync Thread Running");
             while (run) {
                 for ( Map.Entry<Integer, Task> entry : tasks.entrySet() ) {
-                    entry.getValue().checkAndRun();
+                    try {
+                        entry.getValue().checkAndRun();
+                    } catch ( Exception e ) {
+                        e.printStackTrace();
+                    }
                 }
             }
             System.out.println("Sync Thread Stopped");

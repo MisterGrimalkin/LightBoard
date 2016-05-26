@@ -22,7 +22,7 @@ echo "Uploading HTML..."
 sshpass -p raspberry scp -r html/ pi@$1:lightboard
 echo
 echo "Uploading C..."
-sshpass -p raspberry scp -r c/ pi@$1:lightboard
+sshpass -p raspberry scp -r src/main/c/ pi@$1:lightboard
 echo
 sshpass -p raspberry ssh pi@$1 "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; ./build.sh"
 echo "Deployed to $1"

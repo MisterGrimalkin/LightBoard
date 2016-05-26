@@ -2,6 +2,8 @@ package net.amarantha.lightboard.entity;
 
 public enum Tag {
 
+    DEFINE("define"),
+
     TEXT_ZONE("textzone"),
     IMAGE_ZONE("imagezone"),
 

@@ -11,8 +11,10 @@ public class Pattern {
     private Colour penColour = new Colour(1.0, 1.0, 1.0);
 
     public Pattern(int rows, int cols) {
-        binaryValues = new boolean[rows][cols];
-        colourValues = new double[3][rows][cols];
+        int safeRows = rows < 1 ? 1 : rows;
+        int safeCols = cols < 1 ? 1 : cols;
+        binaryValues = new boolean[safeRows][safeCols];
+        colourValues = new double[3][safeRows][safeCols];
     }
 
     public Pattern(int cols, String data) {

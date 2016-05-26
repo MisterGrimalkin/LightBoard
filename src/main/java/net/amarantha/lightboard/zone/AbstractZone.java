@@ -1,10 +1,8 @@
 package net.amarantha.lightboard.zone;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.entity.AlignH;
-import net.amarantha.lightboard.entity.AlignV;
-import net.amarantha.lightboard.entity.Colour;
-import net.amarantha.lightboard.entity.Pattern;
+import net.amarantha.lightboard.entity.*;
+import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.surface.Region;
 import net.amarantha.lightboard.utility.Sync;
@@ -14,6 +12,7 @@ public abstract class AbstractZone {
 
     @Inject private LightBoardSurface surface;
     @Inject private Sync sync;
+    @Inject private SceneLoader sceneLoader;
 
     /**
      * Implement to obtain the next pattern to display
@@ -125,6 +124,115 @@ public abstract class AbstractZone {
         return this;
     }
 
+    ///////////////////
+    // Display Cycle //
+    ///////////////////
+
+    public final AbstractZone in() {
+        if ( paused ) {
+            paused = false;
+        } else {
+            surface.clearRegion(canvasLayer, region);
+            if (inTransition != null) {
+                inTransition.transition(this, this::display, onInAt, onInAtProgress);
+                direction = Transitioning.IN;
+            } else {
+                display();
+            }
+        }
+        return this;
+    }
+
+    public final AbstractZone display() {
+        if ( onInComplete!=null ) {
+            onInComplete.execute();
+        }
+        if ( displayTime==0 ) {
+            drawPattern(getRestX(), getRestY(), pattern);
+            out();
+        } else {
+            startTime = System.currentTimeMillis();
+            direction = Transitioning.DISPLAY;
+            drawPattern(getRestX(), getRestY(), pattern);
+        }
+        return this;
+    }
+
+    public final AbstractZone out() {
+        if ( outTransition!=null ) {
+            outTransition.transition(this, this::end, onOutAt, onOutAtProgress);
+            direction = Transitioning.OUT;
+        } else {
+            end();
+        }
+        return this;
+    }
+
+    public final AbstractZone end() {
+        surface.clearRegion(canvasLayer, region);
+        direction = Transitioning.DISPLAY;
+        if ( onOutComplete !=null ) {
+            onOutComplete.execute();
+        }
+        pattern = getNextPattern();
+        if ( autoNext ) {
+            if ( pattern != null ) {
+                in();
+            }
+        }
+        return this;
+    }
+
+    public final AbstractZone reset() {
+        switch ( direction ) {
+            case IN:
+                break;
+            case DISPLAY:
+                break;
+            case OUT:
+                break;
+        }
+        return this;
+    }
+
+    /////////////////
+    // Transitions //
+    /////////////////
+
+    private enum Transitioning {
+        IN, DISPLAY, OUT
+    }
+
+    public AbstractZone setInTransition(AbstractTransition inTransition) {
+        this.inTransition = inTransition;
+        return this;
+    }
+
+    public AbstractZone setOutTransition(AbstractTransition outTransition) {
+        this.outTransition = outTransition;
+        return this;
+    }
+
+    public AbstractZone setDisplayTime(long displayTime) {
+        this.displayTime = displayTime;
+        return this;
+    }
+
+    public AbstractZone setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+        return this;
+    }
+
+    public AbstractZone setAutoOut(boolean autoOut) {
+        this.autoOut = autoOut;
+        return this;
+    }
+
+    public AbstractZone setAutoNext(boolean autoNext) {
+        this.autoNext = autoNext;
+        return this;
+    }
+
     ///////////////
     // Callbacks //
     ///////////////
@@ -163,108 +271,9 @@ public abstract class AbstractZone {
         this.onOutComplete = callback;
     }
 
-    ///////////////////
-    // Display Cycle //
-    ///////////////////
-
-    public final void in() {
-        if ( paused ) {
-            paused = false;
-        } else {
-            surface.clearRegion(canvasLayer, region);
-            if (inTransition != null) {
-                inTransition.transition(this, this::display, onInAt, onInAtProgress);
-                direction = Transitioning.IN;
-            } else {
-                display();
-            }
-        }
-    }
-
-    public final void display() {
-        if ( onInComplete!=null ) {
-            onInComplete.execute();
-        }
-        if ( displayTime==0 ) {
-            drawPattern(getRestX(), getRestY(), pattern);
-            out();
-        } else {
-            startTime = System.currentTimeMillis();
-            direction = Transitioning.DISPLAY;
-            drawPattern(getRestX(), getRestY(), pattern);
-        }
-    }
-
-    public final void out() {
-        if ( outTransition!=null ) {
-            outTransition.transition(this, this::end, onOutAt, onOutAtProgress);
-            direction = Transitioning.OUT;
-        } else {
-            end();
-        }
-    }
-
-    public final void end() {
-        surface.clearRegion(canvasLayer, region);
-        direction = Transitioning.DISPLAY;
-        if ( onOutComplete !=null ) {
-            onOutComplete.execute();
-        }
-        pattern = getNextPattern();
-        if ( autoNext ) {
-            if ( pattern != null ) {
-                in();
-            }
-        }
-    }
-
-    /////////////////
-    // Transitions //
-    /////////////////
-
-    private enum Transitioning {
-        IN, DISPLAY, OUT
-    }
-
-    public AbstractZone setInTransition(AbstractTransition inTransition) {
-        this.inTransition = inTransition;
-        return this;
-    }
-
-    public AbstractZone setOutTransition(AbstractTransition outTransition) {
-        this.outTransition = outTransition;
-        return this;
-    }
-
-    public AbstractZone setDisplayTime(long displayTime) {
-        this.displayTime = displayTime;
-        return this;
-    }
-
-    public AbstractZone setAutoStart(boolean autoStart) {
-        this.autoStart = autoStart;
-        return this;
-    }
-
-    public boolean isAutoStart() {
-        return autoStart;
-    }
-
-    public AbstractZone setAutoOut(boolean autoOut) {
-        this.autoOut = autoOut;
-        return this;
-    }
-
-    public AbstractZone setAutoNext(boolean autoNext) {
-        this.autoNext = autoNext;
-        return this;
-    }
-
     ////////////
     // Domino //
     ////////////
-
-    public enum Domino { IN, OUT }
 
     private void doZone(Domino domino, AbstractZone zone) {
         switch ( domino ) {
@@ -274,6 +283,7 @@ public abstract class AbstractZone {
             case OUT:
                 zone.out();
                 break;
+            case EXIT:
         }
     }
 
@@ -366,6 +376,21 @@ public abstract class AbstractZone {
         return this;
     }
 
+    public void setId(String id) {
+        if ( initialised ) {
+            throw new IllegalStateException("Must call setId() before init()");
+        }
+        this.id = id;
+    }
+
+    /////////////
+    // Getters //
+    /////////////
+
+    public String getId() {
+        return id;
+    }
+
     public int getRestX() {
         if ( pattern!=null ) {
             switch (alignH) {
@@ -393,17 +418,6 @@ public abstract class AbstractZone {
         }
         return 0;
     }
-
-    public void setId(String id) {
-        if ( initialised ) {
-            throw new IllegalStateException("Must call setId() before init()");
-        }
-        this.id = id;
-    }
-
-    /////////////
-    // Getters //
-    /////////////
 
     public int getLeft() {
         return region.left;
@@ -449,10 +463,9 @@ public abstract class AbstractZone {
         return standalone;
     }
 
-    public String getId() {
-        return id;
+    public boolean isAutoStart() {
+        return autoStart;
     }
-
 
     ////////////
     // Fields //
@@ -493,4 +506,5 @@ public abstract class AbstractZone {
     public String toString() {
         return getClass().getName()+": "+getId();
     }
+
 }

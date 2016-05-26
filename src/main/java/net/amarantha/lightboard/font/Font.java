@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.amarantha.lightboard.entity.AlignH.*;
+import static net.amarantha.lightboard.entity.Colour.GREEN_STR;
+import static net.amarantha.lightboard.entity.Colour.RED_STR;
+import static net.amarantha.lightboard.entity.Colour.YELLOW_STR;
 
 public class Font {
 
@@ -126,11 +129,11 @@ public class Font {
                 char chr = str.charAt(c);
                 if ( inTag ) {
                     if ( chr==CLOSE_TAG ) {
-                        if ( "red".equals(tag) ) {
+                        if ( RED_STR.equals(tag) ) {
                             result.setPenColour(new Colour(1.0,0.0,0.0));
-                        } else if ( "green".equals(tag) ) {
+                        } else if ( GREEN_STR.equals(tag) ) {
                             result.setPenColour(new Colour(0.0,1.0,0.0));
-                        } else if ( "yellow".equals(tag) ) {
+                        } else if ( YELLOW_STR.equals(tag) ) {
                             result.setPenColour(new Colour(1.0,1.0,0.0));
                         }
                         tag = "";

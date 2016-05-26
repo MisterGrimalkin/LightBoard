@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.module.Zone;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.AbstractZone;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class AbstractScene {
+public abstract class AbstractScene {
 
     private String name;
 
@@ -23,8 +24,7 @@ public class AbstractScene {
 
     @Inject private Sync sync;
 
-    // Not actually abstract, but must be implemented for non-XML scenes
-    public void build() {}
+    public abstract void build();
 
     private long tick = 20;
 
@@ -41,16 +41,6 @@ public class AbstractScene {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-//        sync.addTask(new Sync.Task(tick) {
-//            @Override
-//            public void runTask() {
-//                if ( !paused ) {
-//                    tick();
-//                }
-//
-//            }
-//        });
-
     }
 
     public void start() {
@@ -63,11 +53,13 @@ public class AbstractScene {
     }
 
     public void tick() {
-        long now = System.currentTimeMillis();
-        for ( Entry<String, AbstractZone> zoneEntry : zones.entrySet() ) {
-            AbstractZone zone = zoneEntry.getValue();
-            if ( !zone.isStandalone() && now - zoneLastTicked.get(zoneEntry.getKey()) > zone.getTick() ) {
-                zone.tick();
+        if ( !paused ) {
+            long now = System.currentTimeMillis();
+            for (Entry<String, AbstractZone> zoneEntry : zones.entrySet()) {
+                AbstractZone zone = zoneEntry.getValue();
+                if (!zone.isStandalone() && now - zoneLastTicked.get(zoneEntry.getKey()) > zone.getTick()) {
+                    zone.tick();
+                }
             }
         }
     }

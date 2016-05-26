@@ -4,11 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.MockBoard;
-import net.amarantha.lightboard.board.impl.TextBoard;
-import net.amarantha.lightboard.scene.MockBusUpdater;
-import net.amarantha.lightboard.scene.MockTubeUpdater;
-import net.amarantha.lightboard.updater.transport.BusUpdater;
-import net.amarantha.lightboard.updater.transport.TubeUpdater;
+import net.amarantha.lightboard.board.TextBoard;
 import net.amarantha.lightboard.utility.MockSync;
 import net.amarantha.lightboard.utility.Sync;
 
@@ -27,9 +23,6 @@ public class ApplicationTestModule extends AbstractModule {
         bind(PrintStream.class).toInstance(System.out);
 
         bind(Sync.class).to(MockSync.class).in(Singleton.class);
-
-        bind(BusUpdater.class).to(MockBusUpdater.class);
-        bind(TubeUpdater.class).to(MockTubeUpdater.class);
 
     }
 

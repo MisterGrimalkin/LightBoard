@@ -24,7 +24,7 @@ public abstract class Scroll extends AbstractTransition {
     protected double deltaX;
     protected double deltaY;
 
-    protected Edge edge = Edge.NO_SCROLL;
+    protected Edge edge = Edge.NONE;
 
     public Scroll setEdge(Edge edge) {
         this.edge = edge;
