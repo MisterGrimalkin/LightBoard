@@ -9,26 +9,26 @@ public class ScrollIn extends Scroll {
             case LEFT:
                 x = -zone.getPattern().getWidth();
                 y = zone.getRestY();
-                deltaX = 1;//Math.ceil((zone.getRestX() - x) / steps);
+                deltaX = Math.ceil((zone.getRestX() - x) / steps);
                 deltaY = 0;
                 break;
             case RIGHT:
                 x = zone.getWidth();
                 y = zone.getRestY();
-                deltaX = -1;//Math.floor((x - zone.getRestX()) / -steps);
+                deltaX = Math.floor((x - zone.getRestX()) / -steps);
                 deltaY = 0;
                 break;
             case TOP:
                 x = zone.getRestX();
                 y = -zone.getPattern().getHeight();
                 deltaX = 0;
-                deltaY = 1;//Math.ceil((zone.getRestY() - y) / steps);
+                deltaY = Math.ceil((zone.getRestY() - y) / steps);
                 break;
             case BOTTOM:
                 x = zone.getRestX();
                 y = zone.getHeight();
                 deltaX = 0;
-                deltaY = -1;//Math.floor((y - zone.getRestY()) / -steps);
+                deltaY = Math.floor((y - zone.getRestY()) / -steps);
                 break;
             case NONE:
                 break;

@@ -10,6 +10,7 @@ import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.ImageZone;
+import net.amarantha.lightboard.zone.MessageGroup;
 import net.amarantha.lightboard.zone.TextZone;
 import net.amarantha.lightboard.zone.transition.AbstractTransition;
 import net.amarantha.lightboard.zone.transition.Scroll;
@@ -23,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import static net.amarantha.lightboard.entity.Tag.*;
 
@@ -43,12 +43,12 @@ public class SceneLoader extends XMLParser {
         return currentScene;
     }
 
-    private long tick = 10;
+    private long tick = 5;
 
     public void start() {
         surface.clearSurface();
         if ( currentScene==null ) {
-            loadScene("splash");
+            loadScene(props.getDefaultScene());
         } else {
             currentScene.start();
         }
@@ -130,6 +130,8 @@ public class SceneLoader extends XMLParser {
                 scene.registerZone(zone);
             });
 
+            iterateElements(sceneElement, GROUP, (tag,node)-> applyGroup(scene, node));
+
             iterateElements(sceneElement, DOMINO, (tag,node)-> dominoFactory.apply(scene, node));
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -137,6 +139,21 @@ public class SceneLoader extends XMLParser {
         }
 
         return scene;
+    }
+
+    private void applyGroup(AbstractScene scene, Node groupNode) {
+        Node attrNode = groupNode.getAttributes().getNamedItem(ID.getName());
+        if ( attrNode!=null ) {
+            String zoneIdsStr = stringValue(groupNode);
+            String[] zoneIds = zoneIdsStr.split(",");
+            MessageGroup group = new MessageGroup(zoneIds);
+            group.setId(attrNode.getTextContent());
+            scene.registerGroup(group);
+            for ( String id : zoneIds ) {
+                TextZone zone = (TextZone)scene.getZone(id);
+                zone.setGroup(group);
+            }
+        }
     }
 
     /////////////////
@@ -313,7 +330,7 @@ public class SceneLoader extends XMLParser {
                     case EDGE:
                         if ( transition instanceof Scroll ) {
                             Scroll scr = ((Scroll)transition);
-                            switch ( node.getTextContent() ) {
+                            switch ( stringValue(node) ) {
                                 case "top":
                                     scr.setEdge(Edge.TOP);
                                     break;
@@ -342,17 +359,17 @@ public class SceneLoader extends XMLParser {
         iterateAttributes(offsetNode, (tag,node) -> {
             switch ( tag ) {
                 case X:
-                    zone.setOffsetX(Integer.parseInt(node.getTextContent()));
+                    zone.setOffsetX(integerValue(node));
                     break;
                 case Y:
-                    zone.setOffsetY(Integer.parseInt(node.getTextContent()));
+                    zone.setOffsetY(integerValue(node));
                     break;
             }
         });
     }
 
     private void applyFont(TextZone zone, Node fontNode) {
-        String className = props.getFontPackage()+"."+fontNode.getTextContent();
+        String className = props.getFontPackage()+"."+stringValue(fontNode);
         Class<? extends Font> fontClass = null;
         try {
             fontClass = (Class<? extends Font>) Class.forName(className);

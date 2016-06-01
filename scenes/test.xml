@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene>
 
-    <textzone id="1">
-        <in-transition duration="600">RainDown</in-transition>
-        <out-transition duration="100">InterlaceOut</out-transition>
-        <offset x="-30" y="-10"/>
-        <display-time>4000</display-time>
-        <canvas-layer>3</canvas-layer>
-        <auto-out/>
-    </textzone>
-
-    <textzone id="2">
-        <!--<font>LargeFont</font>-->
-        <in-transition duration="600">RainDown</in-transition>
-        <out-transition duration="100">InterlaceOut</out-transition>
-        <display-time>4000</display-time>
-        <offset x="0" y="0"/>
-        <canvas-layer>2</canvas-layer>
-        <auto-out/>
-    </textzone>
-
-    <textzone id="3">
-        <!--<font>SmallFont</font>-->
-        <in-transition duration="600">RainDown</in-transition>
-        <out-transition duration="100">InterlaceOut</out-transition>
-        <offset x="30" y="10"/>
-        <display-time>4000</display-time>
+    <textzone id="day">
+        <region left="1" top="1" width="46" height="9"/>
+        <in-transition duration="800" edge="top">ScrollIn</in-transition>
+        <out-transition duration="500" edge="right">ScrollOut</out-transition>
+        <display-time>10</display-time>
         <canvas-layer>1</canvas-layer>
+        <align-horizontal>right</align-horizontal>
         <auto-start/>
-        <auto-next/>
-        <auto-out/>
+    </textzone>
+
+    <textzone id="time">
+        <region left="46" top="1" width="40" height="9"/>
+        <in-transition duration="800" edge="top">ScrollIn</in-transition>
+        <out-transition duration="500" edge="right">ScrollOut</out-transition>
+        <display-time>100</display-time>
+        <canvas-layer>2</canvas-layer>
+    </textzone>
+
+    <textzone id="description">
+        <region left="85" top="1" height="9" width="205"/>
+        <align-horizontal>left</align-horizontal>
+        <in-transition duration="1300">TypeIn</in-transition>
+        <out-transition duration="1000">InterlaceOut</out-transition>
+        <display-time>4000</display-time>
+        <canvas-layer>2</canvas-layer>
     </textzone>
 
     <domino>
-        <trigger action="in" progress="0.3">3</trigger>
-        <target action="in">2</target>
+        <trigger action="in">day</trigger>
+        <target action="in">time</target>
     </domino>
 
     <domino>
-        <trigger action="in" progress="0.3">2</trigger>
-        <target action="in">1</target>
+        <trigger action="display">time</trigger>
+        <target action="in">description</target>
     </domino>
+
+    <domino>
+        <trigger action="display">description</trigger>
+        <target action="out">day,time,description</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">description</trigger>
+        <target action="in">day</target>
+    </domino>
+
+    <group id="events">day,time,description</group>
 
 </scene>

@@ -7,9 +7,9 @@ public abstract class Scroll extends AbstractTransition {
     @Override
     public void animate(double progress) {
         zone.clear();
+        zone.drawPattern((int)Math.round(x), (int)Math.round(y), zone.getPattern());
         x += deltaX;
         y += deltaY;
-        zone.drawPattern((int)Math.round(x), (int)Math.round(y), zone.getPattern());
     }
 
     @Override

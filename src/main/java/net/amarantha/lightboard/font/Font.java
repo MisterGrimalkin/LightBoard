@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.amarantha.lightboard.entity.AlignH.*;
-import static net.amarantha.lightboard.entity.Colour.GREEN_STR;
-import static net.amarantha.lightboard.entity.Colour.RED_STR;
-import static net.amarantha.lightboard.entity.Colour.YELLOW_STR;
+import static net.amarantha.lightboard.entity.Colour.*;
 
 public class Font {
 

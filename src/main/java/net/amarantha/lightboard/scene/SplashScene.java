@@ -1,7 +1,6 @@
 package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.entity.Domino;
 import net.amarantha.lightboard.font.SimpleFont;
 import net.amarantha.lightboard.font.SmallFont;
 import net.amarantha.lightboard.module.Zone;
@@ -63,7 +62,7 @@ public class SplashScene extends AbstractScene {
         imageZone1
                 .setImage("gp192x32.jpg")
                 .setAutoOut(true)
-                .setInTransition(new RainDown().setDuration(2500))
+                .setInTransition(new RainIn().setDuration(2500))
                 .setOutTransition(new InterlaceOut().setDuration(300))
                 .setDisplayTime(4000)
                 .setCanvasLayer(3);

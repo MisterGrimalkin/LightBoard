@@ -25,4 +25,8 @@ public class Message {
         return text;
     }
 
+    @Override
+    public String toString() {
+        return text;
+    }
 }

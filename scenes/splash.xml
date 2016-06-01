@@ -51,7 +51,7 @@
     </textzone>
 
     <imagezone id="logo" src=":logoFilename">
-        <in-transition duration="2500">RainDown</in-transition>
+        <in-transition duration="2500">RainIn</in-transition>
         <out-transition duration="300">InterlaceOut</out-transition>
         <display-time>4000</display-time>
         <canvas-layer>3</canvas-layer>

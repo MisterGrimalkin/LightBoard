@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.module.Zone;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.AbstractZone;
+import net.amarantha.lightboard.zone.MessageGroup;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -87,6 +88,19 @@ public abstract class AbstractScene {
         for ( Entry<String, AbstractZone> entry : zones.entrySet() ) {
             entry.getValue().pause();
         }
+    }
+
+    private Map<String, MessageGroup> groups = new HashMap<>();
+
+    public void registerGroup(MessageGroup group) {
+        if ( groups.get(group.getId())!=null ) {
+            throw new IllegalStateException("Duplicate Group ID");
+        }
+        groups.put(group.getId(), group);
+    }
+
+    public MessageGroup getGroup(String id) {
+        return groups.get(id);
     }
 
 }

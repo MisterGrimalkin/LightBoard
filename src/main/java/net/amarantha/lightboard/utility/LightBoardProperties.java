@@ -104,4 +104,7 @@ public class LightBoardProperties extends PropertyManager {
         return getString("fontPackage", "net.amarantha.lightboard.font");
     }
 
+    public String getDefaultScene() {
+        return getString("defaultScene", "splash");
+    }
 }

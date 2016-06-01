@@ -4,7 +4,8 @@ import net.amarantha.lightboard.entity.Domino;
 import net.amarantha.lightboard.zone.AbstractZone;
 import org.w3c.dom.Node;
 
-import static net.amarantha.lightboard.entity.Domino.*;
+import static net.amarantha.lightboard.entity.Domino.IN;
+import static net.amarantha.lightboard.entity.Domino.OUT;
 
 public class DominoFactory extends XMLParser {
 
@@ -77,7 +78,7 @@ public class DominoFactory extends XMLParser {
         }
         boolean isValid() {
             return triggerZoneId!=null && triggerZoneAction!=null && !triggerZoneAction.isEmpty()
-                    && targetZoneIds!=null && targetZoneAction!=null && !targetZoneAction.isEmpty();
+                    && targetZoneIds!=null && targetZoneIds.length>0 && targetZoneAction!=null && !targetZoneAction.isEmpty();
         }
     }
 

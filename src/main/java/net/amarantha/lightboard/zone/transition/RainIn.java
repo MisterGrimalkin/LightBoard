@@ -1,6 +1,6 @@
 package net.amarantha.lightboard.zone.transition;
 
-public class RainDown extends AbstractTransition {
+public class RainIn extends AbstractTransition {
 
     @Override
     public void reset() {

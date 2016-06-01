@@ -3,9 +3,13 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.zone.AbstractZone;
+import net.amarantha.lightboard.zone.MessageGroup;
 import net.amarantha.lightboard.zone.TextZone;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -81,6 +85,29 @@ public class SceneResource extends Resource {
         }
     }
 
+    @POST
+    @Path("{sceneName}/group/{groupId}/add")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response addGroupMessage(@PathParam("sceneName") String sceneName, @PathParam("groupId") String groupId, String messages) {
+        try {
+            findMessageGroup(sceneName, groupId).addMessages(messages);
+            return ok("Message added to Group");
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+    }
+
+    @POST
+    @Path("{sceneName}/group/{groupId}/clear")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response clearGroupMessage(@PathParam("sceneName") String sceneName, @PathParam("groupId") String groupId) {
+        try {
+            findMessageGroup(sceneName, groupId).clearMessages();
+            return ok("Message Group Cleared");
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+    }
     /////////////
     // Utility //
     /////////////
@@ -92,6 +119,19 @@ public class SceneResource extends Resource {
                 return (TextZone)zone;
             } else {
                 throw new Exception("Could not find TextZone '"+zoneId+"'");
+            }
+        } else {
+            throw new Exception("Scene '"+sceneName+"' is not active");
+        }
+    }
+
+    private MessageGroup findMessageGroup(String sceneName, String groupId) throws Exception {
+        if ( sceneLoader.getCurrentScene()!=null && sceneLoader.getCurrentScene().getName().equals(sceneName) ) {
+            MessageGroup group = sceneLoader.getCurrentScene().getGroup(groupId);
+            if ( group!=null ) {
+                return group;
+            } else {
+                throw new Exception("Could not find MessageGroup '"+groupId+"'");
             }
         } else {
             throw new Exception("Scene '"+sceneName+"' is not active");

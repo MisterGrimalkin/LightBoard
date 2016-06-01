@@ -13,7 +13,8 @@ then
     echo
     echo "Compiling Java..."
     echo
-    mvn clean package >/dev/null
+    mvn clean package
+    echo
     echo "Uploading Java..."
     sshpass -p raspberry scp -r target/ pi@$1:lightboard
 fi

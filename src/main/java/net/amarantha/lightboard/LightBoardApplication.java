@@ -27,7 +27,6 @@ public class LightBoardApplication {
         if ( isTestMode() ) {
             surface.testMode();
         } else {
-            surface.clearSurface();
             sceneLoader.start();
         }
 

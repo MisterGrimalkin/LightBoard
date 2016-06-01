@@ -7,6 +7,8 @@ public enum Tag {
     TEXT_ZONE("textzone"),
     IMAGE_ZONE("imagezone"),
 
+    GROUP("group"),
+
     STANDALONE("standalone"),
     TICK("tick"),
 
