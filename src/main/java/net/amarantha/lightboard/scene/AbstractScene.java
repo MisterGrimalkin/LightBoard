@@ -7,6 +7,7 @@ import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.MessageGroup;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +25,7 @@ public abstract class AbstractScene {
     }
 
     @Inject private Sync sync;
+    @Inject private SceneLoader sceneLoader;
 
     public abstract void build();
 
@@ -88,6 +90,9 @@ public abstract class AbstractScene {
         for ( Entry<String, AbstractZone> entry : zones.entrySet() ) {
             entry.getValue().pause();
         }
+        for ( Entry<String, MessageGroup> entry : groups.entrySet() ) {
+            entry.getValue().saveMessages();
+        }
     }
 
     private Map<String, MessageGroup> groups = new HashMap<>();
@@ -103,4 +108,11 @@ public abstract class AbstractScene {
         return groups.get(id);
     }
 
+    public Collection<MessageGroup> getGroups() {
+        return groups.values();
+    }
+
+    public void exitScene() {
+        sceneLoader.skip();
+    }
 }

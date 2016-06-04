@@ -43,20 +43,12 @@
     <textzone id="webstatus">
         <font>SmallFont</font>
         <in-transition duration="800">ExplodeIn</in-transition>
-        <out-transition duration="800">ExplodeOut</out-transition>
+        <out-transition duration="800">InterlaceOut</out-transition>
         <display-time>5000</display-time>
         <canvas-layer>1</canvas-layer>
         <auto-out/>
         <message>:webStatus</message>
     </textzone>
-
-    <imagezone id="logo" src=":logoFilename">
-        <in-transition duration="2500">RainIn</in-transition>
-        <out-transition duration="300">InterlaceOut</out-transition>
-        <display-time>4000</display-time>
-        <canvas-layer>3</canvas-layer>
-        <auto-out/>
-    </imagezone>
 
     <domino>
         <trigger action="in">company</trigger>
@@ -75,11 +67,7 @@
         <target action="in">webstatus</target>
     </domino>
     <domino>
-        <trigger action="out" progress="0.6">webstatus</trigger>
-        <target action="in">logo</target>
-    </domino>
-    <domino>
-        <trigger action="out">logo</trigger>
+        <trigger action="out">webstatus</trigger>
         <target action="in">company</target>
     </domino>
 

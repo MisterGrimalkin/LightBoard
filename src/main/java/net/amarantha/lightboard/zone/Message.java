@@ -27,6 +27,6 @@ public class Message {
 
     @Override
     public String toString() {
-        return text;
+        return "{\"id\":\"" + id + "\",\"text\":\"" + text + "\"}";
     }
 }

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	A scene is a configuration of the LightBoard, defined in XML.
+	Only one scene is active at any one time.
+
+	To load a scene, send a POST request to:
+		http://{ipAddressOfLightBoard}:8001/lightboard/scene/{nameOfScene}/load
+
+	The LightBoard will then load and start the scene defined in {nameOfScene}.xml
+-->
+<scene>
+
+	<!--
+		You can define constants to use later in the document. Handy if you want to use the same value in multiple places.
+		They can be used in attribute and element values, by prefixing the name with ':'
+		e.g. ":someText" will be replaced by "Some Piece of Text"
+	-->
+    <define name="someText">Some Piece of Text</define>
+    <define name="someNumber">42</define>
+
+	<!--
+		A Text Zone is an area of the board that contains a looping queue of text messages.
+		You must specify an ID so you can refer to the zone later.
+	-->
+    <textzone id="myTextZone">
+
+		<!-- MOST OF THE FOLLOWING OPTIONS CAN BE APPLIED TO OTHER TYPES OF ZONE AS WELL -->
+		
+		<!--
+			The region of the board the zone occupies, in pixels. The zone will not draw any content outside this region.
+			By default the zone will fill the board.
+		-->
+		<region left="2" top="2" width=":someNumber" height="16"/>
+
+		<!--
+			The positional offset for content relative to the zone's region.
+			You can specify one or both axes.
+		-->
+        <offset x="2" y="-9"/>
+
+		<!--
+			The Z-order of the zone, where a higher number overlays a lower one.
+			Multiple zones with overlapping regions must use different canvas layers.
+		-->
+		<canvas-layer>1</canvas-layer>
+
+		<!--
+			The transition effects used to bring the content in and out. Duration is in milliseconds, and very approximate.
+			Some transition types take additional attributes, for example the ScrollIn and ScrollOut transitions
+			take an "edge" attribute which must be one of: left, right, top or bottom.
+			If transition is omitted, the content will simply appear and disappear.
+			Transitions currently include: ScrollIn, ScrollOut, ExplodeIn, ExplodeOut, TypeIn, RainDown, InterlaceOut
+		-->
+        <in-transition duration="2000">TypeIn</in-transition>
+        <out-transition duration="700" edge="right">ScrollOut</out-transition>
+
+		<!--
+			Content alignment relative to zone region.
+			Horizontal: left, centre, right
+			Vertical: top, middle, bottom
+			If omitted, the defaults are centre and middle.
+			Note that the offset (above) is applied after the alignment
+		-->
+		<align-horizontal>right</align-horizontal>
+		<align-vertical>bottom</align-vertical>
+
+        <!--
+			Once the content has transitioned in, the zone will display the content for at least this length of time (in milliseconds)
+		-->
+		<display-time>3000</display-time>
+
+		<!--
+			Only include this if you know what it means, otherwise leave it out and hope for the best
+		-->
+		<tick>20</tick>
+
+		<!--
+			If this is present, the zone will transition in as soon as the scene is loaded,
+			otherwise it will do nothing
+		-->
+		<auto-start/>
+
+		<!--
+			If this is present, the zone will transition out after the display time has elapsed,
+			otherwise it will leave the content visible and wait
+		-->
+		<auto-out/>
+
+		<!--
+			If this is present, the zone will transition in again (with the next message) after it has transitioned out,
+			otherwise it will do nothing
+		-->
+		<auto-next/>
+
+		
+		<!-- THE FOLLOWING OPTIONS ONLY APPLY TO TEXT ZONES -->
+		
+		<font>SmallFont</font>
+        <!--
+			The font used to render text - currently SmallFont, SimpleFont (default) or LargeFont
+		-->
+		
+        <message>:someText</message>
+        <message>Rights are {red}not {yellow}granted, they are {green}won</message>
+		<!--
+			You can specify messages here, which is useful for testing, but it is better to add messages using Groups (see below)
+		-->
+		
+    </textzone>
+	
+	<!--
+		Images zones contain images loaded from JPG or GIF files.
+		An Image Zone can only hold one image, specified in the "src" attribute.
+	-->
+	<imagezone id="myImageZone" src="logo.jpg">
+		<!--
+			The general options for Text Zones above can be applied here as well
+		-->
+	</imagezone>
+	
+	<!--
+		Dominoes are used to animate a scene by e.g. bringing one zone in after another has finished going out.
+		At least one zone must have <auto-start/> set if the scene is actually going to do anything.
+		You can add as many dominoes as you need, but each zone/trigger-action combo can only trigger ONE domino.
+	-->
+	<domino>
+		<!--
+			A domino is triggered by a single zone (myTextZone in this case) hitting a certain point in its display cycle,
+			which runs IN - DISPLAY - OUT
+			The action attribute can be one the following...
+				in: Domino is triggered when the zone has finished transitioning in and started displaying
+				display: Domino is triggered when the zone has finished displaying (as defined by <display-time>)
+				out: Domino is triggered when the zone has finished transitioning out
+		-->
+		<trigger action="in">myTextZone</trigger>
+
+		<!--
+			A domino can affect multiple zones (ids should be comma-separated), applying the specified action to each one...
+				in: Start the zone transitioning in
+				out: Start the zone transitioning out
+				exit: Instruct the SceneLoader to stop this scene and re-load the previous one (used for "one-shot" scenes like logo banners)
+			For the latter case you do not need to specify a target zone, so you can write: <target action="exit"/>.
+			If there is no previous scene, the current one will repeat.
+		-->
+		<target action="out">myImageZone,someOtherZone</target>
+	</domino>
+	
+	<!--
+		Message Groups ensure that related messages in different zones appear together, by binding several Text Zones to a single queue.
+		A Group can be accessed via POST requests, which accept comma-separated string values in the body.
+		The number of values must match the number of zones in the group. The order of the values in the body will be matched to the zones
+		in the order they are specified in the group element.
+		
+		To add a message to the group's queue:
+			http://{ipAddressOfLightBoard}:8001/lightboard/scene/{nameOfScene}/group/{idOfGroup}/add
+			(put the messages you wish to add in the request body, comma-separated)
+		To clear the group queue:
+			http://{ipAddressOfLightBoard}:8001/lightboard/scene/{nameOfScene}/group/{idOfGroup}/clear
+			
+		The example group below would accept the message "Something Wicked,This Way Comes", but not "Something Wicked This Way Comes"
+		
+		Contents of a group are saved in a file {nameOfScene}-{idOfGroup}.json each time the contents are changed,
+		and will be automatically re-loaded when the scene starts again
+	-->
+	<group id="someGroup">myTextZone,anotherTextZone</group>
+	
+</scene>

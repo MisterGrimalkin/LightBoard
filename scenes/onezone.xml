@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene>
 
-    <define name="scrollTime">1000</define>
+    <define name="scrollTime">500</define>
 
-    <textzone id="50">
+    <textzone id="message">
         <tick>20</tick>
         <in-transition duration=":scrollTime">ExplodeIn</in-transition>
         <out-transition duration=":scrollTime">ExplodeOut</out-transition>
-        <display-time>2000</display-time>
+        <display-time>4000</display-time>
         <auto-start/>
         <auto-next/>
         <auto-out/>
-        <message>The Human Race is a Race Against Time</message>
     </textzone>
+
+    <domino>
+        <trigger action="out">message</trigger>
+        <target action="exit"/>
+    </domino>
+
+    <group id="message">message</group>
 
 </scene>

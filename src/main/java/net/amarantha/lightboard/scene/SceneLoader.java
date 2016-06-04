@@ -31,7 +31,7 @@ import static net.amarantha.lightboard.entity.Tag.*;
 public class SceneLoader extends XMLParser {
 
     private AbstractScene currentScene;
-    private AbstractScene lastScene;
+    private String lastSceneName;
 
     @Inject private Sync sync;
     @Inject private Injector injector;
@@ -69,8 +69,8 @@ public class SceneLoader extends XMLParser {
     }
 
     public void skip() {
-        if ( lastScene!=null ) {
-            startScene(lastScene);
+        if ( lastSceneName!=null ) {
+            loadScene(lastSceneName);
         }
     }
 
@@ -84,16 +84,24 @@ public class SceneLoader extends XMLParser {
             return false;
         } else {
             scene.setName(name);
+            loadSceneMessages(scene);
             startScene(scene);
             return true;
+        }
+    }
+
+    private void loadSceneMessages(AbstractScene scene) {
+        for ( MessageGroup group : scene.getGroups() ) {
+            group.setFilename("scenes/"+scene.getName()+"-"+group.getId()+".json");
+            group.loadMessages();
         }
     }
 
     private void startScene(AbstractScene scene) {
         if ( currentScene!=null ) {
             currentScene.stop();
+            lastSceneName = currentScene.getName();
         }
-        lastScene = currentScene;
         currentScene = scene;
         surface.clearSurface();
         currentScene.init();

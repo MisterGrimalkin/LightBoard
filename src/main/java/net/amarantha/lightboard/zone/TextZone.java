@@ -11,19 +11,17 @@ public class TextZone extends AbstractZone {
 
     @Override
     public Pattern getNextPattern() {
-        if ( group ==null ) {
-            Message nextMessage = messageQueue.poll();
-            if (nextMessage != null) {
-                if (cycleMessages) {
-                    messageQueue.offer(nextMessage);
-                }
-                return font.renderString(nextMessage.getText(), getAlignH());
+        Message nextMessage;
+        if ( group == null ) {
+            nextMessage = messageQueue.poll();
+            if (cycleMessages && nextMessage != null) {
+                messageQueue.offer(nextMessage);
             }
         } else {
-            Message nextMessage = group.requestMessage(this);
-            if ( nextMessage!=null ) {
-                return font.renderString(nextMessage.getText(), getAlignH());
-            }
+            nextMessage = group.requestMessage(this);
+        }
+        if ( nextMessage!=null ) {
+            return font.renderString(nextMessage.getText(), getAlignH());
         }
         return null;
     }
