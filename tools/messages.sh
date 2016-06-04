@@ -18,4 +18,8 @@ then
 fi
 echo "Messages:"
 curl -s http://${lightboard}:8001/lightboard/scene/$1/group/$2/list
+if [ $? -ne 0 ]
+then
+    echo "(offline!)"
+fi
 echo

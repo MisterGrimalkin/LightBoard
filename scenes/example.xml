@@ -143,7 +143,7 @@
 			For the latter case you do not need to specify a target zone, so you can write: <target action="exit"/>.
 			If there is no previous scene, the current one will repeat.
 		-->
-		<target action="out">myImageZone,someOtherZone</target>
+		<target action="out">myImageZone,myTextZone</target>
 	</domino>
 	
 	<!--
@@ -163,6 +163,6 @@
 		Contents of a group are saved in a file {nameOfScene}-{idOfGroup}.json each time the contents are changed,
 		and will be automatically re-loaded when the scene starts again
 	-->
-	<group id="someGroup">myTextZone,anotherTextZone</group>
+	<group id="someGroup">myTextZone</group>
 	
 </scene>

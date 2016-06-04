@@ -7,6 +7,8 @@ public enum Tag {
     TEXT_ZONE("textzone"),
     IMAGE_ZONE("imagezone"),
 
+    DEFAULT_COLOUR("default-colour"),
+
     GROUP("group"),
 
     STANDALONE("standalone"),

@@ -7,5 +7,9 @@ else
     lightboard=`cat lightboard.ip`
 fi
 echo "Available scenes:"
-curl -s http://$lightboard:8001/lightboard/scene/list
+curl -s http://${lightboard}:8001/lightboard/scene/list
+if [ $? -ne 0 ]
+then
+    echo "(offline!)"
+fi
 echo

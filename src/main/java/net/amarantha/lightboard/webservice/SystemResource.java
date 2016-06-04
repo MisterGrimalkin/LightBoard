@@ -23,7 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Path("system")
-public class SystemResource {
+public class SystemResource extends Resource {
 
     private static PropertyManager props;
     private static LightBoardSurface surface;
@@ -161,6 +161,7 @@ public class SystemResource {
             @Override
             public void run() {
                 surface.clearSurface();
+                surface.sleep();
                 System.exit(0);
             }
         }, 2000);
@@ -186,20 +187,16 @@ public class SystemResource {
     @Path("sleep")
     @Produces(MediaType.TEXT_PLAIN)
     public Response sleep() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity("Board has gone to sleep")
-                .build();
+        surface.sleep();
+        return ok("Sleeping");
     }
 
     @POST
     @Path("wake")
     @Produces(MediaType.TEXT_PLAIN)
     public Response wake() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity("Board has woken up")
-                .build();
+        surface.wake();
+        return ok("Awake");
     }
 
 }

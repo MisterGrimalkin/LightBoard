@@ -30,11 +30,11 @@ public class LightBoardApplication {
             sceneLoader.start();
         }
 
-        sync.startSyncThread();
-
         if ( isWithServer() ) {
             webService.start();
         }
+
+        sync.startSyncThread();
 
     }
 

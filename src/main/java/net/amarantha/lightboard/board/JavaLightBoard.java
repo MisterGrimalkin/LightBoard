@@ -146,6 +146,8 @@ public class JavaLightBoard implements LightBoard {
     @Override
     public void sleep() {
         sleeping = true;
+        update(new double[currentFrame.length][currentFrame[0].length][currentFrame[0][0].length]);
+        push();
     }
 
     @Override
@@ -158,7 +160,7 @@ public class JavaLightBoard implements LightBoard {
         nextFrame = currentFrame;
         for ( int r=0; r<rows; r++ ) {
             for ( int c=0; c<cols; c++ ) {
-                if ( c%8==0 || r%8==0 ) {
+                if ( (c+2)%4==0 || (r+2)%4==0 ) {
                     currentFrame[0][r][c] = 1.0;
                     currentFrame[1][r][c] = 1.0;
                     currentFrame[2][r][c] = 1.0;

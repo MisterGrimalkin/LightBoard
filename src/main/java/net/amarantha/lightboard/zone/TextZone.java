@@ -9,6 +9,8 @@ import java.util.Queue;
 
 public class TextZone extends AbstractZone {
 
+    private String colourOverride = "";
+
     @Override
     public Pattern getNextPattern() {
         Message nextMessage;
@@ -21,7 +23,7 @@ public class TextZone extends AbstractZone {
             nextMessage = group.requestMessage(this);
         }
         if ( nextMessage!=null ) {
-            return font.renderString(nextMessage.getText(), getAlignH());
+            return font.renderString(colourOverride+nextMessage.getText(), getAlignH());
         }
         return null;
     }
@@ -73,4 +75,7 @@ public class TextZone extends AbstractZone {
 
     private Font font = new SimpleFont();
 
+    public void setColourOverride(String colourOverride) {
+        this.colourOverride = "{" + colourOverride + "}";
+    }
 }

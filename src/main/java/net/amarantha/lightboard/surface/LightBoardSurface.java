@@ -384,4 +384,12 @@ public class LightBoardSurface {
         return cols;
     }
 
+    public void sleep() {
+        board.sleep();
+    }
+
+    public void wake() {
+        board.wake();
+    }
+
 }

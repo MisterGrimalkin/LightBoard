@@ -17,12 +17,17 @@ echo "Compiling Java..."
 mvn clean package
 echo "Uploading Java..."
 sshpass -p raspberry scp -r target/ pi@${lightboard}:lightboard
+echo "Uploading Shell Scripts..."
+sshpass -p raspberry scp board.sh pi@${lightboard}:lightboard
+sshpass -p raspberry scp getip.sh pi@${lightboard}:lightboard
+sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x board.sh; chmod +x getip.sh"
 echo "Uploading HTML..."
 sshpass -p raspberry scp -r html/ pi@${lightboard}:lightboard
 echo "Uploading C..."
 sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; ./build.sh"
 echo "Deployed to ${lightboard}"
+echo
 cd tools
 if [ ${wasup} ]
 then

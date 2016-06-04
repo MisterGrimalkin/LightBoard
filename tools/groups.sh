@@ -13,4 +13,8 @@ then
 fi
 echo "Available groups:"
 curl -s http://${lightboard}:8001/lightboard/scene/$1/list
+if [ $? -ne 0 ]
+then
+    echo "(offline!)"
+fi
 echo

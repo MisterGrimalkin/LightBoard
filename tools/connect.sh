@@ -12,13 +12,13 @@ else
     lightboard=$1
 fi
 echo "LightBoard @ $lightboard..."
-boardname=`curl -s http://$lightboard:8001/lightboard/system/name`
+boardname=`curl -s http://${lightboard}:8001/lightboard/system/name`
 if [ $? -eq 0 ]
 then
     echo "$lightboard" > lightboard.ip
     echo "BOARD ACTIVE: $boardname"
 else
-    ping -c 1 $lightboard >/dev/null
+    ping -c 1 ${lightboard} >/dev/null
     if [ $? -eq 0 ]
     then
         echo "$lightboard" > lightboard.ip

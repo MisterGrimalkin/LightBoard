@@ -2,65 +2,16 @@
 <scene>
 
     <textzone id="day">
-        <region left="1" top="1" width="46" height="9"/>
-        <in-transition duration="800" edge="top">ScrollIn</in-transition>
-        <out-transition duration="500" edge="right">ScrollOut</out-transition>
-        <display-time>10</display-time>
-        <canvas-layer>1</canvas-layer>
-        <align-horizontal>right</align-horizontal>
-        <auto-start/>
-    </textzone>
-
-    <textzone id="time">
-        <region left="46" top="1" width="40" height="9"/>
-        <in-transition duration="800" edge="top">ScrollIn</in-transition>
-        <out-transition duration="500" edge="right">ScrollOut</out-transition>
-        <display-time>100</display-time>
-        <canvas-layer>2</canvas-layer>
-    </textzone>
-
-    <textzone id="description">
-        <region left="85" top="1" height="9" width="205"/>
-        <align-horizontal>left</align-horizontal>
-        <in-transition duration="1300">TypeIn</in-transition>
-        <out-transition duration="1000">InterlaceOut</out-transition>
-        <display-time>4000</display-time>
-        <canvas-layer>3</canvas-layer>
-    </textzone>
-
-    <textzone id="scroller">
         <tick>10</tick>
-        <region left="0" top="23" height="9" width="256"/>
-        <in-transition duration="8000" edge="right">ScrollIn</in-transition>
-        <out-transition duration="8000" edge="left">ScrollOut</out-transition>
-        <display-time>0</display-time>
-        <canvas-layer>4</canvas-layer>
+        <in-transition duration="4000" edge="right">ScrollIn</in-transition>
+        <out-transition duration="4000" edge="left">ScrollOut</out-transition>
+        <font>LargeFont</font>
         <auto-start/>
         <auto-out/>
         <auto-next/>
+        <display-time>0</display-time>
+<message>Welcome to Nola where People ask you Where You From
+</message>
     </textzone>
-
-    <domino>
-        <trigger action="in">day</trigger>
-        <target action="in">time</target>
-    </domino>
-
-    <domino>
-        <trigger action="display">time</trigger>
-        <target action="in">description</target>
-    </domino>
-
-    <domino>
-        <trigger action="display">description</trigger>
-        <target action="out">day,time,description</target>
-    </domino>
-
-    <domino>
-        <trigger action="out">description</trigger>
-        <target action="in">day</target>
-    </domino>
-
-    <group id="events">day,time,description</group>
-    <group id="scroller">scroller</group>
 
 </scene>

@@ -6,5 +6,5 @@ then
 else
     lightboard=`cat lightboard.ip`
 fi
-sshpass -p raspberry scp pi@${lightboard}:lightboard/lightboard.log ./${lightboard}.log
-less ${lightboard}.log
+sshpass -p raspberry scp pi@${lightboard}:lightboard/lightboard-server.log ./${lightboard}-server.log
+less ${lightboard}-server.log

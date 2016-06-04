@@ -6,7 +6,7 @@ then
 else
     lightboard=`cat lightboard.ip`
 fi
-curl -s -d "" http://$lightboard:8001/lightboard/scene/pause
+curl -s -d "" http://${lightboard}:8001/lightboard/scene/pause
 echo
 if [ $? -ne 0 ]
 then

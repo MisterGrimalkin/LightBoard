@@ -16,5 +16,9 @@ then
     echo "No Message Group specified"
     exit
 fi
-curl -s -d "" http://$lightboard:8001/lightboard/scene/$1/group/$2/clear
+curl -s -d "" http://${lightboard}:8001/lightboard/scene/$1/group/$2/clear
+if [ $? -ne 0 ]
+then
+    echo "(offline!)"
+fi
 echo

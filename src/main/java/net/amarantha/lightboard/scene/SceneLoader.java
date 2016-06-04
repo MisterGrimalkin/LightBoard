@@ -204,7 +204,7 @@ public class SceneLoader extends XMLParser {
                     break;
                 case SRC:
                     if ( zone instanceof ImageZone ) {
-                        ((ImageZone)zone).setImage(stringValue(node));
+                        ((ImageZone)zone).setImage("images/"+stringValue(node));
                     }
                     break;
             }
@@ -220,6 +220,11 @@ public class SceneLoader extends XMLParser {
                 case MESSAGE:
                     if ( zone instanceof TextZone ) {
                         ((TextZone)zone).addMessage(stringValue(node));
+                    }
+                    break;
+                case DEFAULT_COLOUR:
+                    if ( zone instanceof TextZone ) {
+                        ((TextZone)zone).setColourOverride(stringValue(node));
                     }
                     break;
 

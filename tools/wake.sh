@@ -6,5 +6,9 @@ then
 else
     lightboard=`cat lightboard.ip`
 fi
-sshpass -p raspberry scp pi@${lightboard}:lightboard/lightboard.log ./${lightboard}.log
-less ${lightboard}.log
+curl -s -d "" http://${lightboard}:8001/lightboard/system/wake
+echo
+if [ $? -ne 0 ]
+then
+    echo "Failed!"
+fi

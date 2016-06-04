@@ -25,5 +25,9 @@ if [ "$4" = "-replace" ]
 then
     sh clearmessages.sh $1 $2
 fi
-curl -s -d "$3" http://$lightboard:8001/lightboard/scene/$1/group/$2/add
+curl -s -d "$3" http://${lightboard}:8001/lightboard/scene/$1/group/$2/add
+if [ $? -ne 0 ]
+then
+    echo "(offline!)"
+fi
 echo

@@ -7,7 +7,7 @@ else
     lightboard=`cat lightboard.ip`
 fi
 echo "Shutdown LightBoard @ $lightboard..."
-curl -s -d "" http://$lightboard:8001/lightboard/system/shutdown
+curl -s -d "" http://${lightboard}:8001/lightboard/system/shutdown
 if [ $? -eq 0 ]
 then
     echo
