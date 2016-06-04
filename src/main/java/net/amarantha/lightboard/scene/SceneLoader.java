@@ -21,8 +21,11 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static net.amarantha.lightboard.entity.Tag.*;
@@ -55,11 +58,21 @@ public class SceneLoader extends XMLParser {
         sync.addTask(new Sync.Task(tick) {
             @Override
             public void runTask() {
-                if ( currentScene!=null ) {
+                if (!paused && currentScene != null) {
                     currentScene.tick();
                 }
             }
         });
+    }
+
+    private boolean paused = false;
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void resume() {
+        paused = false;
     }
 
     public void stop() {
@@ -90,7 +103,7 @@ public class SceneLoader extends XMLParser {
         }
     }
 
-    private void loadSceneMessages(AbstractScene scene) {
+    public void loadSceneMessages(AbstractScene scene) {
         for ( MessageGroup group : scene.getGroups() ) {
             group.setFilename("scenes/"+scene.getName()+"-"+group.getId()+".json");
             group.loadMessages();
@@ -108,7 +121,21 @@ public class SceneLoader extends XMLParser {
         currentScene.start();
     }
 
-    private AbstractScene loadSceneFromFile(String filename) {
+    public List<String> listSceneFiles() {
+        List<String> result = new ArrayList<>();
+        File dir = new File("scenes");
+        if ( dir.isDirectory() ) {
+            for ( File file : dir.listFiles() ) {
+                String filename = file.getName();
+                if ( filename.length()>4 && filename.substring(filename.length()-4).equals(".xml") ) {
+                    result.add(filename.substring(0,filename.length()-4));
+                }
+            }
+        }
+        return result;
+    }
+
+    public AbstractScene loadSceneFromFile(String filename) {
 
         AbstractScene scene = injector.getInstance(XMLScene.class);
 

@@ -1,17 +1,16 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import net.amarantha.lightboard.scene.AbstractScene;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.MessageGroup;
 import net.amarantha.lightboard.zone.TextZone;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("scene")
 public class SceneResource extends Resource {
@@ -24,6 +23,26 @@ public class SceneResource extends Resource {
     public SceneResource(SceneLoader sceneLoader) {
         SceneResource.sceneLoader = sceneLoader;
     }
+
+    /**
+     * List available scenes
+     */
+    @GET
+    @Path("list")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response listScenes() {
+        try {
+            List<String> sceneNames = sceneLoader.listSceneFiles();
+            String result = "";
+            for (String name : sceneNames) {
+                result += name + "\n";
+            }
+            return ok(result);
+        } catch ( Exception e ) {
+            return error(e.getMessage());
+        }
+    }
+
 
     /**
      * Load scene from file and begin display
@@ -39,51 +58,35 @@ public class SceneResource extends Resource {
         }
     }
 
-    /**
-     * Clear the message queue of a TextZone
-     */
-    @POST
-    @Path("{sceneName}/zone/{zoneId}/clear")
+    @GET
+    @Path("{sceneName}/list")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response clearMessage(@PathParam("sceneName") String sceneName, @PathParam("zoneId") String zoneId) {
+    public Response listGroups(@PathParam("sceneName") String sceneName) {
         try {
-            findTextZone(sceneName, zoneId).clearMessages().end();
-            return ok("Messages Cleared '"+sceneName+"/"+zoneId + "'");
+            AbstractScene scene = findScene(sceneName);
+            String result = "";
+            for ( MessageGroup group : scene.getGroups() ) {
+                result += group.getId()+"\n";
+            }
+            return ok(result);
         } catch (Exception e) {
             return error(e.getMessage());
         }
     }
 
-    /**
-     * Add a message to the queue of a TextZone
-     */
-    @POST
-    @Path("{sceneName}/zone/{zoneId}/add")
+    @GET
+    @Path("{sceneName}/group/{groupId}/list")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addMessage(@PathParam("sceneName") String sceneName, @PathParam("zoneId") String zoneId, String message) {
+    public Response listGroupMessage(@PathParam("sceneName") String sceneName, @PathParam("groupId") String groupId) {
         try {
-            findTextZone(sceneName, zoneId).addMessage(message).end();
-            return ok("Message Added '"+sceneName+"/"+zoneId+"'");
+            MessageGroup group = findMessageGroup(sceneName, groupId);
+            return ok(group.listMessages());
         } catch (Exception e) {
             return error(e.getMessage());
         }
     }
 
-    /**
-     * Clear and then add a message to a TextZone
-     */
-    @POST
-    @Path("{sceneName}/zone/{zoneId}/replace")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response replaceMessage(@PathParam("sceneName") String sceneName, @PathParam("zoneId") String zoneId, String message) {
-        try {
-            findTextZone(sceneName, zoneId).clearMessages().end();
-            findTextZone(sceneName, zoneId).addMessage(message);
-            return ok("Message Replaced '"+sceneName+"/"+zoneId+"'");
-        } catch (Exception e) {
-            return error(e.getMessage());
-        }
-    }
+
 
     @POST
     @Path("{sceneName}/group/{groupId}/add")
@@ -108,33 +111,47 @@ public class SceneResource extends Resource {
             return error(e.getMessage());
         }
     }
+
+    @POST
+    @Path("pause")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response pause() {
+        sceneLoader.pause();
+        return ok("Paused");
+    }
+
+    @POST
+    @Path("resume")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response resume() {
+        sceneLoader.resume();
+        return ok("Resumed");
+    }
+
     /////////////
     // Utility //
     /////////////
 
-    private TextZone findTextZone(String sceneName, String zoneId) throws Exception {
-        if ( sceneLoader.getCurrentScene()!=null && sceneLoader.getCurrentScene().getName().equals(sceneName) ) {
-            AbstractZone zone = sceneLoader.getCurrentScene().getZone(zoneId);
-            if ( zone!=null && zone instanceof TextZone) {
-                return (TextZone)zone;
-            } else {
-                throw new Exception("Could not find TextZone '"+zoneId+"'");
+    private AbstractScene findScene(String sceneName) throws Exception {
+        AbstractScene scene = sceneLoader.getCurrentScene();
+        if ( scene==null || !scene.getName().equals(sceneName) ) {
+            scene = sceneLoader.loadSceneFromFile("scenes/"+sceneName+".xml");
+            if ( scene==null ) {
+                throw new Exception("Scene '" + sceneName + "' not found");
             }
-        } else {
-            throw new Exception("Scene '"+sceneName+"' is not active");
         }
+        scene.setName(sceneName);
+        sceneLoader.loadSceneMessages(scene);
+        return scene;
     }
 
     private MessageGroup findMessageGroup(String sceneName, String groupId) throws Exception {
-        if ( sceneLoader.getCurrentScene()!=null && sceneLoader.getCurrentScene().getName().equals(sceneName) ) {
-            MessageGroup group = sceneLoader.getCurrentScene().getGroup(groupId);
-            if ( group!=null ) {
-                return group;
-            } else {
-                throw new Exception("Could not find MessageGroup '"+groupId+"'");
-            }
+        AbstractScene scene = findScene(sceneName);
+        MessageGroup group = scene.getGroup(groupId);
+        if ( group!=null ) {
+            return group;
         } else {
-            throw new Exception("Scene '"+sceneName+"' is not active");
+            throw new Exception("Could not find MessageGroup '"+groupId+"'");
         }
     }
 

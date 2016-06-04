@@ -168,4 +168,15 @@ public class MessageGroup {
 
     }
 
+    public String listMessages() {
+        String result = "";
+        for ( Entry<Integer, Map<String, Message>> entry : allMessages.entrySet() ) {
+            for ( String field : fields ) {
+                result += entry.getValue().get(field).getText() + ",";
+            }
+            result = result.substring(0, result.length()-1) + "\n";
+        }
+        return result;
+    }
+
 }
