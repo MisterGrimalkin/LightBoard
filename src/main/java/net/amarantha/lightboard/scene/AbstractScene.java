@@ -31,6 +31,10 @@ public abstract class AbstractScene {
 
     private long tick = 20;
 
+    public void setTick(long tick) {
+        this.tick = tick;
+    }
+
     public void init() {
         build();
         try {

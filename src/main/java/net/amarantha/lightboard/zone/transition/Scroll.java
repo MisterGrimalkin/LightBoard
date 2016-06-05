@@ -24,6 +24,12 @@ public abstract class Scroll extends AbstractTransition {
     protected double deltaX;
     protected double deltaY;
 
+    protected Integer speed;
+
+    public void setSpeed(Integer speed) {
+        this.speed = speed;
+    }
+
     protected Edge edge = Edge.NONE;
 
     public Scroll setEdge(Edge edge) {

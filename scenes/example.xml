@@ -17,7 +17,7 @@
 		e.g. ":someText" will be replaced by "Some Piece of Text"
 	-->
     <define name="someText">Some Piece of Text</define>
-    <define name="someNumber">42</define>
+    <define name="someNumber">142</define>
 
 	<!--
 		A Text Zone is an area of the board that contains a looping queue of text messages.
@@ -62,7 +62,7 @@
 			If omitted, the defaults are centre and middle.
 			Note that the offset (above) is applied after the alignment
 		-->
-		<align-horizontal>right</align-horizontal>
+		<align-horizontal>left</align-horizontal>
 		<align-vertical>bottom</align-vertical>
 
         <!--
@@ -158,7 +158,7 @@
 		To clear the group queue:
 			http://{ipAddressOfLightBoard}:8001/lightboard/scene/{nameOfScene}/group/{idOfGroup}/clear
 			
-		The example group below would accept the message "Something Wicked,This Way Comes", but not "Something Wicked This Way Comes"
+		The example group below would accept the message "Something Wicked;;This Way Comes", but not "Something Wicked This Way Comes"
 		
 		Contents of a group are saved in a file {nameOfScene}-{idOfGroup}.json each time the contents are changed,
 		and will be automatically re-loaded when the scene starts again

@@ -19,9 +19,9 @@ public class LightBoardProperties extends PropertyManager {
     // static stuff for command line params
     public static void processArgs(String[] args) {
         List<String> params = Arrays.asList(args);
-        simulationMode = params.contains("simulation");
-        testMode = params.contains("test");
-        withServer = !params.contains("noserver");
+        simulationMode = params.contains("-simulation");
+        testMode = params.contains("-test");
+        withServer = !params.contains("-noserver");
     }
 
     public static boolean isSimulationMode() {
@@ -95,4 +95,6 @@ public class LightBoardProperties extends PropertyManager {
     public String getDefaultScene() {
         return getString("defaultScene", "splash");
     }
+
+    public long getSceneTick() { return getInt("sceneTick", 5); }
 }

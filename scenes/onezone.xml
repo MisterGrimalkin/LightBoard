@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene>
 
-    <define name="scrollTime">500</define>
+    <define name="scrollTime">200</define>
 
     <textzone id="message">
         <tick>20</tick>
-        <in-transition duration=":scrollTime">ExplodeIn</in-transition>
+        <font>LargeFont</font>
+        <in-transition duration="2000">RainIn</in-transition>
         <out-transition duration=":scrollTime">ExplodeOut</out-transition>
         <display-time>4000</display-time>
         <auto-start/>

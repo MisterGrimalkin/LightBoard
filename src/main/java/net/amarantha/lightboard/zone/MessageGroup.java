@@ -16,6 +16,8 @@ import java.util.Map.Entry;
 
 public class MessageGroup {
 
+    public static final String SEP = ";;";
+
     public MessageGroup(String[] fields) {
         this.fields = fields;
         nextMessageSet();
@@ -36,7 +38,7 @@ public class MessageGroup {
     }
 
     public void addMessages(String input) {
-        String[] msgs = input.split(",");
+        String[] msgs = input.split(SEP);
         if ( msgs.length!=fields.length ) {
             throw new IllegalArgumentException("Wrong number of messages, expected " + fields.length);
         }
@@ -172,9 +174,12 @@ public class MessageGroup {
         String result = "";
         for ( Entry<Integer, Map<String, Message>> entry : allMessages.entrySet() ) {
             for ( String field : fields ) {
-                result += entry.getValue().get(field).getText() + ",";
+                result += entry.getValue().get(field).getText() + SEP;
             }
-            result = result.substring(0, result.length()-1) + "\n";
+            result = result.substring(0, result.length()-SEP.length()) + "\n";
+        }
+        if ( result.length()>1 ) {
+            result = result.substring(0, result.length()-1);
         }
         return result;
     }

@@ -13,14 +13,17 @@ then
     sh shutdown.sh
 fi
 cd ..
-echo "Compiling Java..."
-mvn clean package
-echo "Uploading Java..."
-sshpass -p raspberry scp -r target/ pi@${lightboard}:lightboard
+if [ "$1" != "-skipjava" ]
+then
+    echo "Compiling Java..."
+    mvn clean package
+    echo "Uploading Java..."
+    sshpass -p raspberry scp -r target/ pi@${lightboard}:lightboard
+fi
 echo "Uploading Shell Scripts..."
-sshpass -p raspberry scp board.sh pi@${lightboard}:lightboard
-sshpass -p raspberry scp getip.sh pi@${lightboard}:lightboard
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x board.sh; chmod +x getip.sh"
+sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard
+#sshpass -p raspberry scp getip.sh pi@${lightboard}:lightboard
+sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
 echo "Uploading HTML..."
 sshpass -p raspberry scp -r html/ pi@${lightboard}:lightboard
 echo "Uploading C..."

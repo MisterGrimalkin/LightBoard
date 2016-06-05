@@ -14,6 +14,8 @@ public enum Tag {
     STANDALONE("standalone"),
     TICK("tick"),
 
+    SPEED("speed"),
+
     DOMINO("domino"),
     TRIGGER("trigger"),
     ACTION("action"),

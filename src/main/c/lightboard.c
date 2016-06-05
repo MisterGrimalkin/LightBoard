@@ -160,6 +160,22 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_init
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_update
   (JNIEnv *env, jobject o, jintArray arr) {
+    int i = 0;
+    jsize rowLen = (*env)->GetArrayLength(env, arr);
+    jint *inputRow = (*env)->GetIntArrayElements(env, arr, 0);
+//    printf(inputRow);
+//    for (i=0; i<rowLen; i++) {
+//        jsize colLen = (*env)->GetArrayLength(env, inputRow[i]);
+//        jint *inputCol = (*env)->GetIntArrayElements(env, inputRow[i], 0);
+//        int j = 0;
+//        for (j=0, j<colLen; j++ ) {
+////            jsize colLen = (*env)->GetArrayLength(env, inputRow[i]);
+////            jint *inputCol = (*env)->GetIntArrayElements(env, inputRow[i], 0);
+//            printf("#");
+//        }
+//        printf("-\n");
+//    }
+    (*env)->ReleaseIntArrayElements(env, arr, inputRow, 0);
   }
 
 JNIEXPORT jobject JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getUpdateInterval
@@ -169,12 +185,12 @@ JNIEXPORT jobject JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getUpd
 
 JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getRows
   (JNIEnv *env, jobject o) {
-    return 32;
+    return rows;
   }
 
 JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getCols
   (JNIEnv *env, jobject o) {
-    return 192;
+    return cols;
   }
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep

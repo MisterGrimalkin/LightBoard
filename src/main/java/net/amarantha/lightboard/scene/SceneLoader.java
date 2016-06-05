@@ -46,8 +46,6 @@ public class SceneLoader extends XMLParser {
         return currentScene;
     }
 
-    private long tick = 5;
-
     public void start() {
         surface.clearSurface();
         if ( currentScene==null ) {
@@ -55,7 +53,7 @@ public class SceneLoader extends XMLParser {
         } else {
             currentScene.start();
         }
-        sync.addTask(new Sync.Task(tick) {
+        sync.addTask(new Sync.Task(props.getSceneTick()) {
             @Override
             public void runTask() {
                 if (!paused && currentScene != null) {
@@ -385,6 +383,12 @@ public class SceneLoader extends XMLParser {
                                     break;
                             }
                         }
+                        break;
+                    case SPEED:
+                        if ( transition instanceof Scroll ) {
+                            ((Scroll) transition).setSpeed(integerValue(node));
+                        }
+                        break;
                 }
             });
             if ( in ) {

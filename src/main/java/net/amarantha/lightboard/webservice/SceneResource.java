@@ -24,25 +24,33 @@ public class SceneResource extends Resource {
         SceneResource.sceneLoader = sceneLoader;
     }
 
+    ////////////
+    // Scenes //
+    ////////////
+
     /**
      * List available scenes
      */
     @GET
     @Path("list")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response listScenes() {
+    public Response listScenes(@QueryParam("markCurrent") Boolean markCurrent ) {
+        boolean mark = markCurrent==null ? false : markCurrent;
+        String currentSceneName = sceneLoader.getCurrentScene()==null ? "" : sceneLoader.getCurrentScene().getName();
         try {
             List<String> sceneNames = sceneLoader.listSceneFiles();
             String result = "";
             for (String name : sceneNames) {
-                result += name + "\n";
+                result += name + (mark&&name.equals(currentSceneName)?" *" : "") + "\n";
+            }
+            if ( result.length()>1 ) {
+                result = result.substring(0, result.length() - 1);
             }
             return ok(result);
         } catch ( Exception e ) {
             return error(e.getMessage());
         }
     }
-
 
     /**
      * Load scene from file and begin display
@@ -58,6 +66,14 @@ public class SceneResource extends Resource {
         }
     }
 
+
+    ////////////////////
+    // Message Groups //
+    ////////////////////
+
+    /**
+     * List Message Groups for Scene
+     */
     @GET
     @Path("{sceneName}/list")
     @Produces(MediaType.TEXT_PLAIN)
@@ -68,12 +84,18 @@ public class SceneResource extends Resource {
             for ( MessageGroup group : scene.getGroups() ) {
                 result += group.getId()+"\n";
             }
+            if ( result.length()>1 ) {
+                result = result.substring(0, result.length() - 1);
+            }
             return ok(result);
         } catch (Exception e) {
             return error(e.getMessage());
         }
     }
 
+    /**
+     * List messages in Group
+     */
     @GET
     @Path("{sceneName}/group/{groupId}/list")
     @Produces(MediaType.TEXT_PLAIN)
@@ -111,6 +133,10 @@ public class SceneResource extends Resource {
             return error(e.getMessage());
         }
     }
+
+    //////////////
+    // Controls //
+    //////////////
 
     @POST
     @Path("pause")

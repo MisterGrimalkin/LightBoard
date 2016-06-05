@@ -2,46 +2,50 @@
 <scene>
 
     <textzone id="day">
+        <tick>30</tick>
         <default-colour>red</default-colour>
         <font>SmallFont</font>
         <region left="0" top="1" width="39" height="9"/>
         <in-transition duration="300" edge="bottom">ScrollIn</in-transition>
         <out-transition duration="300" edge="right">ScrollOut</out-transition>
         <display-time>100</display-time>
-        <canvas-layer>1</canvas-layer>
+        <canvas-layer>2</canvas-layer>
         <align-horizontal>right</align-horizontal>
         <auto-start/>
     </textzone>
 
     <textzone id="time">
+        <tick>30</tick>
         <default-colour>green</default-colour>
         <region left="0" top="9" width="39" height="9"/>
         <in-transition duration="300" edge="top">ScrollIn</in-transition>
         <out-transition duration="300" edge="right">ScrollOut</out-transition>
         <display-time>200</display-time>
         <align-horizontal>right</align-horizontal>
-        <canvas-layer>1</canvas-layer>
+        <canvas-layer>2</canvas-layer>
     </textzone>
 
     <textzone id="description">
+        <tick>30</tick>
         <region left="43" top="1" height="18" width="250"/>
+        <!--<offset x="43"/>-->
         <align-horizontal>left</align-horizontal>
         <align-vertical>top</align-vertical>
         <font>LargeFont</font>
         <in-transition duration="1100">TypeIn</in-transition>
         <out-transition duration="1000">InterlaceOut</out-transition>
         <display-time>4000</display-time>
-        <canvas-layer>3</canvas-layer>
+        <canvas-layer>1</canvas-layer>
     </textzone>
 
     <textzone id="scroller">
-        <tick>10</tick>
-        <region left="0" top="23" height="9" width="256"/>
-        <in-transition duration="8000" edge="right">ScrollIn</in-transition>
-        <out-transition duration="8000" edge="left">ScrollOut</out-transition>
+        <tick>20</tick>
+        <region left="0" top="23" height="50" width="256"/>
+        <in-transition duration="8000" speed="1" edge="right">ScrollIn</in-transition>
+        <out-transition duration="8000" speed="1" edge="left">ScrollOut</out-transition>
         <display-time>0</display-time>
         <canvas-layer>4</canvas-layer>
-        <!--<auto-start/>-->
+        <auto-start/>
         <auto-out/>
         <auto-next/>
     </textzone>

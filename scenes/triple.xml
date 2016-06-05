@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+
+    <define name="explodeTime">300</define>
+    <define name="displayTime">500</define>
+    <define name="progress">0.9</define>
+
+    <textzone id="one">
+        <tick>30</tick>
+        <offset x="-50" y="-10"/>
+        <default-colour>red</default-colour>
+        <in-transition duration=":explodeTime">ExplodeIn</in-transition>
+        <out-transition duration=":explodeTime">ExplodeOut</out-transition>
+        <display-time>:displayTime</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+    </textzone>
+
+    <textzone id="two">
+        <tick>30</tick>
+        <default-colour>yellow</default-colour>
+        <in-transition duration=":explodeTime">ExplodeIn</in-transition>
+        <out-transition duration=":explodeTime">ExplodeOut</out-transition>
+        <display-time>:displayTime</display-time>
+        <canvas-layer>2</canvas-layer>
+    </textzone>
+
+    <textzone id="three">
+        <tick>30</tick>
+        <offset x="50" y="10"/>
+        <default-colour>green</default-colour>
+        <in-transition duration=":explodeTime">ExplodeIn</in-transition>
+        <out-transition duration=":explodeTime">ExplodeOut</out-transition>
+        <display-time>:displayTime</display-time>
+        <canvas-layer>3</canvas-layer>
+    </textzone>
+
+    <domino>
+        <trigger action="in">one</trigger>
+        <target action="in">two</target>
+    </domino>
+
+    <domino>
+        <trigger action="in">two</trigger>
+        <target action="in">three</target>
+    </domino>
+
+    <domino>
+        <trigger action="in" >three</trigger>
+        <target action="out">one</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">one</trigger>
+        <target action="out">two</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">two</trigger>
+        <target action="out">three</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">three</trigger>
+        <target action="in">one</target>
+    </domino>
+
+    <group id="messages">one,two,three</group>
+
+</scene>
