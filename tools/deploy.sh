@@ -22,10 +22,7 @@ then
 fi
 echo "Uploading Shell Scripts..."
 sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard
-#sshpass -p raspberry scp getip.sh pi@${lightboard}:lightboard
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
-echo "Uploading HTML..."
-sshpass -p raspberry scp -r html/ pi@${lightboard}:lightboard
 echo "Uploading C..."
 sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; ./build.sh"

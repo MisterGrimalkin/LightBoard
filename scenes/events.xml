@@ -39,7 +39,7 @@
     </textzone>
 
     <textzone id="scroller">
-        <tick>20</tick>
+        <tick>5</tick>
         <region left="0" top="23" height="50" width="256"/>
         <in-transition duration="8000" speed="1" edge="right">ScrollIn</in-transition>
         <out-transition duration="8000" speed="1" edge="left">ScrollOut</out-transition>
