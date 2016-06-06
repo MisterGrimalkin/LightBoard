@@ -3,6 +3,9 @@ package net.amarantha.lightboard;
 import com.google.inject.Guice;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.amarantha.lightboard.board.CLightBoard;
+import net.amarantha.lightboard.board.JavaLightBoard;
+import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.module.ApplicationModule;
 import net.amarantha.lightboard.module.SimulationModule;
 

@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="org.javalite:javalite-common:1.4.10" type="repository">
-    <properties maven-id="org.javalite:javalite-common:1.4.10" />
+  <library name="org.javalite:javalite-common:1.4.10">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/javalite-common-1.4.10.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />

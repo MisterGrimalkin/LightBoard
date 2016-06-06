@@ -9,46 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    init
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_init
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    update
- * Signature: ([[[D)V
- */
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_update
-  (JNIEnv *, jobject, jintArray);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    getUpdateInterval
- * Signature: ()Ljava/lang/Long;
- */
-JNIEXPORT jobject JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getUpdateInterval
-  (JNIEnv *, jobject);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    getRows
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getRows
-  (JNIEnv *, jobject);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    getCols
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getCols
-  (JNIEnv *, jobject);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
  * Method:    sleep
  * Signature: ()V
  */
@@ -61,6 +21,30 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_amarantha_lightboard_board_CLightBoard
+ * Method:    initNative
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNative
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     net_amarantha_lightboard_board_CLightBoard
+ * Method:    setPoint
+ * Signature: (IIZZ)V
+ */
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
+  (JNIEnv *, jobject, jint, jint, jboolean, jboolean);
+
+/*
+ * Class:     net_amarantha_lightboard_board_CLightBoard
+ * Method:    flush
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_flush
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

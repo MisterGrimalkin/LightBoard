@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <wiringPi.h>
 #include <jni.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include "net_amarantha_lightboard_board_CLightBoard.h"
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
 int rows = 0;
 int cols = 0;
+
+//bool consumeNextFrame = false;
 
 int clockPin = 0;
 int store = 1;
@@ -22,8 +25,8 @@ int addr1 = 22;
 int addr2 = 23;
 int addr3 = 24;
 
-double currentFrame[3][32][192];
-double nextFrame[3][32][192];
+bool currentFrame[3][32][192];
+bool nextFrame[3][32][192];
 
 void pushTestPattern() {
     int r;
@@ -31,43 +34,24 @@ void pushTestPattern() {
     for ( r=0; r<rows; r++ ) {
         for ( c=0; c<cols; c++ ) {
             if ( c%4==0 || r%4==0 ) {
-                currentFrame[0][r][c] = 1.0;
-                currentFrame[1][r][c] = 1.0;
-                currentFrame[2][r][c] = 1.0;
+                currentFrame[0][r][c] = false;
+                currentFrame[1][r][c] = false;
             } else {
-                currentFrame[0][r][c] = 0.0;
-                currentFrame[1][r][c] = 0.0;
-                currentFrame[2][r][c] = 0.0;
+                currentFrame[0][r][c] = true;
+                currentFrame[1][r][c] = true;
             }
         }
     }
 }
 
-void update(double data[3][32][192]) {
-    int r;
-    int c;
-    for ( r=0; r<rows; r++ ) {
-        for ( c=0; c<cols; c++ ) {
-            currentFrame[0][r][c] = data[0][r][c];
-            currentFrame[1][r][c] = data[1][r][c];
-            currentFrame[2][r][c] = data[2][r][c];
-        }
-    }
-}
-
-
-void sendSerialString(double red1[], double green1[], double red2[], double green2[]) {
-//    struct timespec tim, tim2;
-//       tim.tv_sec = 0;
-//       tim.tv_nsec = 500;
-   int col;
+void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[]) {
+    int col;
     for (col = 0; col < cols ; col++) {
         digitalWrite(clockPin, LOW);
-        digitalWrite(data1R, red1[col]<0.5 );
-        digitalWrite(data1G, green1[col]<0.5 );
-        digitalWrite(data2R, red2[col]<0.5 );
-        digitalWrite(data2G, green2[col]<0.5 );
-//        nanosleep(&tim, &tim2);
+        digitalWrite(data1R, red1[col] );
+        digitalWrite(data1G, green1[col] );
+        digitalWrite(data2R, red2[col] );
+        digitalWrite(data2G, green2[col] );
         digitalWrite(clockPin, HIGH);
     }
 }
@@ -149,45 +133,23 @@ int main (void) {
 
 }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_init
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNative
   (JNIEnv *env, jobject o, jint r, jint c) {
     init(r, c);
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_update
-  (JNIEnv *env, jobject o, jintArray arr) {
-    int i = 0;
-    jsize rowLen = (*env)->GetArrayLength(env, arr);
-    jint *inputRow = (*env)->GetIntArrayElements(env, arr, 0);
-//    printf(inputRow);
-//    for (i=0; i<rowLen; i++) {
-//        jsize colLen = (*env)->GetArrayLength(env, inputRow[i]);
-//        jint *inputCol = (*env)->GetIntArrayElements(env, inputRow[i], 0);
-//        int j = 0;
-//        for (j=0, j<colLen; j++ ) {
-////            jsize colLen = (*env)->GetArrayLength(env, inputRow[i]);
-////            jint *inputCol = (*env)->GetIntArrayElements(env, inputRow[i], 0);
-//            printf("#");
-//        }
-//        printf("-\n");
-//    }
-    (*env)->ReleaseIntArrayElements(env, arr, inputRow, 0);
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
+  (JNIEnv *env, jobject o, jint r, jint c, jboolean red, jboolean green) {
+    currentFrame[0][(int)r][(int)c] = !(bool)red;
+    currentFrame[1][(int)r][(int)c] = !(bool)green;
   }
 
-JNIEXPORT jobject JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getUpdateInterval
+
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_flush
   (JNIEnv *env, jobject o) {
-    return (jobject)-1;
+//    consumeNextFrame = true;
   }
 
-JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getRows
-  (JNIEnv *env, jobject o) {
-    return rows;
-  }
-
-JNIEXPORT jint JNICALL Java_net_amarantha_lightboard_board_CLightBoard_getCols
-  (JNIEnv *env, jobject o) {
-    return cols;
-  }
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
   (JNIEnv *env, jobject o) {
