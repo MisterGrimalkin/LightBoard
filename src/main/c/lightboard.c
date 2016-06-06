@@ -31,23 +31,19 @@ void pushTestPattern() {
     for ( r=0; r<rows; r++ ) {
         for ( c=0; c<cols; c++ ) {
             if ( c%4==0 || r%4==0 ) {
-//                printf("#");
                 currentFrame[0][r][c] = 1.0;
                 currentFrame[1][r][c] = 1.0;
                 currentFrame[2][r][c] = 1.0;
             } else {
-//                printf("-");
                 currentFrame[0][r][c] = 0.0;
                 currentFrame[1][r][c] = 0.0;
                 currentFrame[2][r][c] = 0.0;
             }
         }
-//        printf("\n");
     }
 }
 
 void update(double data[3][32][192]) {
-    printf("DUMP");
     int r;
     int c;
     for ( r=0; r<rows; r++ ) {
@@ -61,9 +57,9 @@ void update(double data[3][32][192]) {
 
 
 void sendSerialString(double red1[], double green1[], double red2[], double green2[]) {
-    struct timespec tim, tim2;
-       tim.tv_sec = 0;
-       tim.tv_nsec = 500;
+//    struct timespec tim, tim2;
+//       tim.tv_sec = 0;
+//       tim.tv_nsec = 500;
    int col;
     for (col = 0; col < cols ; col++) {
         digitalWrite(clockPin, LOW);
@@ -116,7 +112,7 @@ void init(int r, int c) {
     rows = r;
     cols = c;
 
-    printf("\nStarting C RaspPi LightBoard....\n");
+    printf("Starting C RaspPi LightBoard....\n");
     printf("%dx%d\n", rows, cols);
 
     pushTestPattern();
@@ -135,7 +131,7 @@ void init(int r, int c) {
     pinMode(addr2, OUTPUT);
     pinMode(addr3, OUTPUT);
 
-    printf("\nBoard Running\n");
+    printf("Board Running\n");
 
     for ( ;; ) {
         push();
@@ -145,7 +141,7 @@ void init(int r, int c) {
 
 int main (void) {
 
-    printf("Hello\n");
+    printf("Starting LightBoard in Native Mode...\n");
 
     init(32, 192);
 
