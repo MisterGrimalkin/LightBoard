@@ -9,22 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    sleep
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
-  (JNIEnv *, jobject);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    wake
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
-  (JNIEnv *, jobject);
-
-/*
- * Class:     net_amarantha_lightboard_board_CLightBoard
  * Method:    initNative
  * Signature: (II)V
  */
@@ -41,10 +25,18 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
 
 /*
  * Class:     net_amarantha_lightboard_board_CLightBoard
- * Method:    flush
+ * Method:    sleep
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_flush
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_amarantha_lightboard_board_CLightBoard
+ * Method:    wake
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

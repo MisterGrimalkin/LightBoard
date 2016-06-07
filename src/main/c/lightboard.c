@@ -11,7 +11,7 @@
 int rows = 0;
 int cols = 0;
 
-//bool consumeNextFrame = false;
+bool currentFrame[3][32][192];
 
 int clockPin = 0;
 int store = 1;
@@ -25,8 +25,7 @@ int addr1 = 22;
 int addr2 = 23;
 int addr3 = 24;
 
-bool currentFrame[3][32][192];
-bool nextFrame[3][32][192];
+bool paused = false;
 
 void pushTestPattern() {
     int r;
@@ -57,37 +56,23 @@ void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[]) {
 }
 
 void decodeRowAddress(int row) {
-    if (CHECK_BIT(row, 0)!=0 ) {
-        digitalWrite(addr0, HIGH);
-    } else {
-        digitalWrite(addr0, LOW);
-    }
-    if (CHECK_BIT(row, 1)!=0 ) {
-        digitalWrite(addr1, HIGH);
-    } else {
-        digitalWrite(addr1, LOW);
-    }
-    if (CHECK_BIT(row, 2)!=0 ) {
-        digitalWrite(addr2, HIGH);
-    } else {
-        digitalWrite(addr2, LOW);
-    }
-    if (CHECK_BIT(row, 3)!=0 ) {
-        digitalWrite(addr3, HIGH);
-    } else {
-        digitalWrite(addr3, LOW);
-    }
+    digitalWrite(addr0, CHECK_BIT(row, 0)!=0);
+    digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
+    digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
+    digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
 }
 
 void push() {
-    int row;
-    for (row = 0; row < rows/2; row++) {
-        sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
-        digitalWrite(output, HIGH);
-        digitalWrite(store, LOW);
-        decodeRowAddress(row);
-        digitalWrite(store, HIGH);
-        digitalWrite(output, LOW);
+    if ( !paused ) {
+        int row;
+        for (row = 0; row < rows/2; row++) {
+            sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
+            digitalWrite(output, HIGH);
+            digitalWrite(store, LOW);
+            decodeRowAddress(row);
+            digitalWrite(store, HIGH);
+            digitalWrite(output, LOW);
+        }
     }
 }
 
@@ -109,7 +94,7 @@ void init(int r, int c) {
     pinMode(data1R, OUTPUT);
     pinMode(data2R, OUTPUT);
     pinMode(data1G, OUTPUT);
-    pinMode(data1R, OUTPUT);
+    pinMode(data2G, OUTPUT);
     pinMode(addr0, OUTPUT);
     pinMode(addr1, OUTPUT);
     pinMode(addr2, OUTPUT);
@@ -123,15 +108,20 @@ void init(int r, int c) {
 
 }
 
-int main (void) {
-
-    printf("Starting LightBoard in Native Mode...\n");
-
-    init(32, 192);
-
-    return 0;
-
+void clearBoard() {
+    int r,c;
+    for ( r=0; r<rows; r++ ) {
+        for ( c=0; c<cols; c++ ) {
+            currentFrame[0][r][c] = true;
+            currentFrame[1][r][c] = true;
+        }
+    }
+    push();
 }
+
+/////////
+// JNI //
+/////////
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNative
   (JNIEnv *env, jobject o, jint r, jint c) {
@@ -140,22 +130,29 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNativ
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
   (JNIEnv *env, jobject o, jint r, jint c, jboolean red, jboolean green) {
-    currentFrame[0][(int)r][(int)c] = !(bool)red;
-    currentFrame[1][(int)r][(int)c] = !(bool)green;
+    if ( !paused ) {
+        currentFrame[0][(int)r][(int)c] = !(bool)red;
+        currentFrame[1][(int)r][(int)c] = !(bool)green;
+    }
   }
-
-
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_flush
-  (JNIEnv *env, jobject o) {
-//    consumeNextFrame = true;
-  }
-
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
   (JNIEnv *env, jobject o) {
+    paused = true;
+    clearBoard();
   }
 
 JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
   (JNIEnv *env, jobject o) {
+    paused = false;
   }
 
+////////////////
+// Test Start //
+////////////////
+
+int main (void) {
+    printf("Starting LightBoard in Native Mode...\n");
+    init(32, 192);
+    return 0;
+}

@@ -26,19 +26,13 @@ public class CLightBoard implements LightBoard {
     }
 
     @Override
-    public Long getUpdateInterval() { return null; }
+    public Long getUpdateInterval() { return 1L; }
 
     @Override
     public int getRows() { return rows; }
 
     @Override
     public int getCols() { return cols; }
-
-    @Override
-    public native void sleep();
-
-    @Override
-    public native void wake();
 
     ////////////////////
     // Native Methods //
@@ -48,7 +42,11 @@ public class CLightBoard implements LightBoard {
 
     private native void setPoint(int row, int col, boolean red, boolean green);
 
-    private native void flush();
+    @Override
+    public native void sleep();
+
+    @Override
+    public native void wake();
 
     //////////////////////
     // Direct Test Mode //
