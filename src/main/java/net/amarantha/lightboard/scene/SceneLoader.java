@@ -111,7 +111,9 @@ public class SceneLoader extends XMLParser {
     private void startScene(AbstractScene scene) {
         if ( currentScene!=null ) {
             currentScene.stop();
-            lastSceneName = currentScene.getName();
+            if ( !scene.getName().equals(currentScene.getName()) ) {
+                lastSceneName = currentScene.getName();
+            }
         }
         currentScene = scene;
         surface.clearSurface();
