@@ -10,7 +10,7 @@ import static net.amarantha.lightboard.entity.Domino.OUT;
 
 public class DominoFactory extends XMLParser {
 
-    public void apply(AbstractScene scene, Node dominoNode) {
+    public void apply(AbstractScene scene, Node dominoNode) throws XMLSceneException {
         final DominoConfig dominoConfig = new DominoConfig();
         iterateChildren(dominoNode, (tag,node)->{
             switch (tag) {

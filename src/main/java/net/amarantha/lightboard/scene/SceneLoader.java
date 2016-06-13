@@ -49,7 +49,11 @@ public class SceneLoader extends XMLParser {
     public void start() {
         surface.clearSurface();
         if ( currentScene==null ) {
-            loadScene(props.getDefaultScene());
+            try {
+                loadScene(props.getDefaultScene());
+            } catch (XMLSceneException e) {
+                e.printStackTrace();
+            }
         } else {
             currentScene.start();
         }
@@ -79,7 +83,7 @@ public class SceneLoader extends XMLParser {
         }
     }
 
-    public void skip() {
+    public void skip() throws XMLSceneException {
         if ( lastSceneName!=null ) {
             loadScene(lastSceneName);
         }
@@ -89,7 +93,7 @@ public class SceneLoader extends XMLParser {
     // Parser //
     ////////////
 
-    public boolean loadScene(String name) {
+    public boolean loadScene(String name) throws XMLSceneException {
         AbstractScene scene = loadSceneFromFile("scenes/"+name+".xml");
         if ( scene==null ) {
             return false;
@@ -135,7 +139,7 @@ public class SceneLoader extends XMLParser {
         return result;
     }
 
-    public AbstractScene loadSceneFromFile(String filename) {
+    public AbstractScene loadSceneFromFile(String filename) throws XMLSceneException {
 
         AbstractScene scene = injector.getInstance(XMLScene.class);
 
@@ -176,7 +180,7 @@ public class SceneLoader extends XMLParser {
         return scene;
     }
 
-    private void applyGroup(AbstractScene scene, Node groupNode) {
+    private void applyGroup(AbstractScene scene, Node groupNode) throws XMLSceneException {
         Node attrNode = groupNode.getAttributes().getNamedItem(ID.getName());
         if ( attrNode!=null ) {
             String zoneIdsStr = stringValue(groupNode);
@@ -186,8 +190,13 @@ public class SceneLoader extends XMLParser {
             scene.registerGroup(group);
             for ( String id : zoneIds ) {
                 TextZone zone = (TextZone)scene.getZone(id);
+                if ( zone==null ) {
+                    throw new XMLSceneException("No zone found: " + id);
+                }
                 zone.setGroup(group);
             }
+        } else {
+            throw new XMLSceneException("No Group ID Specified");
         }
     }
 
@@ -195,7 +204,7 @@ public class SceneLoader extends XMLParser {
     // Applicators //
     /////////////////
 
-    private void apply(AbstractZone zone, Node zoneNode) {
+    private void apply(AbstractZone zone, Node zoneNode) throws XMLSceneException {
 
         iterateAttributes(zoneNode, (tag,node) -> {
             switch ( tag ) {
@@ -279,7 +288,7 @@ public class SceneLoader extends XMLParser {
         });
     }
 
-    private void applyRegion(AbstractZone zone, Node regionNode) {
+    private void applyRegion(AbstractZone zone, Node regionNode) throws XMLSceneException {
         final Map<Tag, Integer> region = new HashMap<>();
         iterateAttributes(regionNode, (tag,node)->{
             switch ( tag ) {
@@ -303,10 +312,12 @@ public class SceneLoader extends XMLParser {
         Integer height = region.get(Tag.HEIGHT);
         if ( left!=null && top!=null && width!=null && height!=null ) {
             zone.setRegion(left, top, width, height);
+        } else {
+            throw new XMLSceneException("Region incomplete");
         }
     }
 
-    private void applyAlignH(AbstractZone zone, Node node) {
+    private void applyAlignH(AbstractZone zone, Node node) throws XMLSceneException {
         switch ( stringValue(node) ) {
             case "left":
                 zone.setAlignH(AlignH.LEFT);
@@ -319,10 +330,12 @@ public class SceneLoader extends XMLParser {
             case "right":
                 zone.setAlignH(AlignH.RIGHT);
                 break;
+            default:
+                throw new XMLSceneException("Invalid H-Align value");
         }
     }
 
-    private void applyAlignV(AbstractZone zone, Node node) {
+    private void applyAlignV(AbstractZone zone, Node node) throws XMLSceneException {
         switch ( stringValue(node) ) {
             case "top":
                 zone.setAlignV(AlignV.TOP);
@@ -335,10 +348,12 @@ public class SceneLoader extends XMLParser {
             case "bottom":
                 zone.setAlignV(AlignV.BOTTOM);
                 break;
+            default:
+                throw new XMLSceneException("Invalid V-Align value");
         }
     }
 
-    private void applyOutline(AbstractZone zone, Node node) {
+    private void applyOutline(AbstractZone zone, Node node) throws XMLSceneException {
         switch ( stringValue(node) ) {
             case Colour.RED_STR:
                 zone.setOutline(Colour.RED);
@@ -349,16 +364,18 @@ public class SceneLoader extends XMLParser {
             case Colour.GREEN_STR:
                 zone.setOutline(Colour.GREEN);
                 break;
+            default:
+                throw new XMLSceneException("Unknown colour in outline");
         }
     }
 
-    private void applyTransition(AbstractZone zone, Node transitionNode, boolean in) {
+    private void applyTransition(AbstractZone zone, Node transitionNode, boolean in) throws XMLSceneException {
         Class<? extends AbstractTransition> transitionClass = null;
         String className = props.getTransitionPackage()+"."+stringValue(transitionNode);
         try {
             transitionClass = (Class<? extends AbstractTransition>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not find Transition " + className);
+            throw new XMLSceneException("Could not find Transition " + className);
         }
         if ( transitionClass!=null ) {
             final AbstractTransition transition = injector.getInstance(transitionClass);
@@ -401,7 +418,7 @@ public class SceneLoader extends XMLParser {
         }
     }
 
-    private void applyOffset(AbstractZone zone, Node offsetNode) {
+    private void applyOffset(AbstractZone zone, Node offsetNode) throws XMLSceneException {
         iterateAttributes(offsetNode, (tag,node) -> {
             switch ( tag ) {
                 case X:
@@ -417,14 +434,19 @@ public class SceneLoader extends XMLParser {
     private void applyFont(TextZone zone, Node fontNode) {
         String className = props.getFontPackage()+"."+stringValue(fontNode);
         Class<? extends Font> fontClass = null;
+        String fileToLoad = null;
         try {
             fontClass = (Class<? extends Font>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not find Font " + className);
+            fontClass = Font.class;
+            fileToLoad = stringValue(fontNode);
         }
         if ( fontClass!=null ) {
             Font font = injector.getInstance(fontClass);
             zone.setFont(font);
+            if ( fileToLoad!=null ) {
+                font.loadFont(fileToLoad+".dat");
+            }
         }
     }
 

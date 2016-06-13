@@ -117,6 +117,10 @@ public abstract class AbstractScene {
     }
 
     public void exitScene() {
-        sceneLoader.skip();
+        try {
+            sceneLoader.skip();
+        } catch (XMLSceneException e) {
+            e.printStackTrace();
+        }
     }
 }

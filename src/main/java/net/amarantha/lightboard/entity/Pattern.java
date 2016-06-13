@@ -17,6 +17,17 @@ public class Pattern {
         colourValues = new double[3][safeRows][safeCols];
     }
 
+    public String asString() {
+        String result = "";
+        for ( int r=0; r<binaryValues.length; r++ ) {
+            for ( int c=0; c<binaryValues[0].length; c++ ) {
+                result += binaryValues[r][c] ? "#" : "_";
+            }
+            result += "\n";
+        }
+        return result;
+    }
+
     public Pattern(int cols, String data) {
         int rows = data.length()/cols;
         binaryValues = new boolean[rows][cols];

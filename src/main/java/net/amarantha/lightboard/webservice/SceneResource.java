@@ -3,6 +3,7 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.AbstractScene;
 import net.amarantha.lightboard.scene.SceneLoader;
+import net.amarantha.lightboard.scene.XMLSceneException;
 import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.MessageGroup;
 import net.amarantha.lightboard.zone.TextZone;
@@ -59,10 +60,14 @@ public class SceneResource extends Resource {
     @Path("{sceneName}/load")
     @Produces(MediaType.TEXT_PLAIN)
     public Response loadScene(@PathParam("sceneName") String sceneName) {
-        if ( sceneLoader.loadScene(sceneName) ) {
-            return ok("Scene '" + sceneName + "' Loaded");
-        } else {
-            return error("Scene + '" + sceneName + "' not found");
+        try {
+            if (sceneLoader.loadScene(sceneName)) {
+                return ok("Scene '" + sceneName + "' Loaded");
+            } else {
+                return error("Scene + '" + sceneName + "' not found");
+            }
+        } catch ( XMLSceneException e ) {
+            return error(e.getMessage());
         }
     }
 

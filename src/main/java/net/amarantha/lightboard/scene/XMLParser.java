@@ -12,14 +12,14 @@ import java.util.Map;
 public class XMLParser {
 
     protected interface Callback {
-        void call(Tag tag, Node node);
+        void call(Tag tag, Node node) throws XMLSceneException;
     }
 
     ///////////////
     // Iterators //
     ///////////////
 
-    protected void iterateAttributes(Node parentNode, Callback callback) {
+    protected void iterateAttributes(Node parentNode, Callback callback) throws XMLSceneException {
         NamedNodeMap attr = parentNode.getAttributes();
         for ( int i=0; i<attr.getLength(); i++ ) {
             Node node = attr.item(i);
@@ -28,7 +28,7 @@ public class XMLParser {
         }
     }
 
-    protected void iterateChildren(Node parentNode, Callback callback) {
+    protected void iterateChildren(Node parentNode, Callback callback) throws XMLSceneException {
         NodeList children = parentNode.getChildNodes();
         for ( int i=0; i<children.getLength(); i++ ) {
             Node node = children.item(i);
@@ -37,7 +37,7 @@ public class XMLParser {
         }
     }
 
-    protected void iterateElements(Element parentElement, Tag tag, Callback callback) {
+    protected void iterateElements(Element parentElement, Tag tag, Callback callback) throws XMLSceneException {
         NodeList children = parentElement.getElementsByTagName(tag.getName());
         for ( int i=0; i<children.getLength(); i++ ) {
             Node node = children.item(i);

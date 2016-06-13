@@ -4,8 +4,13 @@ import net.amarantha.lightboard.entity.AlignH;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static net.amarantha.lightboard.entity.AlignH.*;
 import static net.amarantha.lightboard.entity.Colour.*;
@@ -17,6 +22,49 @@ public class Font {
     public final static char CLOSE_TAG = '}';
 
     private Map<Character, Pattern> chars = new HashMap<>();
+
+    public void saveFont(String filename) {
+        try ( FileWriter writer = new FileWriter(filename) ) {
+            for (Entry<Character, Pattern> entry : chars.entrySet() ) {
+                writer.write("~"+entry.getKey()+"\n");
+                writer.write(entry.getValue().asString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFont(String filename) {
+        try {
+            String fontFile = new String(Files.readAllBytes(Paths.get(filename)));
+            String[] lines = fontFile.split("\n");
+            Character currentChar = null;
+            Integer width = null;
+            StringBuilder sb = new StringBuilder();
+            for ( String line : lines ) {
+                if ( line.length() > 1 && line.charAt(0)=='~' ) {
+                    if ( currentChar!=null && width!=null ) {
+                        Pattern p = new Pattern(width, sb.toString());
+                        registerPattern(currentChar, p);
+                    }
+                    currentChar = line.charAt(1);
+                    width = null;
+                    sb = new StringBuilder();
+                } else {
+                    if ( width==null ) {
+                        width = line.length();
+                    }
+                    sb.append(line);
+                }
+            }
+            if ( currentChar!=null && width!=null ) {
+                Pattern p = new Pattern(width, sb.toString());
+                registerPattern(currentChar, p);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public final void registerPattern(char key, boolean[][] bits) {
         registerPattern(key, new Pattern(bits));

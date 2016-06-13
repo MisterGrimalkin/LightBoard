@@ -9,7 +9,7 @@
         <in-transition duration="300" edge="bottom">ScrollIn</in-transition>
         <out-transition duration="300" edge="right">ScrollOut</out-transition>
         <display-time>100</display-time>
-        <canvas-layer>2</canvas-layer>
+        <canvas-layer>1</canvas-layer>
         <align-horizontal>right</align-horizontal>
         <auto-start/>
     </textzone>
@@ -22,33 +22,53 @@
         <out-transition duration="300" edge="right">ScrollOut</out-transition>
         <display-time>200</display-time>
         <align-horizontal>right</align-horizontal>
-        <canvas-layer>2</canvas-layer>
+        <canvas-layer>1</canvas-layer>
     </textzone>
 
-    <textzone id="description">
+    <textzone id="eventname">
         <tick>30</tick>
         <region left="43" top="1" height="18" width="250"/>
         <!--<offset x="43"/>-->
         <align-horizontal>left</align-horizontal>
         <align-vertical>top</align-vertical>
         <font>LargeFont</font>
-        <in-transition duration="1100">TypeIn</in-transition>
+        <in-transition duration="900">TypeIn</in-transition>
         <out-transition duration="1000">InterlaceOut</out-transition>
-        <display-time>4000</display-time>
-        <canvas-layer>1</canvas-layer>
+        <display-time>300</display-time>
+        <canvas-layer>2</canvas-layer>
     </textzone>
 
-    <textzone id="scroller">
-        <tick>5</tick>
-        <region left="0" top="23" height="50" width="256"/>
-        <in-transition duration="8000" speed="1" edge="right">ScrollIn</in-transition>
-        <out-transition duration="8000" speed="1" edge="left">ScrollOut</out-transition>
-        <display-time>0</display-time>
-        <canvas-layer>4</canvas-layer>
-        <auto-start/>
-        <auto-out/>
-        <auto-next/>
+    <textzone id="description1">
+        <region left="43" top="18" height="7" width="250"/>
+        <font>SmallFont</font>
+        <align-horizontal>left</align-horizontal>
+        <canvas-layer>3</canvas-layer>
+        <display-time>300</display-time>
+        <in-transition duration="800" edge="top">ScrollIn</in-transition>
+        <out-transition duration="1000" edge="left">InterlaceOut</out-transition>
     </textzone>
+
+    <textzone id="description2">
+        <region left="43" top="25" height="7" width="250"/>
+        <font>SmallFont</font>
+        <align-horizontal>left</align-horizontal>
+        <canvas-layer>4</canvas-layer>
+        <display-time>6000</display-time>
+        <in-transition duration="800" edge="top">ScrollIn</in-transition>
+        <out-transition duration="1000" edge="left">InterlaceOut</out-transition>
+    </textzone>
+
+    <!--<textzone id="scroller">-->
+        <!--<tick>5</tick>-->
+        <!--<region left="0" top="23" height="50" width="256"/>-->
+        <!--<in-transition duration="8000" speed="1" edge="right">ScrollIn</in-transition>-->
+        <!--<out-transition duration="8000" speed="1" edge="left">ScrollOut</out-transition>-->
+        <!--<display-time>0</display-time>-->
+        <!--<canvas-layer>4</canvas-layer>-->
+        <!--<auto-start/>-->
+        <!--<auto-out/>-->
+        <!--<auto-next/>-->
+    <!--</textzone>-->
 
     <domino>
         <trigger action="display">day</trigger>
@@ -57,20 +77,30 @@
 
     <domino>
         <trigger action="display">time</trigger>
-        <target action="in">description</target>
+        <target action="in">eventname</target>
     </domino>
 
     <domino>
-        <trigger action="display">description</trigger>
-        <target action="out">day,time,description</target>
+        <trigger action="display">eventname</trigger>
+        <target action="in">description1</target>
     </domino>
 
     <domino>
-        <trigger action="out">description</trigger>
+        <trigger action="display">description1</trigger>
+        <target action="in">description2</target>
+    </domino>
+
+    <domino>
+        <trigger action="display">description2</trigger>
+        <target action="out">day,time,eventname,description1,description2</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">eventname</trigger>
         <target action="in">day</target>
     </domino>
 
-    <group id="events">day,time,description</group>
-    <group id="scroller">scroller</group>
+    <group id="events">day,time,eventname,description1,description2</group>
+    <!--<group id="scroller">scroller</group>-->
 
 </scene>
