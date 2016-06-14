@@ -38,7 +38,7 @@ public class LightBoardProperties extends PropertyManager {
 
     @Inject PropertyManager props;
 
-    String ip = null;
+    private String ip = null;
 
     public String getIp() {
         if ( ip==null ) {

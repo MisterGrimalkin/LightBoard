@@ -44,8 +44,8 @@
         <align-horizontal>left</align-horizontal>
         <canvas-layer>3</canvas-layer>
         <display-time>300</display-time>
-        <in-transition duration="800" edge="top">ScrollIn</in-transition>
-        <out-transition duration="1000" edge="left">InterlaceOut</out-transition>
+        <in-transition duration="800" edge="top">TypeIn</in-transition>
+        <out-transition duration="1100" edge="left">InterlaceOut</out-transition>
     </textzone>
 
     <textzone id="description2">
@@ -54,8 +54,8 @@
         <align-horizontal>left</align-horizontal>
         <canvas-layer>4</canvas-layer>
         <display-time>6000</display-time>
-        <in-transition duration="800" edge="top">ScrollIn</in-transition>
-        <out-transition duration="1000" edge="left">InterlaceOut</out-transition>
+        <in-transition duration="800" edge="top">TypeIn</in-transition>
+        <out-transition duration="1200" edge="left">InterlaceOut</out-transition>
     </textzone>
 
     <!--<textzone id="scroller">-->

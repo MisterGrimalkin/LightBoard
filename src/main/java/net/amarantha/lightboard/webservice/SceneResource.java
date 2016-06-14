@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
+import javafx.scene.Scene;
 import net.amarantha.lightboard.scene.AbstractScene;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.scene.XMLSceneException;
@@ -65,6 +66,43 @@ public class SceneResource extends Resource {
                 return ok("Scene '" + sceneName + "' Loaded");
             } else {
                 return error("Scene + '" + sceneName + "' not found");
+            }
+        } catch ( XMLSceneException e ) {
+            return error(e.getMessage());
+        }
+    }
+
+    @GET
+    @Path("/current")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getCurrentScene() {
+        AbstractScene currentScene = sceneLoader.getCurrentScene();
+        if ( currentScene!=null ) {
+            return ok(currentScene.getName());
+        } else {
+            return error("No current scene");
+        }
+    }
+
+
+    /**
+     * Reload current scene
+     */
+    @POST
+    @Path("/reload")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response reloadScene() {
+        try {
+            AbstractScene currentScene = sceneLoader.getCurrentScene();
+            if ( currentScene!=null ) {
+                String name = currentScene.getName();
+                if (sceneLoader.loadScene(name)) {
+                    return ok("Scene '" + name + "' Loaded");
+                } else {
+                    return error("Scene + '" + name + "' not found");
+                }
+            } else {
+                return error("No current scene");
             }
         } catch ( XMLSceneException e ) {
             return error(e.getMessage());
