@@ -4,9 +4,7 @@ import net.amarantha.lightboard.entity.Domino;
 import net.amarantha.lightboard.zone.AbstractZone;
 import org.w3c.dom.Node;
 
-import static net.amarantha.lightboard.entity.Domino.EXIT;
-import static net.amarantha.lightboard.entity.Domino.IN;
-import static net.amarantha.lightboard.entity.Domino.OUT;
+import static net.amarantha.lightboard.entity.Domino.*;
 
 public class DominoFactory extends XMLParser {
 

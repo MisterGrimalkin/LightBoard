@@ -18,13 +18,16 @@ then
     echo "Compiling Java..."
     mvn clean package
     echo "Uploading Java..."
-    sshpass -p raspberry scp -r target/ pi@${lightboard}:lightboard
+    sshpass -p raspberry scp -r target/lightboard/ pi@${lightboard}:
+else
+    echo "Uploading Native Sources..."
+    sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
 fi
 echo "Uploading Shell Scripts..."
-sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard
+sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard/
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
-echo "Uploading C..."
-sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
+echo "Compiling Native Code..."
+#sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; ./build.sh"
 echo "Deployed to ${lightboard}"
 echo

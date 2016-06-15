@@ -1,13 +1,10 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Inject;
-import javafx.scene.Scene;
 import net.amarantha.lightboard.scene.AbstractScene;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.scene.XMLSceneException;
-import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.MessageGroup;
-import net.amarantha.lightboard.zone.TextZone;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

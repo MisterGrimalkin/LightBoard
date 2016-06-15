@@ -46,7 +46,7 @@ public class LightBoardProperties extends PropertyManager {
 
             Process p;
             try {
-                p = Runtime.getRuntime().exec("sh getip.sh");
+                p = Runtime.getRuntime().exec("sh scripts/getip.sh");
                 p.waitFor();
                 BufferedReader reader =
                         new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -57,7 +57,7 @@ public class LightBoardProperties extends PropertyManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ip = output.toString();
+            ip = output.toString().trim();
         }
         return ip;
     }
