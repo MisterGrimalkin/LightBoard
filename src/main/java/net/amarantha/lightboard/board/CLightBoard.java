@@ -1,6 +1,6 @@
 package net.amarantha.lightboard.board;
 
-public abstract class CLightBoard implements LightBoard {
+public class CLightBoard implements LightBoard {
 
     private int rows;
     private int cols;
@@ -30,9 +30,16 @@ public abstract class CLightBoard implements LightBoard {
     @Override
     public int getCols() { return cols; }
 
-    protected abstract void initNative(int rows, int cols);
+    ////////////////////
+    // Native Methods //
+    ////////////////////
 
-    protected abstract void setPoint(int row, int col, boolean red, boolean green);
+    protected native void initNative(int rows, int cols);
 
+    protected native void setPoint(int row, int col, boolean red, boolean green);
+
+    public native void sleep();
+
+    public native void wake();
 
 }

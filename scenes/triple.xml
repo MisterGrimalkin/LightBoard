@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene>
 
-    <define name="explodeTime">300</define>
+    <define name="explodeTime">100</define>
     <define name="displayTime">500</define>
     <define name="progress">0.9</define>
 
     <textzone id="one">
+        <font>LargeFont</font>
         <tick>30</tick>
         <offset x="-50" y="-10"/>
         <default-colour>red</default-colour>
@@ -17,6 +18,7 @@
     </textzone>
 
     <textzone id="two">
+        <font>LargeFont</font>
         <tick>30</tick>
         <default-colour>yellow</default-colour>
         <in-transition duration=":explodeTime">ExplodeIn</in-transition>
@@ -26,6 +28,7 @@
     </textzone>
 
     <textzone id="three">
+        <font>LargeFont</font>
         <tick>30</tick>
         <offset x="50" y="10"/>
         <default-colour>green</default-colour>

@@ -22,6 +22,7 @@ public class LightBoardApplication {
 
     public void startApplication() {
 
+        System.out.println("Starting LightBoardSurface: " + props.getBoardRows() + "x" + props.getBoardCols());
         surface.init(props.getBoardRows(), props.getBoardCols(), true);
 
         if ( isTestMode() ) {

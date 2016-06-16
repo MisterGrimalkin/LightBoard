@@ -4,7 +4,7 @@
 #include <jni.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "net_amarantha_lightboard_board_CLightBoard_192x32_Big_Sign.h"
+#include "net_amarantha_lightboard_board_CLightBoard.h"
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
@@ -132,12 +132,12 @@ void clearBoard() {
 // JNI //
 /////////
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_initNative
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNative
   (JNIEnv *env, jobject o, jint r, jint c) {
     init(r, c);
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_setPoint
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
   (JNIEnv *env, jobject o, jint r, jint c, jboolean red, jboolean green) {
     if ( !paused ) {
         nextFrame[0][(int)r][(int)c] = !(bool)red;
@@ -157,13 +157,13 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1
     }
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_sleep
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
   (JNIEnv *env, jobject o) {
     paused = true;
     clearBoard();
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_wake
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
   (JNIEnv *env, jobject o) {
     paused = false;
   }

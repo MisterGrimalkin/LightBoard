@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+
+    <!-- Labels -->
+
+    <textzone id="label">
+        <default-colour>red</default-colour>
+        <font>SmallFont</font>
+        <region left="0" top="0" width="60" height="20"/>
+        <display-time>100</display-time>
+        <canvas-layer>1</canvas-layer>
+        <align-horizontal>right</align-horizontal>
+        <message>Next Showers:</message>
+        <auto-start/>
+    </textzone>
+
+    <textzone id="female-label">
+        <font>LargeFont</font>
+        <region left="65" top="0" width="14" height="20"/>
+        <message>@</message>
+        <auto-start/>
+    </textzone>
+
+    <textzone id="male-label">
+        <font>LargeFont</font>
+        <region left="125" top="0" width="14" height="20"/>
+        <message>~</message>
+        <auto-start/>
+    </textzone>
+
+    <!-- Tickets -->
+
+    <textzone id="female-ticket">
+        <font>LargeFont</font>
+        <region left="80" top="0" width="30" height="20"/>
+        <in-transition duration="1500">RainIn</in-transition>
+        <display-time>2000</display-time>
+        <auto-start/>
+        <auto-next/>
+    </textzone>
+
+    <textzone id="male-ticket">
+        <font>LargeFont</font>
+        <region left="140" top="0" width="30" height="20"/>
+        <in-transition duration="1500">RainIn</in-transition>
+        <display-time>2000</display-time>
+        <auto-start/>
+    </textzone>
+
+    <!-- Scroller -->
+
+    <textzone id="scroller">
+        <tick>20</tick>
+        <region left="0" top="20" width="192" height="10"/>
+        <in-transition speed="1" edge="right">ScrollIn</in-transition>
+        <out-transition speed="1" edge="left">ScrollOut</out-transition>
+        <display-time>0</display-time>
+        <auto-start/>
+        <auto-out/>
+        <auto-next/>
+    </textzone>
+
+    <group id="female">female-ticket</group>
+    <group id="male">male-ticket</group>
+    <group id="scroller">scroller</group>
+
+</scene>

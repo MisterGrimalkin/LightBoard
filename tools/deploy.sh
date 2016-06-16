@@ -13,6 +13,12 @@ then
     sh shutdown.sh
 fi
 cd ..
+if [ "$1" = "-clean" ]
+then
+    echo "Clearing existing installation..."
+    sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi; sudo cp lightboard/application.properties .; sudo rm -r lightboard; sudo mkdir lightboard; sudo chmod a+xw lightboard; sudo mv application.properties lightboard"
+fi
+
 if [ "$1" != "-skipjava" ]
 then
     echo "Compiling Java..."
@@ -28,7 +34,7 @@ sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard/
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
 echo "Compiling Native Code..."
 #sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; bash build.sh"
+sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; bash build.sh"
 echo "Deployed to ${lightboard}"
 echo
 cd tools

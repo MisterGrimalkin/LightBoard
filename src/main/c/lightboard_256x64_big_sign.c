@@ -11,15 +11,20 @@
 int rows = 0;
 int cols = 0;
 
-bool currentFrame[3][32][192];
+bool currentFrame[3][64][256];
+bool nextFrame[3][64][256];
 
 int clockPin = 0;
 int store = 1;
 int output = 2;
 int data1R = 3;
 int data2R = 4;
+int data3R = 25;
+int data4R = 26;
 int data1G = 5;
 int data2G = 6;
+int data3G = 27;
+int data4G = 28;
 int addr0 = 21;
 int addr1 = 22;
 int addr2 = 23;
@@ -45,15 +50,19 @@ void pushTestPattern() {
     }
 }
 
-void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[]) {
+void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[], bool red3[], bool green3[], bool red4[], bool green4[]) {
     int col;
     for (col = 0; col < cols ; col++) {
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, LOW);
-        digitalWrite(data1R, red1[col] );
-        digitalWrite(data1G, green1[col] );
-        digitalWrite(data2R, red2[col] );
-        digitalWrite(data2G, green2[col] );
+        digitalWrite(data3R, !red3[col] );
+        digitalWrite(data3G, !green3[col] );
+        digitalWrite(data4R, !red4[col] );
+        digitalWrite(data4G, !green4[col] );
+        digitalWrite(data1R, !red1[col] );
+        digitalWrite(data1G, !green1[col] );
+        digitalWrite(data2R, !red2[col] );
+        digitalWrite(data2G, !green2[col] );
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, HIGH);
     }
@@ -64,19 +73,24 @@ void decodeRowAddress(int row) {
     digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
     digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
     digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
+    delayMicroseconds(CLOCK_DELAY);
 }
 
 void push() {
     if ( !paused ) {
         int row;
-        for (row = 0; row < rows/2; row++) {
-            sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
+        for (row = 0; row < rows/4; row++) {
+            sendSerialString(currentFrame[0][row],      currentFrame[1][row],
+                             currentFrame[0][row + 16], currentFrame[1][row + 16],
+                             currentFrame[0][row + 32], currentFrame[1][row + 32],
+                             currentFrame[0][row + 48], currentFrame[1][row + 48]);
             digitalWrite(output, HIGH);
-            digitalWrite(store, LOW);
-            decodeRowAddress(row);
             digitalWrite(store, HIGH);
+            decodeRowAddress(row);
+            digitalWrite(store, LOW);
             digitalWrite(output, LOW);
         }
+        delayMicroseconds(CLOCK_DELAY);
     }
 }
 
@@ -98,8 +112,12 @@ void init(int r, int c) {
     pinMode(output, OUTPUT);
     pinMode(data1R, OUTPUT);
     pinMode(data2R, OUTPUT);
+    pinMode(data3R, OUTPUT);
+    pinMode(data4R, OUTPUT);
     pinMode(data1G, OUTPUT);
     pinMode(data2G, OUTPUT);
+    pinMode(data3G, OUTPUT);
+    pinMode(data4G, OUTPUT);
     pinMode(addr0, OUTPUT);
     pinMode(addr1, OUTPUT);
     pinMode(addr2, OUTPUT);
@@ -124,6 +142,8 @@ void clearBoard() {
     push();
 }
 
+
+
 /////////
 // JNI //
 /////////
@@ -138,6 +158,20 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
     if ( !paused ) {
         currentFrame[0][(int)r][(int)c] = !(bool)red;
         currentFrame[1][(int)r][(int)c] = !(bool)green;
+//        nextFrame[0][(int)r][(int)c] = !(bool)red;
+//        nextFrame[1][(int)r][(int)c] = !(bool)green;
+//        if ( r==rows-1 && c==cols-1 ) {
+//            paused = true;
+//            int r2 = 0;
+//            int c2 = 0;
+//            for ( r2=0; r2<rows; r2++ ) {
+//                for ( c2=0; c2<cols; c2++ ) {
+//                    currentFrame[0][r2][c2] = nextFrame[0][r2][c2];
+//                    currentFrame[1][r2][c2] = nextFrame[1][r2][c2];
+//                }
+//            }
+//            paused = false;
+//        }
     }
   }
 
@@ -158,6 +192,6 @@ JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
 
 int main (void) {
     printf("Starting LightBoard in Native Mode...\n");
-    init(32, 192);
+    init(64, 256);
     return 0;
 }
