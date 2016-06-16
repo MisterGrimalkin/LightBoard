@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+files=( "lightboard_192x32_small_sign" "lightboard_192x32_big_sign" )
 echo "Compiling C...."
+for i in "${files[@]}"
+do
+	echo ${i}
+done
 # Pi2
 jniInclude="NOT FOUND"
 if [ -f /usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt/include/jni.h ]
@@ -15,7 +20,10 @@ if [ "$jniInclude" == "NOT FOUND" ]
 then
     echo "No Java Native Interface found"
 else
-    gcc -shared -lwiringPi -o liblightboard.so ${jniInclude} ${jniLinux} lightboard.c
-    gcc -lwiringPi -o lightboard.so ${jniInclude} ${jniLinux} lightboard.c
+    for i in "${files[@]}"
+    do
+        gcc -shared -lwiringPi -o lib${i}.so ${jniInclude} ${jniLinux} ${i}.c
+        gcc -lwiringPi -o ${i}.so ${jniInclude} ${jniLinux} ${i}.c
+    done
 fi
 echo

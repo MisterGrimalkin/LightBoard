@@ -28,7 +28,7 @@ sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard/
 sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
 echo "Compiling Native Code..."
 #sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; ./build.sh"
+sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; chmod +x test.sh; bash build.sh"
 echo "Deployed to ${lightboard}"
 echo
 cd tools

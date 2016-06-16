@@ -11,6 +11,7 @@ public class Main { //extends Application {
     public static void main(String[] args) {
         processArgs(args);
         if ( isSimulationMode() ) {
+            System.out.println("Simulation Mode is not Currently Supported");
 //            launch(args);
         } else {
             Guice.createInjector(new ApplicationModule())

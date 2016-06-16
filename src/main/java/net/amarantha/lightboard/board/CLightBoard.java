@@ -1,13 +1,9 @@
 package net.amarantha.lightboard.board;
 
-public class CLightBoard implements LightBoard {
+public abstract class CLightBoard implements LightBoard {
 
     private int rows;
     private int cols;
-
-    static {
-        System.loadLibrary("lightboard");
-    }
 
     @Override
     public void init(int rows, int cols) {
@@ -34,26 +30,9 @@ public class CLightBoard implements LightBoard {
     @Override
     public int getCols() { return cols; }
 
-    ////////////////////
-    // Native Methods //
-    ////////////////////
+    protected abstract void initNative(int rows, int cols);
 
-    private native void initNative(int rows, int cols);
+    protected abstract void setPoint(int row, int col, boolean red, boolean green);
 
-    private native void setPoint(int row, int col, boolean red, boolean green);
-
-    @Override
-    public native void sleep();
-
-    @Override
-    public native void wake();
-
-    //////////////////////
-    // Direct Test Mode //
-    //////////////////////
-
-    public static void main(String[] args) {
-        new Thread(() -> new CLightBoard().init(32, 192)).start();
-    }
 
 }

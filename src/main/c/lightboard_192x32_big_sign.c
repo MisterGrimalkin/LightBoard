@@ -4,7 +4,7 @@
 #include <jni.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "net_amarantha_lightboard_board_CLightBoard.h"
+#include "net_amarantha_lightboard_board_CLightBoard_192x32_Big_Sign.h"
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
@@ -12,6 +12,7 @@ int rows = 0;
 int cols = 0;
 
 bool currentFrame[3][32][192];
+bool nextFrame[3][32][192];
 
 int clockPin = 0;
 int store = 1;
@@ -27,7 +28,7 @@ int addr3 = 24;
 
 bool paused = false;
 
-int CLOCK_DELAY = 1;
+int CLOCK_DELAY = 2;
 
 void pushTestPattern() {
     int r;
@@ -50,10 +51,10 @@ void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[]) {
     for (col = 0; col < cols ; col++) {
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, LOW);
-        digitalWrite(data1R, red1[col] );
-        digitalWrite(data1G, green1[col] );
-        digitalWrite(data2R, red2[col] );
-        digitalWrite(data2G, green2[col] );
+        digitalWrite(data1R, !red1[col] );
+        digitalWrite(data1G, !green1[col] );
+        digitalWrite(data2R, !red2[col] );
+        digitalWrite(data2G, !green2[col] );
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, HIGH);
     }
@@ -64,6 +65,7 @@ void decodeRowAddress(int row) {
     digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
     digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
     digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
+    delayMicroseconds(CLOCK_DELAY);
 }
 
 void push() {
@@ -72,9 +74,9 @@ void push() {
         for (row = 0; row < rows/2; row++) {
             sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
             digitalWrite(output, HIGH);
-            digitalWrite(store, LOW);
-            decodeRowAddress(row);
             digitalWrite(store, HIGH);
+            decodeRowAddress(row);
+            digitalWrite(store, LOW);
             digitalWrite(output, LOW);
         }
     }
@@ -124,30 +126,44 @@ void clearBoard() {
     push();
 }
 
+
+
 /////////
 // JNI //
 /////////
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_initNative
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_initNative
   (JNIEnv *env, jobject o, jint r, jint c) {
     init(r, c);
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_setPoint
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_setPoint
   (JNIEnv *env, jobject o, jint r, jint c, jboolean red, jboolean green) {
     if ( !paused ) {
-        currentFrame[0][(int)r][(int)c] = !(bool)red;
-        currentFrame[1][(int)r][(int)c] = !(bool)green;
+        nextFrame[0][(int)r][(int)c] = !(bool)red;
+        nextFrame[1][(int)r][(int)c] = !(bool)green;
+        if ( r==rows-1 && c==cols-1 ) {
+            paused = true;
+            int r2 = 0;
+            int c2 = 0;
+            for ( r2=0; r2<rows; r2++ ) {
+                for ( c2=0; c2<cols; c2++ ) {
+                    currentFrame[0][r2][c2] = nextFrame[0][r2][c2];
+                    currentFrame[1][r2][c2] = nextFrame[1][r2][c2];
+                }
+            }
+            paused = false;
+        }
     }
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_sleep
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_sleep
   (JNIEnv *env, jobject o) {
     paused = true;
     clearBoard();
   }
 
-JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_wake
+JNIEXPORT void JNICALL Java_net_amarantha_lightboard_board_CLightBoard_1192x32_1Big_1Sign_wake
   (JNIEnv *env, jobject o) {
     paused = false;
   }

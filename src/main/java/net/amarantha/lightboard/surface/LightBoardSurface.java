@@ -1,6 +1,7 @@
 package net.amarantha.lightboard.surface;
 
 import net.amarantha.lightboard.board.CLightBoard;
+import net.amarantha.lightboard.board.CLightBoard_192x32_Small_Sign;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
