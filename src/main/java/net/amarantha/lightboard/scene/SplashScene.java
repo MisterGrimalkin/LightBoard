@@ -1,8 +1,8 @@
 package net.amarantha.lightboard.scene;
 
 import com.google.inject.Inject;
-import net.amarantha.lightboard.font.SimpleFont;
-import net.amarantha.lightboard.font.SmallFont;
+import net.amarantha.lightboard.font.SimpleFont_Old;
+import net.amarantha.lightboard.font.SmallFont_Old;
 import net.amarantha.lightboard.module.Zone;
 import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.zone.ImageZone;
@@ -28,7 +28,7 @@ public class SplashScene extends AbstractScene {
         int explodeDuration = 800;
 
         textZone1
-                .setFont(new SmallFont())
+                .setFont(new SmallFont_Old())
                 .setAutoStart(true)
                 .setOffset(0, -9)
                 .setInTransition(new TypeIn().setDuration(typingDuration))
@@ -37,14 +37,14 @@ public class SplashScene extends AbstractScene {
                 .setCanvasLayer(1);
 
         textZone2
-                .setFont(new SimpleFont())
+                .setFont(new SimpleFont_Old())
                 .setInTransition(new TypeIn().setDuration(typingDuration))
                 .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
                 .setDisplayTime(300)
                 .setCanvasLayer(2);
 
         textZone3
-                .setFont(new SmallFont())
+                .setFont(new SmallFont_Old())
                 .setOffset(0, 9)
                 .setInTransition(new TypeIn().setDuration(typingDuration))
                 .setOutTransition(new ExplodeOut().setDuration(explodeDuration))
@@ -52,7 +52,7 @@ public class SplashScene extends AbstractScene {
                 .setCanvasLayer(3);
 
         textZone4
-                .setFont(new SmallFont())
+                .setFont(new SmallFont_Old())
                 .setAutoOut(true)
                 .setInTransition(new ExplodeIn().setDuration(explodeDuration))
                 .setOutTransition(new ExplodeOut().setDuration(explodeDuration))

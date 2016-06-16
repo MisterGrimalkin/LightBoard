@@ -442,10 +442,11 @@ public class SceneLoader extends XMLParser {
             fileToLoad = stringValue(fontNode);
         }
         if ( fontClass!=null ) {
+            System.out.println("Loading font from file: "+fileToLoad);
             Font font = injector.getInstance(fontClass);
             zone.setFont(font);
             if ( fileToLoad!=null ) {
-                font.loadFont(fileToLoad+".dat");
+                font.loadFont("fonts/"+fileToLoad+".fnt");
             }
         }
     }

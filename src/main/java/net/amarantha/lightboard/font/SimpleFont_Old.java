@@ -1,11 +1,11 @@
 package net.amarantha.lightboard.font;
 
-public class SimpleFont extends Font {
+public class SimpleFont_Old extends Font {
 
     private static final boolean o = false;
     private static final boolean i = true;
 
-    public SimpleFont() {
+    public SimpleFont_Old() {
 
         registerPattern(' ', SPACE);
         registerPattern('*', DIAMOND);

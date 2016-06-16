@@ -3,7 +3,7 @@ package net.amarantha.lightboard.webservice;
 import com.google.inject.Inject;
 import net.amarantha.lightboard.entity.Colour;
 import net.amarantha.lightboard.entity.Pattern;
-import net.amarantha.lightboard.font.SmallFont;
+import net.amarantha.lightboard.font.SmallFont_Old;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.surface.LightBoardSurface;
 import net.amarantha.lightboard.utility.PropertyManager;
@@ -176,7 +176,7 @@ public class SystemResource extends Resource {
     private static void displayShutdownMessage() {
         sceneLoader.stop();
         surface.clearSurface();
-        Pattern shutdownPattern = new SmallFont().renderString("{red}SHUTTING DOWN");
+        Pattern shutdownPattern = new SmallFont_Old().renderString("{red}SHUTTING DOWN");
         int x = (surface.getCols() - shutdownPattern.getWidth()) / 2;
         int y =(surface.getRows() - shutdownPattern.getHeight()) / 2;
         surface.outlineRegion(LightBoardSurface.LAYERS-1, Colour.RED, surface.safeRegion(x-2, y-2, shutdownPattern.getWidth()+4, shutdownPattern.getHeight()+4));

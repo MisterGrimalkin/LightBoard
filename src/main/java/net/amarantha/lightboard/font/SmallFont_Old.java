@@ -1,11 +1,11 @@
 package net.amarantha.lightboard.font;
 
-public class SmallFont extends Font {
+public class SmallFont_Old extends Font {
 
     private static final boolean o = false;
     private static final boolean i = true;
 
-    public SmallFont() {
+    public SmallFont_Old() {
 
         registerPattern('A', A);
         registerPattern('B', B);

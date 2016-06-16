@@ -2,9 +2,9 @@ package net.amarantha.lightboard.font;
 
 import net.amarantha.lightboard.entity.Pattern;
 
-public class LargeFont extends Font {
+public class LargeFont_Old extends Font {
 
-    public LargeFont() {
+    public LargeFont_Old() {
         registerPattern('0', ZERO);
         registerPattern('1', ONE);
         registerPattern('2', TWO);

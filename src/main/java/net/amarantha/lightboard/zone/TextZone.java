@@ -2,7 +2,7 @@ package net.amarantha.lightboard.zone;
 
 import net.amarantha.lightboard.entity.Pattern;
 import net.amarantha.lightboard.font.Font;
-import net.amarantha.lightboard.font.SimpleFont;
+import net.amarantha.lightboard.font.SimpleFont_Old;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -73,7 +73,7 @@ public class TextZone extends AbstractZone {
         return this;
     }
 
-    private Font font = new SimpleFont();
+    private Font font = new SimpleFont_Old();
 
     public void setColourOverride(String colourOverride) {
         this.colourOverride = "{" + colourOverride + "}";

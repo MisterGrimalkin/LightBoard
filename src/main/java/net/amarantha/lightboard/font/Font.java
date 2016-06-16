@@ -231,4 +231,16 @@ public class Font {
         return result;
     }
 
+
+    ///////////////////////////
+    // Export Fonts to Files //
+    ///////////////////////////
+
+    public static void main(String args[]) {
+        System.out.println("Exporting System Fonts...");
+        new SmallFont_Old().saveFont("fonts/SmallFont.fnt");
+        new SimpleFont_Old().saveFont("fonts/SimpleFont.fnt");
+        new LargeFont_Old().saveFont("fonts/LargeFont.fnt");
+    }
+
 }

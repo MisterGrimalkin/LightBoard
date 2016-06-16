@@ -27,6 +27,8 @@ int addr3 = 24;
 
 bool paused = false;
 
+int CLOCK_DELAY = 1;
+
 void pushTestPattern() {
     int r;
     int c;
@@ -46,11 +48,13 @@ void pushTestPattern() {
 void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[]) {
     int col;
     for (col = 0; col < cols ; col++) {
+        delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, LOW);
         digitalWrite(data1R, red1[col] );
         digitalWrite(data1G, green1[col] );
         digitalWrite(data2R, red2[col] );
         digitalWrite(data2G, green2[col] );
+        delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, HIGH);
     }
 }
@@ -82,6 +86,7 @@ void init(int r, int c) {
     cols = c;
 
     printf("Starting C RaspPi LightBoard....\n");
+    printf("Raspberry Pi revision: %d\n", piBoardRev());
     printf("%dx%d\n", rows, cols);
 
     pushTestPattern();
