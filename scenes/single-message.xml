@@ -5,7 +5,7 @@
 
     <textzone id="message">
         <tick>20</tick>
-        <font>LargeFont</font>
+        <font>GreenpeaceFont</font>
         <in-transition duration="2000">RainIn</in-transition>
         <out-transition duration=":scrollTime">ExplodeOut</out-transition>
         <display-time>4000</display-time>

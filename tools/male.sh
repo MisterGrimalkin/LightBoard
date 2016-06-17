@@ -12,6 +12,5 @@ then
     exit
 fi
 sh clearmessages.sh showers male
-sh addmessages.sh showers male "$1"
-sh reload.sh
+sh addmessages.sh showers male "$1;;$1"
 echo

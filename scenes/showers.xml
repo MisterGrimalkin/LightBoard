@@ -8,7 +8,7 @@
         <font>SmallFont</font>
         <region left="0" top="0" width="60" height="20"/>
         <display-time>100</display-time>
-        <canvas-layer>1</canvas-layer>
+        <canvas-layer>6</canvas-layer>
         <align-horizontal>right</align-horizontal>
         <message>Next Showers:</message>
         <auto-start/>
@@ -28,40 +28,82 @@
         <auto-start/>
     </textzone>
 
-    <!-- Tickets -->
+    <!-- Female Tickets -->
+
+    <textzone id="female-ticket-incoming">
+        <font>LargeFont</font>
+        <default-colour>green</default-colour>
+        <align-horizontal>left</align-horizontal>
+        <align-vertical>top</align-vertical>
+        <offset x="80" y="2"/>
+        <in-transition duration="1500">RainIn</in-transition>
+        <display-time>2000</display-time>
+        <canvas-layer>5</canvas-layer>
+        <auto-start/>
+        <auto-out/>
+    </textzone>
 
     <textzone id="female-ticket">
         <font>LargeFont</font>
-        <region left="80" top="0" width="30" height="20"/>
+        <offset x="80" y="2"/>
+        <align-horizontal>left</align-horizontal>
+        <align-vertical>top</align-vertical>
+        <out-transition duration="1500">ExplodeOut</out-transition>
+        <display-time>2000</display-time>
+        <canvas-layer>2</canvas-layer>
+    </textzone>
+
+    <domino>
+        <trigger action="display">female-ticket-incoming</trigger>
+        <target action="in">female-ticket</target>
+    </domino>
+
+    <!-- Male Tickets -->
+
+    <textzone id="male-ticket-incoming">
+        <font>LargeFont</font>
+        <default-colour>green</default-colour>
+        <align-horizontal>left</align-horizontal>
+        <align-vertical>top</align-vertical>
+        <offset x="140" y="2"/>
         <in-transition duration="1500">RainIn</in-transition>
         <display-time>2000</display-time>
+        <canvas-layer>3</canvas-layer>
         <auto-start/>
-        <auto-next/>
+        <auto-out/>
     </textzone>
 
     <textzone id="male-ticket">
         <font>LargeFont</font>
-        <region left="140" top="0" width="30" height="20"/>
-        <in-transition duration="1500">RainIn</in-transition>
+        <offset x="140" y="2"/>
+        <align-horizontal>left</align-horizontal>
+        <align-vertical>top</align-vertical>
+        <out-transition duration="1500">ExplodeOut</out-transition>
         <display-time>2000</display-time>
-        <auto-start/>
+        <canvas-layer>4</canvas-layer>
     </textzone>
+
+    <domino>
+        <trigger action="display">male-ticket-incoming</trigger>
+        <target action="in">male-ticket</target>
+    </domino>
 
     <!-- Scroller -->
 
     <textzone id="scroller">
-        <tick>20</tick>
+        <tick>10</tick>
         <region left="0" top="20" width="192" height="10"/>
-        <in-transition speed="1" edge="right">ScrollIn</in-transition>
-        <out-transition speed="1" edge="left">ScrollOut</out-transition>
-        <display-time>0</display-time>
+        <in-transition duration="1500" edge="bottom">ScrollIn</in-transition>
+        <out-transition duration="1000">InterlaceOut</out-transition>
+        <display-time>5000</display-time>
+        <canvas-layer>6</canvas-layer>
         <auto-start/>
         <auto-out/>
         <auto-next/>
     </textzone>
 
-    <group id="female">female-ticket</group>
-    <group id="male">male-ticket</group>
+    <group id="female">female-ticket-incoming,female-ticket</group>
+    <group id="male">male-ticket-incoming,male-ticket</group>
     <group id="scroller">scroller</group>
 
 </scene>

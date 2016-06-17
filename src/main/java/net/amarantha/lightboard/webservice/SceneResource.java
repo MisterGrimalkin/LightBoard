@@ -4,12 +4,18 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.scene.AbstractScene;
 import net.amarantha.lightboard.scene.SceneLoader;
 import net.amarantha.lightboard.scene.XMLSceneException;
+import net.amarantha.lightboard.zone.AbstractZone;
+import net.amarantha.lightboard.zone.Message;
 import net.amarantha.lightboard.zone.MessageGroup;
+import net.amarantha.lightboard.zone.TextZone;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
+
+import static net.amarantha.lightboard.zone.AbstractZone.Transitioning.*;
 
 @Path("scene")
 public class SceneResource extends Resource {
@@ -148,8 +154,6 @@ public class SceneResource extends Resource {
         }
     }
 
-
-
     @POST
     @Path("{sceneName}/group/{groupId}/add")
     @Produces(MediaType.TEXT_PLAIN)
@@ -167,7 +171,13 @@ public class SceneResource extends Resource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response clearGroupMessage(@PathParam("sceneName") String sceneName, @PathParam("groupId") String groupId) {
         try {
-            findMessageGroup(sceneName, groupId).clearMessages();
+            MessageGroup group = findMessageGroup(sceneName, groupId);
+            group.clearMessages();
+            for ( TextZone zone : findZonesForGroup(sceneName, group) ) {
+                if ( zone.getDirection()== DISPLAY ) {
+                    zone.out();
+                }
+            }
             return ok("Message Group Cleared");
         } catch (Exception e) {
             return error(e.getMessage());
@@ -219,6 +229,20 @@ public class SceneResource extends Resource {
         } else {
             throw new Exception("Could not find MessageGroup '"+groupId+"'");
         }
+    }
+
+    private List<TextZone> findZonesForGroup(String sceneName, MessageGroup group) throws Exception {
+        AbstractScene scene = findScene(sceneName);
+        List<TextZone> result = new ArrayList<>();
+        for ( String zoneId : group.getZoneIds() ) {
+            TextZone zone = (TextZone) scene.getZone(zoneId);
+            if ( zone!=null ) {
+                result.add(zone);
+            } else {
+                throw new Exception("Could not find TextZone '" + zoneId + "'");
+            }
+        }
+        return result;
     }
 
 }

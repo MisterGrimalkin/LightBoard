@@ -55,25 +55,27 @@ void sendSerialString(bool red1[], bool green1[], bool red2[], bool green2[], bo
     for (col = 0; col < cols ; col++) {
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, LOW);
-        digitalWrite(data3R, !red3[col] );
-        digitalWrite(data3G, !green3[col] );
-        digitalWrite(data4R, !red4[col] );
-        digitalWrite(data4G, !green4[col] );
+//        digitalWrite(data3R, !red3[col] );
+//        digitalWrite(data3G, !green3[col] );
+//        digitalWrite(data4R, !red4[col] );
+//        digitalWrite(data4G, !green4[col] );
         digitalWrite(data1R, !red1[col] );
         digitalWrite(data1G, !green1[col] );
         digitalWrite(data2R, !red2[col] );
         digitalWrite(data2G, !green2[col] );
         delayMicroseconds(CLOCK_DELAY);
         digitalWrite(clockPin, HIGH);
+//        delayMicroseconds(CLOCK_DELAY);
     }
 }
 
 void decodeRowAddress(int row) {
+//    delayMicroseconds(CLOCK_DELAY);
     digitalWrite(addr0, CHECK_BIT(row, 0)!=0);
     digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
     digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
     digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
-    delayMicroseconds(CLOCK_DELAY);
+//    delayMicroseconds(CLOCK_DELAY);
 }
 
 void push() {
@@ -81,16 +83,17 @@ void push() {
         int row;
         for (row = 0; row < rows/4; row++) {
             sendSerialString(currentFrame[0][row],      currentFrame[1][row],
-                             currentFrame[0][row + 16], currentFrame[1][row + 16],
-                             currentFrame[0][row + 32], currentFrame[1][row + 32],
-                             currentFrame[0][row + 48], currentFrame[1][row + 48]);
-            digitalWrite(output, HIGH);
+                             currentFrame[0][row + (rows/4)], currentFrame[1][row + (rows/4)],
+                             currentFrame[0][row + (rows/2)], currentFrame[1][row + (rows/2)],
+                             currentFrame[0][row + ((3*rows)/4)], currentFrame[1][row + ((3*rows)/4)]);
             digitalWrite(store, HIGH);
+            digitalWrite(output, HIGH);
+            delayMicroseconds(CLOCK_DELAY*100);
             decodeRowAddress(row);
-            digitalWrite(store, LOW);
+            delayMicroseconds(CLOCK_DELAY*100);
             digitalWrite(output, LOW);
+            digitalWrite(store, LOW);
         }
-        delayMicroseconds(CLOCK_DELAY);
     }
 }
 

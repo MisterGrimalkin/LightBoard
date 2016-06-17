@@ -199,7 +199,7 @@ public abstract class AbstractZone {
     // Transitions //
     /////////////////
 
-    private enum Transitioning {
+    public enum Transitioning {
         IN, DISPLAY, OUT
     }
 
@@ -465,6 +465,10 @@ public abstract class AbstractZone {
 
     public boolean isAutoStart() {
         return autoStart;
+    }
+
+    public Transitioning getDirection() {
+        return direction;
     }
 
     ////////////

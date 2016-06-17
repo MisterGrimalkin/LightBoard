@@ -93,7 +93,7 @@ public class LightBoardSurface {
         board.update(compositeState);
     }
 
-    private int testPatternSize = 4;
+    private int testPatternSize = 6;
     private int testPatternOffset = 0;
 
     public void testMode() {

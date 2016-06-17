@@ -28,7 +28,7 @@ int addr3 = 24;
 
 bool paused = false;
 
-int CLOCK_DELAY = 2;
+int CLOCK_DELAY = 1;
 
 void pushTestPattern() {
     int r;
@@ -65,7 +65,7 @@ void decodeRowAddress(int row) {
     digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
     digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
     digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
-    delayMicroseconds(CLOCK_DELAY);
+//    delayMicroseconds(CLOCK_DELAY);
 }
 
 void push() {
@@ -73,11 +73,13 @@ void push() {
         int row;
         for (row = 0; row < rows/2; row++) {
             sendSerialString(currentFrame[0][row], currentFrame[1][row], currentFrame[0][row + rows / 2], currentFrame[1][row + rows / 2]);
-            digitalWrite(output, HIGH);
             digitalWrite(store, HIGH);
+            digitalWrite(output, HIGH);
+            delayMicroseconds(CLOCK_DELAY*50);
             decodeRowAddress(row);
-            digitalWrite(store, LOW);
+            delayMicroseconds(CLOCK_DELAY*50);
             digitalWrite(output, LOW);
+            digitalWrite(store, LOW);
         }
     }
 }
@@ -87,6 +89,7 @@ void init(int r, int c) {
     rows = r;
     cols = c;
 
+
     printf("Starting C RaspPi LightBoard....\n");
     printf("Raspberry Pi revision: %d\n", piBoardRev());
     printf("%dx%d\n", rows, cols);
@@ -94,6 +97,8 @@ void init(int r, int c) {
     pushTestPattern();
 
     wiringPiSetup() ;
+
+//    piHiPri(99);
 
     pinMode(clockPin, OUTPUT);
     pinMode(store, OUTPUT);

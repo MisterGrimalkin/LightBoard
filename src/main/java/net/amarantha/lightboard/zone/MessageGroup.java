@@ -18,13 +18,13 @@ public class MessageGroup {
 
     public static final String SEP = ";;";
 
-    public MessageGroup(String[] fields) {
-        this.fields = fields;
+    public MessageGroup(String[] zoneIds) {
+        this.zoneIds = zoneIds;
         nextMessageSet();
     }
 
     private String id;
-    private String[] fields;
+    private String[] zoneIds;
     private Map<Integer, Map<String, Message>> allMessages = new HashMap<>();
     private Map<String, Boolean> hasCollected = new HashMap<>();
     private int insertPointer = 0;
@@ -39,12 +39,12 @@ public class MessageGroup {
 
     public void addMessages(String input) {
         String[] msgs = input.split(SEP);
-        if ( msgs.length!=fields.length ) {
-            throw new IllegalArgumentException("Wrong number of messages, expected " + fields.length);
+        if ( msgs.length!= zoneIds.length ) {
+            throw new IllegalArgumentException("Wrong number of messages, expected " + zoneIds.length);
         }
         Map<String, Message> messages = new LinkedHashMap<>();
-        for ( int i=0; i<fields.length; i++ ) {
-            messages.put(fields[i], new Message(msgs[i]));
+        for (int i = 0; i< zoneIds.length; i++ ) {
+            messages.put(zoneIds[i], new Message(msgs[i]));
         }
         allMessages.put(insertPointer++, messages);
         saveMessages();
@@ -55,7 +55,7 @@ public class MessageGroup {
         if ( requestPointer >= allMessages.keySet().size() ) {
             requestPointer = 0;
         }
-        for ( String field : fields ) {
+        for ( String field : zoneIds) {
             hasCollected.put(field, false);
         }
     }
@@ -115,6 +115,10 @@ public class MessageGroup {
         }
     }
 
+    public String[] getZoneIds() {
+        return zoneIds;
+    }
+
     private String filename;
 
     public void loadMessages() {
@@ -134,7 +138,7 @@ public class MessageGroup {
                     while (iter.hasNext()) {
                         JSONObject jsonEntry = iter.next();
                         Map<String, Message> messages = new HashMap<>();
-                        for (String field : fields) {
+                        for (String field : zoneIds) {
                             JSONObject messageJson = (JSONObject) jsonEntry.get(field);
                             if (messageJson != null) {
                                 messages.put(field, new Message(messageJson.get("id").toString(), messageJson.get("text").toString()));
@@ -173,7 +177,7 @@ public class MessageGroup {
     public String listMessages() {
         String result = "";
         for ( Entry<Integer, Map<String, Message>> entry : allMessages.entrySet() ) {
-            for ( String field : fields ) {
+            for ( String field : zoneIds) {
                 result += entry.getValue().get(field).getText() + SEP;
             }
             result = result.substring(0, result.length()-SEP.length()) + "\n";
