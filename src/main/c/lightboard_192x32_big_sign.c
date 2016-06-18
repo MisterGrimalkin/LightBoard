@@ -65,7 +65,6 @@ void decodeRowAddress(int row) {
     digitalWrite(addr1, CHECK_BIT(row, 1)!=0);
     digitalWrite(addr2, CHECK_BIT(row, 2)!=0);
     digitalWrite(addr3, CHECK_BIT(row, 3)!=0);
-//    delayMicroseconds(CLOCK_DELAY);
 }
 
 void push() {

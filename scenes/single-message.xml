@@ -6,9 +6,9 @@
     <textzone id="message">
         <tick>20</tick>
         <font>GreenpeaceFont</font>
-        <in-transition duration="2000">RainIn</in-transition>
-        <out-transition duration=":scrollTime">ExplodeOut</out-transition>
-        <display-time>4000</display-time>
+        <in-transition speed="1" edge="right">ScrollIn</in-transition>
+        <out-transition speed="1" edge="left">ScrollOut</out-transition>
+        <display-time>0</display-time>
         <auto-start/>
         <auto-next/>
         <auto-out/>
