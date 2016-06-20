@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+
+    <define name="transIn">1200</define>
+    <define name="transOut">1200</define>
+    <define name="display">5000</define>
+
+    <textzone id="A">
+        <font>Zapper</font>
+        <canvas-layer>1</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="30"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>yellow</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">InterlaceOut</out-transition>
+        <auto-start/>
+        <message>A</message>
+    </textzone>
+
+    <textzone id="B">
+        <font>Zapper</font>
+        <canvas-layer>2</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="80"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>green</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">InterlaceOut</out-transition>
+        <auto-start/>
+        <message>B</message>
+    </textzone>
+
+    <textzone id="C">
+        <font>Zapper</font>
+        <canvas-layer>3</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="135"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>red</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">InterlaceOut</out-transition>
+        <auto-start/>
+        <message>C</message>
+    </textzone>
+
+    <domino>
+        <trigger action="out">C</trigger>
+        <target action="exit"/>
+    </domino>
+
+    <group id="zaps">A,B,C</group>
+
+</scene>

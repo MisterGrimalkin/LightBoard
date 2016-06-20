@@ -8,7 +8,7 @@
     <textzone id="one">
         <font>LargeFont</font>
         <tick>30</tick>
-        <offset x="-50" y="-10"/>
+        <offset x="-50" y="-8"/>
         <default-colour>red</default-colour>
         <in-transition duration=":explodeTime">ExplodeIn</in-transition>
         <out-transition duration=":explodeTime">ExplodeOut</out-transition>
@@ -30,7 +30,7 @@
     <textzone id="three">
         <font>LargeFont</font>
         <tick>30</tick>
-        <offset x="50" y="10"/>
+        <offset x="50" y="8"/>
         <default-colour>green</default-colour>
         <in-transition duration=":explodeTime">ExplodeIn</in-transition>
         <out-transition duration=":explodeTime">ExplodeOut</out-transition>

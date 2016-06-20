@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+
+    <define name="transIn">1200</define>
+    <define name="transOut">1200</define>
+    <define name="display">2000</define>
+
+    <textzone id="A">
+        <font>Zapper</font>
+        <canvas-layer>1</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="30" y="-1"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>yellow</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-start/>
+        <auto-out/>
+        <message>A</message>
+    </textzone>
+
+    <textzone id="B">
+        <font>Zapper</font>
+        <canvas-layer>2</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="80"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>green</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-start/>
+        <auto-out/>
+        <message>B</message>
+    </textzone>
+
+    <textzone id="C">
+        <font>Zapper</font>
+        <canvas-layer>3</canvas-layer>
+        <region left="0" top="0" width="192" height="32"/>
+        <offset x="135" y="1"/>
+        <align-horizontal>left</align-horizontal>
+        <default-colour>red</default-colour>
+        <display-time>:display</display-time>
+        <in-transition duration=":transIn">RainIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-start/>
+        <auto-out/>
+        <message>C</message>
+    </textzone>
+
+    <textzone id="message1">
+        <canvas-layer>4</canvas-layer>
+        <font>LargeFont</font>
+        <message>If We Work Together...</message>
+        <in-transition duration=":transIn">ExplodeIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-out/>
+    </textzone>
+
+    <textzone id="message2">
+        <canvas-layer>5</canvas-layer>
+        <font>LargeFont</font>
+        <message>...We Can Build...</message>
+        <in-transition duration=":transIn">ExplodeIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-out/>
+    </textzone>
+
+    <textzone id="message3">
+        <canvas-layer>4</canvas-layer>
+        <font>LargeFont</font>
+        <message>...A Better World...</message>
+        <in-transition duration=":transIn">ExplodeIn</in-transition>
+        <out-transition duration=":transOut">ExplodeOut</out-transition>
+        <auto-out/>
+    </textzone>
+
+    <textzone id="message4">
+        <canvas-layer>5</canvas-layer>
+        <font>LargeFont</font>
+        <message>Starting Right Now</message>
+        <display-time>4000</display-time>
+        <in-transition duration=":transIn">ExplodeIn</in-transition>
+        <auto-out/>
+    </textzone>
+
+    <define name="logoFilename">gp192x32.jpg</define>
+
+    <imagezone id="logo" src=":logoFilename">
+        <out-transition duration="300">InterlaceOut</out-transition>
+        <display-time>200</display-time>
+        <canvas-layer>3</canvas-layer>
+    </imagezone>
+
+    <textzone id="bigmessage" >
+        <font>GreenpeaceFont</font>
+        <in-transition duration="2500" edge="right">ScrollIn</in-transition>
+        <out-transition duration="2500" edge="left">ScrollOut</out-transition>
+        <display-time>0</display-time>
+        <canvas-layer>4</canvas-layer>
+        <default-colour>red</default-colour>
+        <message>ANOTHER WORLD IS POSSIBLE</message>
+        <auto-out/>
+    </textzone>
+
+    <domino>
+        <trigger action="display">C</trigger>
+        <target action="in">message1</target>
+    </domino>
+
+    <domino>
+        <trigger action="in">message1</trigger>
+        <target action="in">message2</target>
+    </domino>
+
+    <domino>
+        <trigger action="in">message2</trigger>
+        <target action="in">message3</target>
+    </domino>
+
+    <domino>
+        <trigger action="in">message3</trigger>
+        <target action="in">message4</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">message4</trigger>
+        <target action="in">logo</target>
+    </domino>
+
+    <domino>
+        <trigger action="display">logo</trigger>
+        <target action="in">bigmessage</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">bigmessage</trigger>
+        <target action="out">logo</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">logo</trigger>
+        <target action="exit"/>
+    </domino>
+
+    <!--<group id="zaps">A,B,C</group>-->
+
+</scene>
