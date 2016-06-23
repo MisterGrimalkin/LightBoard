@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+
+    <define name="logoFilename">gp192x32.jpg</define>
+
+    <imagezone id="logo" src=":logoFilename">
+        <region left="0" top="0" width="256" height="40"/>
+        <in-transition duration="2500">RainIn</in-transition>
+        <out-transition duration="300">InterlaceOut</out-transition>
+        <display-time>4000</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <!--<auto-out/>-->
+    </imagezone>
+
+    <textzone id="message">
+        <!--<region left="0" top="0" width="256" height="48"/>-->
+        <offset y="40"/>
+        <default-colour>red</default-colour>
+        <font>GreenpeaceFont</font>
+        <in-transition duration="500">TypeIn</in-transition>
+        <out-transition duration="300">InterlaceOut</out-transition>
+        <display-time>4000</display-time>
+        <canvas-layer>2</canvas-layer>
+        <message>Welcome To The Future</message>
+        <align-vertical>top</align-vertical>
+        <!--<auto-start/>-->
+        <!--<auto-out/>-->
+    </textzone>
+
+    <domino>
+        <trigger action="in">logo</trigger>
+        <target action="in">message</target>
+    </domino>
+
+    <domino>
+        <trigger action="display">message</trigger>
+        <target action="out">logo,message</target>
+    </domino>
+
+    <domino>
+        <trigger action="out">logo</trigger>
+        <target action="exit"/>
+    </domino>
+
+    <!--<group id="message">message</group>-->
+
+</scene>

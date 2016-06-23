@@ -86,9 +86,9 @@ void push() {
                              currentFrame[0][row + ((3*rows)/4)], currentFrame[1][row + ((3*rows)/4)]);
             digitalWrite(store, HIGH);
             digitalWrite(output, HIGH);
-            delayMicroseconds(CLOCK_DELAY*100);
+            delayMicroseconds(CLOCK_DELAY*1);
             decodeRowAddress(row);
-            delayMicroseconds(CLOCK_DELAY*100);
+            delayMicroseconds(CLOCK_DELAY*1);
             digitalWrite(output, LOW);
             digitalWrite(store, LOW);
         }

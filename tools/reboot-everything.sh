@@ -26,7 +26,7 @@ sshpass -p raspberry ssh pi@192.168.1.76 "sudo reboot"
 echo
 echo "Everything will probably be OK again fairly soon."
 echo
-
+#sudo reboot
 
 
 
