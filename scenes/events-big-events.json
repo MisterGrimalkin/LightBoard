@@ -104,11 +104,33 @@
       },
       "eventname": {
         "id": "661abb80-0d9b-470a-9f0c-1331fcfe5e16",
-        "text": "New York Brassband"
+        "text": "NEW YORK BRASSBAND"
       },
       "description1": {
         "id": "a1a7afd3-6c97-41c3-a653-062614e0ca86",
-        "text": "In the Engine Room"
+        "text": "  "
+      }
+    },
+    {
+      "time": {
+        "id": "e6e33420-cf7e-486b-9c0e-df64ddc05fc7",
+        "text": "12:00pm"
+      },
+      "description2": {
+        "id": "4ad3fe70-547c-42b1-894c-892ccec274d0",
+        "text": "  "
+      },
+      "day": {
+        "id": "9242462c-7a04-479a-b351-a5eb53d2b5a6",
+        "text": "Thursday"
+      },
+      "eventname": {
+        "id": "b81d1b9b-41ea-4207-b1cb-6df045179e09",
+        "text": "NEW YORK BRASSBAND"
+      },
+      "description1": {
+        "id": "89b99102-5b41-425c-b878-caf63877c90b",
+        "text": "  "
       }
     }
   ]

@@ -170,9 +170,13 @@ public class SceneResource extends Resource {
     @Path("{sceneName}/group/{groupId}/clear")
     @Produces(MediaType.TEXT_PLAIN)
     public Response clearGroupMessage(@PathParam("sceneName") String sceneName, @PathParam("groupId") String groupId) {
+        return clearGroupMessage(sceneName, groupId, false);
+    }
+
+    public Response clearGroupMessage(String sceneName, String groupId, boolean keepPointer) {
         try {
             MessageGroup group = findMessageGroup(sceneName, groupId);
-            group.clearMessages();
+            group.clearMessages(!keepPointer);
             for ( TextZone zone : findZonesForGroup(sceneName, group) ) {
                 if ( zone.getDirection()== DISPLAY ) {
                     zone.out();

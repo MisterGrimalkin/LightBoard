@@ -1,1 +1,26 @@
-{"requestPointer":0,"messages":[{"message":{"id":"768c89d5-0faa-4fc7-9289-3a056b5ecf89","text":"ABC"}}]}
+{
+  "requestPointer": 0,
+  "messages": [
+    {
+      "message": {
+        "id": "1",
+        "text": "Another World is Possible"
+      }
+    },{
+      "message": {
+        "id": "3",
+        "text": "Imagine a World Beyond Oil"
+      }
+    },{
+      "message": {
+        "id": "4",
+        "text": "Inspirational Message Goes Here..."
+      }
+    },{
+      "message": {
+        "id": "2",
+        "text": "Our Oceans are Not for Sale"
+      }
+    }
+  ]
+}

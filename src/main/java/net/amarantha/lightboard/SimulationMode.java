@@ -18,8 +18,8 @@ public class SimulationMode extends Application {
             launch(args);
         } else {
             Guice.createInjector(new ApplicationModule())
-                    .getInstance(LightBoardApplication.class)
-                    .startApplication();
+                    .getInstance(LightBoardSystem.class)
+                    .start();
         }
     }
 
@@ -29,8 +29,8 @@ public class SimulationMode extends Application {
                 Modules.override(new ApplicationModule())
                         .with(new SimulationModule(primaryStage))
         )
-                .getInstance(LightBoardApplication.class)
-                .startApplication();
+                .getInstance(LightBoardSystem.class)
+                .start();
     }
 
 }

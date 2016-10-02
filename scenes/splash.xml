@@ -50,6 +50,13 @@
         <message>:webStatus</message>
     </textzone>
 
+    <imagezone id="gplogo" src=":logoFilename">
+        <display-time>3000</display-time>
+        <in-transition duration="2000">RainIn</in-transition>
+        <out-transition duration="1500">ExplodeOut</out-transition>
+        <auto-out/>
+    </imagezone>
+
     <domino>
         <trigger action="in">company</trigger>
         <target action="in">system</target>
@@ -68,6 +75,10 @@
     </domino>
     <domino>
         <trigger action="out">webstatus</trigger>
+        <target action="in">gplogo</target>
+    </domino>
+    <domino>
+        <trigger action="out">gplogo</trigger>
         <target action="in">company</target>
     </domino>
 

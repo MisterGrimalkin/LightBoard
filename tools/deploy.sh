@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+pwd=`cat password`
 if [ ! -f "lightboard.ip" ]
 then
     echo "No LightBoard specified"
@@ -16,7 +17,7 @@ cd ..
 if [ "$1" = "-clean" ]
 then
     echo "Clearing existing installation..."
-    sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi; sudo cp lightboard/application.properties .; sudo rm -r lightboard; sudo mkdir lightboard; sudo chmod a+xw lightboard; sudo mv application.properties lightboard"
+    sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi; sudo cp lightboard/application.properties .; sudo rm -r lightboard; sudo mkdir lightboard; sudo chmod a+xw lightboard; sudo mv application.properties lightboard"
 fi
 
 if [ "$1" != "-skipjava" ]
@@ -24,17 +25,16 @@ then
     echo "Compiling Java..."
     mvn clean package
     echo "Uploading Java..."
-    sshpass -p raspberry scp -r target/lightboard/ pi@${lightboard}:
+    sshpass -p ${pwd} scp -r target/lightboard/ pi@${lightboard}:
 else
     echo "Uploading Native Sources..."
-    sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
+    sshpass -p ${pwd} scp -r src/main/c/ pi@${lightboard}:lightboard
 fi
 echo "Uploading Shell Scripts..."
-sshpass -p raspberry scp *.sh pi@${lightboard}:lightboard/
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
+sshpass -p ${pwd} scp *.sh pi@${lightboard}:lightboard/
+sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
 echo "Compiling Native Code..."
-#sshpass -p raspberry scp -r src/main/c/ pi@${lightboard}:lightboard
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; bash build.sh"
+sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; bash build.sh"
 echo "Deployed to ${lightboard}"
 echo
 cd tools

@@ -31,9 +31,15 @@ public class MessageGroup {
     private int requestPointer = -1;
 
     public void clearMessages() {
+        clearMessages(true);
+    }
+
+    public void clearMessages(boolean resetPointer) {
         allMessages.clear();
-        insertPointer = 0;
-        nextMessageSet();
+        if ( resetPointer ) {
+            insertPointer = 0;
+            nextMessageSet();
+        }
         saveMessages();
     }
 

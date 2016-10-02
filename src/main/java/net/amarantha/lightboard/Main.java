@@ -10,8 +10,8 @@ public class Main {
     public static void main(String[] args) {
         processArgs(args);
         Guice.createInjector(new ApplicationModule())
-            .getInstance(LightBoardApplication.class)
-                .startApplication();
+            .getInstance(LightBoardSystem.class)
+                .start();
     }
 
 }

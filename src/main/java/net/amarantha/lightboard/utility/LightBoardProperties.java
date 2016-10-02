@@ -59,6 +59,9 @@ public class LightBoardProperties extends PropertyManager {
             }
             ip = output.toString().trim();
         }
+        if ( ip.isEmpty() ) {
+            ip = "127.0.0.1";
+        }
         return ip;
     }
 

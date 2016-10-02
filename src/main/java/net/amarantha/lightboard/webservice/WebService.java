@@ -26,7 +26,9 @@ public class WebService {
 
         System.out.println("Starting Web Service....");
 
-        String fullUri = "http://" + props.getIp().trim() + ":8001/lightboard/";
+        String ip = props.getIp().trim();
+
+        String fullUri = "http://" + ip + ":8001/lightboard/";
 
         try {
             final ResourceConfig rc = new ResourceConfig().packages("net.amarantha.lightboard.webservice");

@@ -1,0 +1,36 @@
+{
+  "buses": [
+    {
+      "id": "1",
+      "stop": 51311,
+      "bus": "W3",
+      "destination": "Finsbury Park",
+      "active": true,
+      "offset": 0
+    },
+    {
+      "id": "2",
+      "stop": 51174,
+      "bus": "W3",
+      "destination": "Northmblnd Park",
+      "active": true,
+      "offset": 0
+    },
+    {
+      "id": "3",
+      "stop": 53240,
+      "bus": "41",
+      "destination": "Tottenham Hale",
+      "active": true,
+      "offset": 0
+    },
+    {
+      "id": "4",
+      "stop": 51174,
+      "bus": "41",
+      "destination": "Archway",
+      "active": true,
+      "offset": 0
+    }
+  ]
+}

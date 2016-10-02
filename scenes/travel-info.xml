@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene id="splash" name="Splash Screen">
+
+    <define name="busHold">3000</define>
+    <define name="busTransition">400</define>
+
+    <textzone id="bus-number">
+        <region left="0" top="0" width="30" height="18"/>
+        <font>LargeFont</font>
+        <display-time>:busHold</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
+        <auto-out/>
+        <in-transition duration=":busTransition" edge="left">ScrollIn</in-transition>
+        <out-transition duration=":busTransition" edge="right">ScrollOut</out-transition>
+    </textzone>
+
+    <textzone id="destination-1">
+        <region left="30" top="0" width="81" height="9"/>
+        <font>SimpleFont</font>
+        <display-time>:busHold</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
+        <in-transition duration=":busTransition" edge="bottom">ScrollIn</in-transition>
+        <out-transition duration=":busTransition" edge="top">ScrollOut</out-transition>
+    </textzone>
+
+    <textzone id="times-1">
+        <region left="30" top="9" width="81" height="9"/>
+        <font>SimpleFont</font>
+        <display-time>:busHold</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
+        <in-transition duration=":busTransition" edge="top">ScrollIn</in-transition>
+        <out-transition duration=":busTransition" edge="bottom">ScrollOut</out-transition>
+    </textzone>
+
+    <textzone id="destination-2">
+        <region left="111" top="0" width="81" height="9"/>
+        <font>SimpleFont</font>
+        <display-time>:busHold</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
+        <in-transition duration=":busTransition" edge="bottom">ScrollIn</in-transition>
+        <out-transition duration=":busTransition" edge="top">ScrollOut</out-transition>
+    </textzone>
+
+    <textzone id="times-2">
+        <region left="111" top="9" width="81" height="9"/>
+        <font>SimpleFont</font>
+        <display-time>:busHold</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+        <auto-next/>
+        <in-transition duration=":busTransition" edge="top">ScrollIn</in-transition>
+        <out-transition duration=":busTransition" edge="bottom">ScrollOut</out-transition>
+    </textzone>
+
+    <!-- Tubes -->
+
+    <textzone id="scroller">
+        <region left="0" top="18" width="192" height="8"/>
+        <font>SimpleFont</font>
+        <display-time>0</display-time>
+        <canvas-layer>2</canvas-layer>
+        <in-transition speed="1" edge="right">ScrollIn</in-transition>
+        <out-transition speed="1" edge="left">ScrollOut</out-transition>
+        <auto-start/>
+        <auto-out/>
+        <auto-next/>
+    </textzone>
+
+    <textzone id="tube-status">
+        <region left="0" top="27" width="192" height="8"/>
+        <font>SmallFont</font>
+        <display-time>3000</display-time>
+        <canvas-layer>1</canvas-layer>
+        <auto-start/>
+    </textzone>
+
+    <domino>
+        <trigger action="display">bus-number</trigger>
+        <target action="out">destination-1,times-1,destination-2,times-2</target>
+    </domino>
+
+    <group id="buses">bus-number,destination-1,times-1,destination-2,times-2</group>
+    <group id="scroller">scroller</group>
+    <group id="tubes">tube-status</group>
+
+</scene>

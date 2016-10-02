@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/scripts" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.javalite:javalite-common:1.4.10" level="project" />
     <orderEntry type="library" name="pi4j-core" level="project" />
@@ -70,7 +70,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools-jar:1">
         <CLASSES>
-          <root url="jar://$USER_HOME$/bin/jdk1.8.0_40/lib/tools.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/jre/jre/../lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

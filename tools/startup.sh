@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+pwd=`cat password`
 if [ ! -f "lightboard.ip" ]
 then
     echo "No LightBoard specified"
@@ -13,5 +14,5 @@ then
     exit
 fi
 echo "Starting LightBoard @ $lightboard..."
-sshpass -p raspberry ssh pi@${lightboard} "cd /home/pi/lightboard; ./board.sh" &
+sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi/lightboard; ./board.sh" &
 echo
