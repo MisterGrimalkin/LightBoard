@@ -7,30 +7,23 @@ import javafx.stage.Stage;
 import net.amarantha.lightboard.module.ApplicationModule;
 import net.amarantha.lightboard.module.SimulationModule;
 
-import static net.amarantha.lightboard.utility.LightBoardProperties.isSimulationMode;
-import static net.amarantha.lightboard.utility.LightBoardProperties.processArgs;
+import static net.amarantha.utils.properties.PropertiesService.processArgs;
+
 
 public class SimulationMode extends Application {
 
     public static void main(String[] args) {
         processArgs(args);
-        if ( isSimulationMode() ) {
-            launch(args);
-        } else {
-            Guice.createInjector(new ApplicationModule())
-                    .getInstance(LightBoardSystem.class)
-                    .start();
-        }
+        launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
         Guice.createInjector(
-                Modules.override(new ApplicationModule())
-                        .with(new SimulationModule(primaryStage))
-        )
-                .getInstance(LightBoardSystem.class)
-                .start();
+            Modules.override(new ApplicationModule())
+                .with(new SimulationModule(primaryStage)))
+                    .getInstance(LightBoardSystem.class)
+                        .start();
     }
 
 }

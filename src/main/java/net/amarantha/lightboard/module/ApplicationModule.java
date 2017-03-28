@@ -4,18 +4,24 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import net.amarantha.lightboard.board.LightBoard;
 import net.amarantha.lightboard.board.TextBoard;
-import net.amarantha.lightboard.utility.LightBoardProperties;
+import net.amarantha.utils.properties.PropertiesService;
+import net.amarantha.utils.properties.PropertyNotFoundException;
 
 import java.io.PrintStream;
 
 public class ApplicationModule extends AbstractModule {
 
-    private final Class boardClass;
+    private Class boardClass;
 
     public ApplicationModule() {
-        LightBoardProperties props = new LightBoardProperties();
-        boardClass = props.getBoardClass();
-        System.out.println("BoardClass: " + boardClass.getSimpleName());
+        PropertiesService props = new PropertiesService();
+        try {
+            boardClass = props.getClass("boardClass");
+            System.out.println("BoardClass: " + boardClass.getSimpleName());
+        } catch (PropertyNotFoundException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override

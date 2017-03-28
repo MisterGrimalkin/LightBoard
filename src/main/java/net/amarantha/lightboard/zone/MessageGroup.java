@@ -29,6 +29,7 @@ public class MessageGroup {
     private Map<String, Boolean> hasCollected = new HashMap<>();
     private int insertPointer = 0;
     private int requestPointer = -1;
+    private boolean persistMessages = true;
 
     public void clearMessages() {
         clearMessages(true);
@@ -93,6 +94,10 @@ public class MessageGroup {
         this.id = id;
     }
 
+    public void setPersistMessages(boolean persistMessages) {
+        this.persistMessages = persistMessages;
+    }
+
     private boolean hasCollected(String id) {
         return hasCollected.get(id)!=null && hasCollected.get(id);
     }
@@ -111,7 +116,7 @@ public class MessageGroup {
     }
 
     public void saveMessages() {
-        if ( filename!=null ) {
+        if ( persistMessages && filename!=null ) {
             try (FileWriter file = new FileWriter(filename)) {
                 file.write(getAsJson());
                 file.flush();
@@ -128,7 +133,7 @@ public class MessageGroup {
     private String filename;
 
     public void loadMessages() {
-        if ( filename!=null ) {
+        if ( persistMessages && filename!=null ) {
             try (FileReader file = new FileReader(filename)) {
                 JSONParser parser = new JSONParser();
                 JSONObject obj = (JSONObject) parser.parse(file);

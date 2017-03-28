@@ -10,6 +10,9 @@ public enum Tag {
     DEFAULT_COLOUR("default-colour"),
 
     GROUP("group"),
+    PERSIST("persist"),
+    YES("yes"),
+    NO("no"),
 
     STANDALONE("standalone"),
     TICK("tick"),

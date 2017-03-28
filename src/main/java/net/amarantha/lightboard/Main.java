@@ -3,7 +3,8 @@ package net.amarantha.lightboard;
 import com.google.inject.Guice;
 import net.amarantha.lightboard.module.ApplicationModule;
 
-import static net.amarantha.lightboard.utility.LightBoardProperties.processArgs;
+import static net.amarantha.utils.properties.PropertiesService.processArgs;
+
 
 public class Main {
 
@@ -13,5 +14,8 @@ public class Main {
             .getInstance(LightBoardSystem.class)
                 .start();
     }
+
+    public static final String TEST_MODE = "test";
+    public static final String NO_HTTP = "noserver";
 
 }

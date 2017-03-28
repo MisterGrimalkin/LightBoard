@@ -40,8 +40,8 @@ public abstract class Updater {
                 doRefresh();
             }
         }, dataRefresh);
-        doRefresh();
-        System.out.println("Updater running every " + dataRefresh + "ms");
+        System.out.println(getClass().getSimpleName() + " running every " + dataRefresh + "ms");
+        paused = false;
     }
 
     private boolean paused = true;
@@ -55,10 +55,13 @@ public abstract class Updater {
         doRefresh();
     }
 
-    private void doRefresh() {
+    protected void doRefresh() {
         if ( !paused ) {
             try {
+                long now = System.currentTimeMillis();
+                System.out.println("Refreshing " + getClass().getSimpleName() + "...");
                 refresh();
+                System.out.println("Refreshed " + getClass().getSimpleName() + " in " + (System.currentTimeMillis()-now) + "ms");
             } catch ( Exception e ) {
                 System.out.println("ERROR!\n"+e.getMessage());
                 e.printStackTrace();

@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-pwd=`cat password`
+if [ ! -f "password" ]
+then
+    echo "No password set"
+    exit 1
+else
+    password=`cat password`
+fi
+
 if [ ! -f "lightboard.ip" ]
 then
     echo "No LightBoard specified"
@@ -7,37 +14,72 @@ then
 else
     lightboard=`cat lightboard.ip`
 fi
+
+if [ "$1" = "-clean" ]
+then
+    read -p "Really remove existing installation? " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        exit 0
+    fi
+fi
+
 boardname=`curl -s http://${lightboard}:8001/lightboard/system/name`
 if [ $? -eq 0 ]
 then
     wasup=true
     sh shutdown.sh
 fi
-cd ..
-if [ "$1" = "-clean" ]
-then
-    echo "Clearing existing installation..."
-    sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi; sudo cp lightboard/application.properties .; sudo rm -r lightboard; sudo mkdir lightboard; sudo chmod a+xw lightboard; sudo mv application.properties lightboard"
-fi
 
 if [ "$1" != "-skipjava" ]
 then
     echo "Compiling Java..."
+    cd ..
     mvn clean package
-    echo "Uploading Java..."
-    sshpass -p ${pwd} scp -r target/lightboard/ pi@${lightboard}:
-else
-    echo "Uploading Native Sources..."
-    sshpass -p ${pwd} scp -r src/main/c/ pi@${lightboard}:lightboard
+    cd tools
+    if [ ! -f "../target/lightboard/lightboard.jar" ]
+    then
+        echo "Compilation Failed!"
+        exit 1
+    fi
 fi
-echo "Uploading Shell Scripts..."
-sshpass -p ${pwd} scp *.sh pi@${lightboard}:lightboard/
-sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi/lightboard; chmod +x *.sh"
-echo "Compiling Native Code..."
-sshpass -p ${pwd} ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; bash build.sh"
+
+if [ "$1" = "-clean" ]
+then
+    echo "Removing existing installation..."
+    sshpass -p ${password} ssh pi@${lightboard} "cd /home/pi; sudo cp lightboard/application.properties .; sudo rm -r lightboard; mkdir lightboard; sudo chmod a+xw lightboard; mv application.properties lightboard"
+    echo "Uploading Application and Libraries..."
+    sshpass -p ${password} scp -r ../target/lightboard pi@${lightboard}:
+    echo "Uploading Configuration..."
+    sshpass -p ${password} scp ../*config.json pi@${lightboard}:lightboard
+else
+    echo "Uploading Application JAR..."
+    sshpass -p ${password} scp ../target/lightboard/*.jar pi@${lightboard}:lightboard
+    echo "Uploading Native Sources..."
+    sshpass -p ${password} scp -r ../target/lightboard/c pi@${lightboard}:lightboard
+    echo "Uploading Fonts..."
+    sshpass -p ${password} scp -r ../target/lightboard/fonts pi@${lightboard}:lightboard
+    echo "Uploading Images..."
+    sshpass -p ${password} scp -r ../target/lightboard/images pi@${lightboard}:lightboard
+    echo "Uploading Scenes..."
+    sshpass -p ${password} scp -r ../target/lightboard/scenes pi@${lightboard}:lightboard
+    echo "Uploading Support Scripts..."
+    sshpass -p ${password} scp -r ../target/lightboard/scripts pi@${lightboard}:lightboard
+    sshpass -p ${password} ssh pi@${lightboard} "cd /home/pi/lightboard/scripts; sudo chmod +x *.sh"
+fi
+
+echo "Uploading Main Scripts and Default Properties..."
+sshpass -p ${password} scp ../*.sh pi@${lightboard}:lightboard
+sshpass -p ${password} ssh pi@${lightboard} "cd /home/pi/lightboard; sudo chmod +x *.sh; sudo chmod -x *.jar"
+sshpass -p ${password} scp ../default.properties pi@${lightboard}:lightboard
+
+echo "Compiling Native Libraries..."
+sshpass -p ${password} ssh pi@${lightboard} "cd /home/pi/lightboard/c; chmod +x build.sh; ./build.sh; rm *.c; rm build.sh"
+
+echo
 echo "Deployed to ${lightboard}"
 echo
-cd tools
 if [ ${wasup} ]
 then
     sh startup.sh

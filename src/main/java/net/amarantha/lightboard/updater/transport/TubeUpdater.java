@@ -2,9 +2,9 @@ package net.amarantha.lightboard.updater.transport;
 
 import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
-import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.SceneResource;
+import net.amarantha.utils.properties.PropertiesService;
 import org.javalite.http.Http;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,36 +21,27 @@ public class TubeUpdater extends Updater {
 
     private final static String TFL_TS_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
 
-    @Inject private SceneResource sceneResource;
+    private SceneResource sceneResource;
 
-    @Inject private LightBoardProperties props;
+    private PropertiesService props;
 
     @Inject
-    public TubeUpdater(Sync sync) {
+    public TubeUpdater(Sync sync, SceneResource sceneResource, PropertiesService props) {
         super(sync);
+        this.sceneResource = sceneResource;
+        this.props = props;
+        setDataRefresh(120000L);
     }
 
     private boolean showTubeFullDetails = true;
     private boolean showTubeSummary = true;
 
-    public void start() {
-        sync.addTask(new Sync.Task(120000L) {
-            @Override
-            public void runTask() {
-                refresh();
-            }
-        });
-    }
-
     @Override
     public void refresh() {
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                sceneResource.clearGroupMessage("travel-info", "scroller", true);
-                sceneResource.clearGroupMessage("travel-info", "tubes", true);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
 
                 List<TubeStatus> tubeStatuses = parseDocument(queryWebService());
 
@@ -106,13 +97,19 @@ public class TubeUpdater extends Updater {
 
                 }
 
+                sceneResource.clearGroupMessage("travel-info", "scroller", true);
+                sceneResource.clearGroupMessage("travel-info", "tubes", true);
+
                 StringBuilder sb = new StringBuilder();
                 detailMessages.forEach((s)->{
+                    System.out.println("\tDETAIL="+s);
                     sceneResource.addGroupMessage("travel-info", "scroller", s);
                 });
+                System.out.println("\tSTATUS="+statusMessage);
                 sceneResource.addGroupMessage("travel-info", "tubes", statusMessage);
-            }
-        }, 0);
+
+//            }
+//        }, 0);
     }
 
     protected String doTflCall() {

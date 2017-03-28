@@ -1,7 +1,7 @@
 package net.amarantha.lightboard.webservice;
 
 import com.google.inject.Singleton;
-import net.amarantha.lightboard.utility.LightBoardProperties;
+import net.amarantha.utils.properties.PropertiesService;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -17,8 +17,9 @@ public class WebService {
 
     @Inject private SceneResource sceneResource;
     @Inject private SystemResource systemResource;
+    @Inject private AnimationResource animationResource;
 
-    @Inject private LightBoardProperties props;
+    @Inject private PropertiesService props;
 
     private boolean running = false;
 

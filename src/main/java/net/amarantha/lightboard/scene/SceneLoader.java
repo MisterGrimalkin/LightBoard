@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 import net.amarantha.lightboard.entity.*;
 import net.amarantha.lightboard.font.Font;
 import net.amarantha.lightboard.surface.LightBoardSurface;
-import net.amarantha.lightboard.utility.LightBoardProperties;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.zone.AbstractZone;
 import net.amarantha.lightboard.zone.ImageZone;
@@ -14,6 +13,7 @@ import net.amarantha.lightboard.zone.MessageGroup;
 import net.amarantha.lightboard.zone.TextZone;
 import net.amarantha.lightboard.zone.transition.AbstractTransition;
 import net.amarantha.lightboard.zone.transition.Scroll;
+import net.amarantha.utils.properties.PropertiesService;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -38,9 +38,13 @@ public class SceneLoader extends XMLParser {
 
     @Inject private Sync sync;
     @Inject private Injector injector;
-    @Inject private LightBoardProperties props;
+    @Inject private PropertiesService props;
     @Inject private LightBoardSurface surface;
     @Inject private DominoFactory dominoFactory;
+
+    public void setCurrentScene(AbstractScene currentScene) {
+        this.currentScene = currentScene;
+    }
 
     public AbstractScene getCurrentScene() {
         return currentScene;
@@ -50,14 +54,14 @@ public class SceneLoader extends XMLParser {
         surface.clearSurface();
         if ( currentScene==null ) {
             try {
-                loadScene(props.getDefaultScene());
+                loadScene(props.getString("defaultScene", "splash"));
             } catch (XMLSceneException e) {
                 e.printStackTrace();
             }
         } else {
             currentScene.start();
         }
-        sync.addTask(new Sync.Task(props.getSceneTick()) {
+        sync.addTask(new Sync.Task((long)props.getInt("sceneTick", 5)) {
             @Override
             public void runTask() {
                 if (!paused && currentScene != null) {
@@ -182,11 +186,14 @@ public class SceneLoader extends XMLParser {
 
     private void applyGroup(AbstractScene scene, Node groupNode) throws XMLSceneException {
         Node attrNode = groupNode.getAttributes().getNamedItem(ID.getName());
+        Node persistNode = groupNode.getAttributes().getNamedItem(PERSIST.getName());
+        boolean persist = persistNode==null || persistNode.getTextContent().equals(YES.getName());
         if ( attrNode!=null ) {
             String zoneIdsStr = stringValue(groupNode);
             String[] zoneIds = zoneIdsStr.split(",");
             MessageGroup group = new MessageGroup(zoneIds);
             group.setId(attrNode.getTextContent());
+            group.setPersistMessages(persist);
             scene.registerGroup(group);
             for ( String id : zoneIds ) {
                 TextZone zone = (TextZone)scene.getZone(id);
@@ -371,7 +378,7 @@ public class SceneLoader extends XMLParser {
 
     private void applyTransition(AbstractZone zone, Node transitionNode, boolean in) throws XMLSceneException {
         Class<? extends AbstractTransition> transitionClass = null;
-        String className = props.getTransitionPackage()+"."+stringValue(transitionNode);
+        String className = props.getString("transitionPackage", "net.amarantha.lightboard.zone.transition")+"."+stringValue(transitionNode);
         try {
             transitionClass = (Class<? extends AbstractTransition>) Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -432,7 +439,7 @@ public class SceneLoader extends XMLParser {
     }
 
     private void applyFont(TextZone zone, Node fontNode) {
-        String className = props.getFontPackage()+"."+stringValue(fontNode);
+        String className = props.getString("fontPackage", "net.amarantha.lightboard.font")+"."+stringValue(fontNode);
         Class<? extends Font> fontClass = null;
         String fileToLoad = null;
         try {

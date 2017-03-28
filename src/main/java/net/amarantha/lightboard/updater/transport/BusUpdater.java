@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.amarantha.lightboard.updater.Updater;
 import net.amarantha.lightboard.utility.Sync;
 import net.amarantha.lightboard.webservice.SceneResource;
+import net.amarantha.utils.properties.PropertiesService;
 import org.javalite.http.Http;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,20 +24,13 @@ public class BusUpdater extends Updater {
 
     protected Map<String, BusDeparture> buses = new HashMap<>();
 
-    @Inject private SceneResource sceneResource;
+    private SceneResource sceneResource;
 
     @Inject
-    public BusUpdater(Sync sync) {
+    public BusUpdater(Sync sync, SceneResource sceneResource) {
         super(sync);
-    }
-
-    public void start() {
-        sync.addTask(new Sync.Task(30000L) {
-            @Override
-            public void runTask() {
-                refresh();
-            }
-        });
+        this.sceneResource = sceneResource;
+        setDataRefresh(30000L);
     }
 
     private Map<Integer, String> busNumbers;
@@ -184,7 +178,7 @@ public class BusUpdater extends Updater {
                     String message = msgs[0]+";;"+msgs[1]+";;"+msgs[2]+";;"+msgs[3]+";;"+msgs[4];
 
                     sceneResource.addGroupMessage("travel-info", "buses", message);
-//                    System.out.println(message);
+                    System.out.println("\t"+message);
 
                 });
 

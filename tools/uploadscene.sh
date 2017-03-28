@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-pwd=`cat password`
+if [ ! -f "password" ]
+then
+    echo "No password set"
+    exit 1
+else
+    password=`cat password`
+fi
+
 if [ ! -f "lightboard.ip" ]
 then
     echo "No LightBoard specified"
@@ -12,7 +19,7 @@ then
     echo "No Scene Name specified"
     exit
 fi
-sshpass -p ${pwd} scp "../scenes/$1.xml" pi@${lightboard}:lightboard/scenes
+sshpass -p ${password} scp "../scenes/$1.xml" pi@${lightboard}:lightboard/scenes
 if [ "$2" = "-start" ]
 then
     sh loadscene.sh $1

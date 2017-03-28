@@ -39,7 +39,7 @@ public abstract class AbstractTransition {
     public final void tick() {
         if ( System.currentTimeMillis() - lastDrawn >= delay ) {
             currentStep++;
-            if ( isComplete() ) {
+            if ( zone.getPattern()==null || isComplete() ) {
                 zone.clear();
                 complete();
             } else {

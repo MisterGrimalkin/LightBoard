@@ -51,7 +51,7 @@ public class LightBoardSurface {
         ledState = new double[LAYERS][3][rows][cols];
 
         if (loadTestPattern) {
-            initTestPattern(0);
+            initTestPattern(0, 0);
         }
 
         boardRegion = safeRegion(0, 0, cols, rows);
@@ -94,32 +94,83 @@ public class LightBoardSurface {
     }
 
     private int testPatternSize = 6;
-    private int testPatternOffset = 0;
+    private int testSquaresX = 0;
+    private int testSquaresY = 0;
+
+    private int testScanX = 0;
+    private int testScanY = 0;
+    private int testScanBlockSize = 1;
+    private Colour testScanColour = Colour.BLACK;
+    private boolean testScanFilling;
 
     public void testMode() {
         System.out.println("LightBoard in TEST MODE");
-        sync.addTask(new Sync.Task(100L) {
+        sync.addTask(new Sync.Task(50L) {
             @Override
             public void runTask() {
-                clearSurface();
-                if (testPatternOffset++ >= (testPatternSize * 3)) {
-                    testPatternOffset = 1;
+                switch ( testMode ) {
+                    case FILL:
+                        break;
+                    case SCAN:
+                        Colour colour = testScanFilling ? testScanColour : Colour.BLACK;
+                        for ( int i=1; i<=testScanBlockSize; i++ ) {
+                            drawPoint(0, testScanX++, testScanY, colour);
+                        }
+                        if ( testScanX >= cols ) {
+                            testScanX = 0;
+                            if ( ++testScanY >= rows ) {
+                                testScanY = 0;
+                                testScanFilling = !testScanFilling;
+                            }
+                        }
+                        break;
+                    case SQUARES:
+                        clearSurface();
+                        if (testSquaresX++ >= (testPatternSize * 3)) {
+                            testSquaresX = 1;
+                        }
+                        if (testSquaresY++ >= (testPatternSize * 3)) {
+                            testSquaresY = 1;
+                        }
+                        initTestPattern(testSquaresX - (testPatternSize * 3), testSquaresY - (testPatternSize * 3));
+                        break;
                 }
-                initTestPattern(testPatternOffset - (testPatternSize * 3));
             }
         });
-
     }
 
-    private void initTestPattern(int xOffset) {
+    enum TestMode { FILL, SCAN, SQUARES }
+
+    private TestMode testMode = TestMode.SQUARES;
+
+    public void testFill(Colour colour) {
+        testMode = TestMode.FILL;
+        fillRegion(0, boardRegion, colour);
+    }
+
+    public void testScan(Colour colour, int blockSize) {
+        testMode = TestMode.SCAN;
+        clearSurface();
+        testScanBlockSize = blockSize;
+        testScanColour = colour;
+        testScanX = 0;
+        testScanY = 0;
+        testScanFilling = true;
+    }
+
+    public void testSquares() {
+        testMode = TestMode.SQUARES;
+    }
+
+    private void initTestPattern(int xOffset, int yOffset) {
         for (int x = 0; x < (cols + (testPatternSize * 3)); x += (testPatternSize * 3)) {
-            for (int y = 0; y < rows; y += (testPatternSize * 3)) {
+            for (int y = 0; y < (rows + (testPatternSize * 3)); y += (testPatternSize * 3)) {
                 if (x + xOffset < cols) {
-                    fillRegion(safeRegion(x + xOffset, y, testPatternSize, testPatternSize), new Colour(1.0, 0.0, 0.0));
-                    if (x + xOffset + testPatternSize < cols && y + testPatternSize < rows) {
-                        fillRegion(safeRegion(x + xOffset + testPatternSize, y + testPatternSize, testPatternSize, testPatternSize), new Colour(0.0, 1.0, 0.0));
-                        if (x + xOffset + (testPatternSize * 2) < cols && y + (testPatternSize * 2) < rows) {
-                            fillRegion(safeRegion(x + xOffset + (testPatternSize * 2), y + (testPatternSize * 2), testPatternSize, testPatternSize), new Colour(1.0, 1.0, 0.0));
+                    fillRegion(safeRegion(x + xOffset, y + yOffset, testPatternSize, testPatternSize), new Colour(1.0, 0.0, 0.0));
+                    if (x + xOffset + testPatternSize < cols && y + yOffset + testPatternSize < rows) {
+                        fillRegion(safeRegion(x + xOffset + testPatternSize, y + yOffset + testPatternSize, testPatternSize, testPatternSize), new Colour(0.0, 1.0, 0.0));
+                        if (x + xOffset + (testPatternSize * 2) < cols && y + yOffset + (testPatternSize * 2) < rows) {
+                            fillRegion(safeRegion(x + xOffset + (testPatternSize * 2), y + yOffset + (testPatternSize * 2), testPatternSize, testPatternSize), new Colour(1.0, 1.0, 0.0));
                         }
                     }
                 }

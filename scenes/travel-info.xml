@@ -3,6 +3,153 @@
 
     <define name="busHold">3000</define>
     <define name="busTransition">400</define>
+    <define name="gridColour">green</define>
+<!--	
+    <textzone id="1">
+	<region left="0" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="2">
+	<region left="16" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="3">
+	<region left="32" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="4">
+	<region left="48" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="5">
+	<region left="64" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="6">
+	<region left="80" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="7">
+	<region left="96" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="8">
+	<region left="112" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="9">
+	<region left="128" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="10">
+	<region left="144" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="11">
+	<region left="160" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="12">
+	<region left="176" top="0" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="01">
+	<region left="0" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="02">
+	<region left="16" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="03">
+	<region left="32" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="04">
+	<region left="48" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="05">
+	<region left="64" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="06">
+	<region left="80" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="07">
+	<region left="96" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="08">
+	<region left="112" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="09">
+	<region left="128" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="010">
+	<region left="144" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="011">
+	<region left="160" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+    <textzone id="012">
+	<region left="176" top="16" width="16" height="16"/>
+        <outline>:gridColour</outline>
+        <canvas-layer>7</canvas-layer>
+	<auto-start/>
+    </textzone>
+-->
 
     <textzone id="bus-number">
         <region left="0" top="0" width="30" height="18"/>
@@ -88,7 +235,7 @@
     </domino>
 
     <group id="buses">bus-number,destination-1,times-1,destination-2,times-2</group>
-    <group id="scroller">scroller</group>
-    <group id="tubes">tube-status</group>
+    <group id="scroller" persist="yes">scroller</group>
+    <group id="tubes" persist="yes">tube-status</group>
 
 </scene>
